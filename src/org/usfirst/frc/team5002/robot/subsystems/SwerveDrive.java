@@ -1,13 +1,9 @@
 package org.usfirst.frc.team5002.robot.subsystems;
 
 import org.usfirst.frc.team5002.robot.commands.KillDrivetrain;
-
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
-
-import edu.wpi.first.wpilibj.CounterBase.EncodingType;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -28,12 +24,17 @@ public class SwerveDrive extends Subsystem {
     private CANTalon bl_drive;
     private CANTalon br_drive;
     
-    private void configureTalon(CANTalon srx, double p, double i, double d) {
+    private void configureSteerMotor(CANTalon srx, double p, double i, double d) {
     	srx.changeControlMode(TalonControlMode.Position);
     	srx.setFeedbackDevice(FeedbackDevice.QuadEncoder);
     	srx.configEncoderCodesPerRev(7); // the encoders on the swivel motors return 7 ticks per revolution
     	srx.setPID(p, i, d); // TODO: Set these at some point
     	srx.setPosition(0); // Reset to initial position
+    }
+    
+    private void configureDriveMotor(CANTalon srx) {
+    	srx.changeControlMode(TalonControlMode.PercentVbus);
+    	srx.set(0); // Reset to initial position
     }
     
     public SwerveDrive() {
@@ -45,20 +46,10 @@ public class SwerveDrive extends Subsystem {
         bl_swiv = new CANTalon(4);
         br_swiv = new CANTalon(6);
         
-        /* Chain all four swivel motors together.
-         * We _could_ control them all individually w/ PID
-         * (and in fact for one of them we do need to do that)
-         * But that's hard and I'm lazy. */
-        fr_swiv.changeControlMode(TalonControlMode.Follower);
-        bl_swiv.changeControlMode(TalonControlMode.Follower);
-        br_swiv.changeControlMode(TalonControlMode.Follower);
-        
-        fr_swiv.set(fl_swiv.getDeviceID());
-        bl_swiv.set(fl_swiv.getDeviceID());
-        br_swiv.set(fl_swiv.getDeviceID());
-        
-        /* Now set controls for the main swivel motor. */
-        this.configureTalon(fl_swiv, 0.0, 0.0, 0.0);
+        this.configureSteerMotor(fl_swiv, 0.0, 0.0, 0.0);
+        this.configureSteerMotor(fr_swiv, 0.0, 0.0, 0.0);
+        this.configureSteerMotor(bl_swiv, 0.0, 0.0, 0.0);
+        this.configureSteerMotor(br_swiv, 0.0, 0.0, 0.0);
         
         /* Init drive motors... */
         fl_drive = new CANTalon(1);
@@ -68,16 +59,12 @@ public class SwerveDrive extends Subsystem {
         
         /* We chain only the motors on each side together
          * (to allow for turning) */
-        bl_drive.changeControlMode(TalonControlMode.Follower);
-        br_drive.changeControlMode(TalonControlMode.Follower);
-        bl_drive.set(fl_drive.getDeviceID());
-        br_drive.set(fr_drive.getDeviceID());
         
         /* Set main controls for driving... */
-        fl_drive.changeControlMode(TalonControlMode.PercentVbus);
-        fr_drive.changeControlMode(TalonControlMode.PercentVbus);
-        fl_drive.set(0.0); /* All drives are initially off */
-        fr_drive.set(0.0);
+        this.configureDriveMotor(fl_drive);
+        this.configureDriveMotor(fr_drive);
+        this.configureDriveMotor(bl_drive);
+        this.configureDriveMotor(br_drive);
     }
     
     /* Handy functions for getting master motor controllers directly. */
@@ -85,18 +72,18 @@ public class SwerveDrive extends Subsystem {
     public CANTalon getRightController() { return fr_drive; }
     public CANTalon getSwivelController() { return fl_swiv; }
     
-    public void setDriveOutput(double vbus) {
-    	fl_drive.set(vbus);
-    	fr_drive.set(vbus);
+    public void setDriveOutput(double vbus_fl, double vbus_fr, double vbus_bl, double vbus_br) {
+    	fl_drive.set(vbus_fl);
+    	fr_drive.set(vbus_fr);
+    	bl_drive.set(vbus_bl);
+    	br_drive.set(vbus_br);
     }
     
-    public void setDriveOutput(double vbus_left, double vbus_right) {
-    	fl_drive.set(vbus_left);
-    	fr_drive.set(vbus_right);
-    }
-    
-    public void setSwervePosition(double pos) {
-    	fl_swiv.set(pos);
+    public void setSwervePosition(double pos_fl, double pos_fr, double pos_bl, double pos_br) {
+    	fl_swiv.set(pos_fl);
+    	fr_swiv.set(pos_fr);
+    	br_swiv.set(pos_bl);
+    	br_swiv.set(pos_br);
     }
     
     public void initDefaultCommand() {
