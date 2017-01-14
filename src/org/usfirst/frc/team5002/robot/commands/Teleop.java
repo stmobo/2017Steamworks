@@ -32,7 +32,7 @@ public class Teleop extends Command {
 	 * @return		Array of Doubles matching ws1-ws4 and wa1-wa4
 	 */
 	protected void execute(){
-		Joystick stick = OI.getJoystick();
+		Joystick stick = Robot.oi.getJoystick();
 		double fwd = stick.getX();
 		double str = stick.getY();
 		double rcw = stick.getZ();
@@ -78,7 +78,7 @@ public class Teleop extends Command {
 		Robot.drivetrain.setDriveOutput(ws2, ws1, ws4, ws3);
 	}
 	
-    public Teleop(Joystick in) {
+    public Teleop() {
         requires(Robot.drivetrain);
     }
 
