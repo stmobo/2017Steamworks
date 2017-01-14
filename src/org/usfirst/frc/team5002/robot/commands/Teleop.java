@@ -9,9 +9,6 @@ import edu.wpi.first.wpilibj.command.Command;
  * Teleop.java -- teleop drive control code for linear movement + rotation
  */
 public class Teleop extends Command {
-
-	Joystick stick;
-	
 	private static final double joystickDeadband = 0.10;
 	private static final double maxDriveOutput = 1.0;
 	
@@ -35,6 +32,7 @@ public class Teleop extends Command {
 	 * @return		Array of Doubles matching ws1-ws4 and wa1-wa4
 	 */
 	protected void execute(){
+		Joystick stick = OI.getJoystick();
 		double fwd = stick.getX();
 		double str = stick.getY();
 		double rcw = stick.getZ();
@@ -82,8 +80,6 @@ public class Teleop extends Command {
 	
     public Teleop(Joystick in) {
         requires(Robot.drivetrain);
-        
-        stick = in;
     }
 
     // Called just before this Command runs the first time

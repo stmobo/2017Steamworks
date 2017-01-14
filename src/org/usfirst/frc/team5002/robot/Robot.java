@@ -94,7 +94,7 @@ public class Robot extends IterativeRobot {
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
 		
-		Teleop teleCmd = new Teleop(oi.stick);
+		Teleop teleCmd = new Teleop();
 		Scheduler.getInstance().add(teleCmd);
 	}
 
