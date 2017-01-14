@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team5002.robot.commands.Teleop;
+import org.usfirst.frc.team5002.robot.commands.PIDSteerTest;
 import org.usfirst.frc.team5002.robot.subsystems.SwerveDrive;
 
 /**
@@ -63,7 +64,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		autonomousCommand = chooser.getSelected();
+		autonomousCommand = new PIDSteerTest();
 
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
