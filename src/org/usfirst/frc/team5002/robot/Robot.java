@@ -8,8 +8,12 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+
 import org.usfirst.frc.team5002.robot.commands.ForwardsAuto;
-import org.usfirst.frc.team5002.robot.subsystems.Drivetrain;
+
+import org.usfirst.frc.team5002.robot.commands.Teleop;
+import org.usfirst.frc.team5002.robot.subsystems.SwerveDrive;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -20,7 +24,11 @@ import org.usfirst.frc.team5002.robot.subsystems.Drivetrain;
  */
 public class Robot extends IterativeRobot {
 
-	public static final Drivetrain exampleSubsystem = new Drivetrain();
+
+	
+
+	public static final SwerveDrive drivetrain = new SwerveDrive();
+
 	public static OI oi;
 
 	Command autonomousCommand;
@@ -33,9 +41,11 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		oi = new OI();
+
 		chooser.addDefault("Default Auto", new ForwardsAuto());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", chooser);
+
 	}
 
 	/**
@@ -96,6 +106,9 @@ public class Robot extends IterativeRobot {
 		// this line or comment it out.
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
+		
+		Teleop teleCmd = new Teleop();
+		Scheduler.getInstance().add(teleCmd);
 	}
 
 	/**
