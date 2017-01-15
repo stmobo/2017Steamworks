@@ -1,7 +1,6 @@
 package org.usfirst.frc.team5002.robot.commands;
 
 import org.usfirst.frc.team5002.robot.Robot;
-import org.usfirst.frc.team5002.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -33,9 +32,9 @@ public class Teleop extends Command {
 	 */
 	protected void execute(){
 		Joystick stick = Robot.oi.getJoystick();
-		double fwd = stick.getX();
-		double str = stick.getY();
-		double rcw = stick.getZ();
+		double fwd = (Math.abs(stick.getX()) > joystickDeadband) ? stick.getX() : 0.0;
+		double str = (Math.abs(stick.getY()) > joystickDeadband) ? stick.getY() : 0.0;
+		double rcw = (Math.abs(stick.getZ()) > joystickDeadband) ? stick.getZ() : 0.0;
 
 		if(Math.abs(fwd)>1.0 || Math.abs(str)>1.0 || Math.abs(rcw)>1.0){
 			return;
@@ -75,7 +74,12 @@ public class Teleop extends Command {
 		double wa4 = (c==0 && a==0) ? 0.0 : (Math.atan2(a, c) * 180 / Math.PI);
 
 		Robot.drivetrain.setSwervePosition(wa2, wa1, wa4, wa3);
-		Robot.drivetrain.setDriveOutput(ws2, ws1, ws4, ws3);
+		Robot.drivetrain.setDriveOutput(
+				Math.min(ws2, maxDriveOutput), 
+				Math.min(ws1, maxDriveOutput),
+				Math.min(ws4, maxDriveOutput),
+				Math.min(ws3, maxDriveOutput)
+			);
 	}
 
     public Teleop() {
