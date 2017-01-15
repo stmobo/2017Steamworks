@@ -41,10 +41,10 @@ public class SwerveDrive extends Subsystem {
     	/* XXX: Change the ports around as necessary! */
 
     	/* Init swivel (swerve? motor-turner?) motors */
-        fl_swiv = new CANTalon(RobotDrive.fl_steer);
-        fr_swiv = new CANTalon(RobotDrive.fr_steer);
-        bl_swiv = new CANTalon(RobotDrive.bl_steer);
-        br_swiv = new CANTalon(RobotDrive.br_steer);
+        fl_swiv = new CANTalon(RobotMap.fl_steer);
+        fr_swiv = new CANTalon(RobotMap.fr_steer);
+        bl_swiv = new CANTalon(RobotMap.bl_steer);
+        br_swiv = new CANTalon(RobotMap.br_steer);
 
         this.configureSteerMotor(fl_swiv, 0.0, 0.0, 0.0);
         this.configureSteerMotor(fr_swiv, 0.0, 0.0, 0.0);
@@ -52,10 +52,10 @@ public class SwerveDrive extends Subsystem {
         this.configureSteerMotor(br_swiv, 0.0, 0.0, 0.0);
 
         /* Init drive motors... */
-        fl_drive = new CANTalon(RobotDrive.fl_drive);
-        fr_drive = new CANTalon(RobotDrive.fr_drive);
-        bl_drive = new CANTalon(RobotDrive.bl_drive);
-        br_drive = new CANTalon(RobotDrive.br_drive);
+        fl_drive = new CANTalon(RobotMap.fl_drive);
+        fr_drive = new CANTalon(RobotMap.fr_drive);
+        bl_drive = new CANTalon(RobotMap.bl_drive);
+        br_drive = new CANTalon(RobotMap.br_drive);
 
         /* We chain only the motors on each side together
          * (to allow for turning) */
