@@ -1,5 +1,6 @@
 package org.usfirst.frc.team5002.robot.subsystems;
 
+import org.usfirst.frc.team5002.robot.RobotMap;
 import org.usfirst.frc.team5002.robot.commands.KillDrivetrain;
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
