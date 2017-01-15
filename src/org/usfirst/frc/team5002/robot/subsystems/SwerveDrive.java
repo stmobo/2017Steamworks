@@ -6,6 +6,8 @@ import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.networktables.NetworkTablesJNI;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * SwerveDrive.java -- swerve drive subsystem
@@ -38,8 +40,6 @@ public class SwerveDrive extends Subsystem {
     }
 
     public SwerveDrive() {
-    	/* XXX: Change the ports around as necessary! */
-
     	/* Init swivel (swerve? motor-turner?) motors */
         fl_swiv = new CANTalon(RobotMap.fl_steer);
         fr_swiv = new CANTalon(RobotMap.fr_steer);
@@ -57,20 +57,19 @@ public class SwerveDrive extends Subsystem {
         bl_drive = new CANTalon(RobotMap.bl_drive);
         br_drive = new CANTalon(RobotMap.br_drive);
 
-        /* We chain only the motors on each side together
-         * (to allow for turning) */
-
         /* Set main controls for driving... */
         this.configureDriveMotor(fl_drive);
         this.configureDriveMotor(fr_drive);
         this.configureDriveMotor(bl_drive);
         this.configureDriveMotor(br_drive);
     }
-
-    /* Handy functions for getting master motor controllers directly. */
-    public CANTalon getLeftController() { return fl_drive; }
-    public CANTalon getRightController() { return fr_drive; }
-    public CANTalon getSwivelController() { return fl_swiv; }
+    
+    public void writePIDErrorToDashboard() {
+    	SmartDashboard.putNumber("FrontLeft-Steer-Error", fl_swiv.getClosedLoopError());
+    	SmartDashboard.putNumber("FrontRight-Steer-Error", fr_swiv.getClosedLoopError());
+    	SmartDashboard.putNumber("BackLeft-Steer-Error", bl_swiv.getClosedLoopError());
+    	SmartDashboard.putNumber("BackRight-Steer-Error", br_swiv.getClosedLoopError());
+    }
 
     public void setDriveOutput(double vbus_fl, double vbus_fr, double vbus_bl, double vbus_br) {
     	fl_drive.set(vbus_fl);

@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public class PIDSteerTest extends Command {
 	protected void execute(){
 		Robot.drivetrain.setSwervePosition(180, 180, 180, 180);
+		Robot.drivetrain.writePIDErrorToDashboard();
 	}
 
     public PIDSteerTest() {
