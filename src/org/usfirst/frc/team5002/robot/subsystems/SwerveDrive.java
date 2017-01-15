@@ -27,8 +27,7 @@ public class SwerveDrive extends Subsystem {
 
     private void configureSteerMotor(CANTalon srx, double p, double i, double d) {
     	srx.changeControlMode(TalonControlMode.Position);
-    	srx.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-    	srx.configEncoderCodesPerRev(7); // the encoders on the swivel motors return 7 ticks per revolution
+    	srx.setFeedbackDevice(FeedbackDevice.AnalogEncoder);
     	srx.setPID(p, i, d); // TODO: Set these at some point
     	srx.setPosition(0); // Reset to initial position
     }
