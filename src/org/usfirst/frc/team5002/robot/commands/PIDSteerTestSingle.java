@@ -2,23 +2,33 @@ package org.usfirst.frc.team5002.robot.commands;
 
 import org.usfirst.frc.team5002.robot.Robot;
 import org.usfirst.frc.team5002.robot.subsystems.SwerveDrive;
-import edu.wpi.first.wpilibj.Joystick;
+
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * PIDSteerTest -- Flips steer motors 180 degrees for PID testing purposes
+ * PIDSteerTest -- Flips one module's steer motor 180 degrees
  */
-public class PIDSteerTest extends Command {
+public class PIDSteerTestSingle extends Command {
+	private SwerveDrive.ModulePosition mod;
+	
 	protected void execute(){
-		Robot.drivetrain.setSwervePosition(180, 180, 180, 180);
+		Robot.drivetrain.setSwervePosition(mod, SmartDashboard.getNumber("Steer-PIDTest-Setpoint", 0.0));
 	}
 
-    public PIDSteerTest() {
+    public PIDSteerTestSingle(SwerveDrive.ModulePosition mod) {
         requires(Robot.drivetrain);
+        this.mod = mod;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	double p = SmartDashboard.getNumber("Steer-PIDTest-PTerm", 0.0);
+    	double i = SmartDashboard.getNumber("Steer-PIDTest-ITerm", 0.0);
+    	double d = SmartDashboard.getNumber("Steer-PIDTest-DTerm", 0.0);
+    	
+    	Robot.drivetrain.reconfigurePID(mod, p, i, d);
     }
 
     // Make this return true when this Command no longer needs to run execute()

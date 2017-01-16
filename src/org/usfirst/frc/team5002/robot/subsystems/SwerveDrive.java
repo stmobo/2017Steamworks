@@ -1,10 +1,13 @@
 package org.usfirst.frc.team5002.robot.subsystems;
 
+import org.usfirst.frc.team5002.robot.RobotMap;
 import org.usfirst.frc.team5002.robot.commands.KillDrivetrain;
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.networktables.NetworkTablesJNI;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * SwerveDrive.java -- swerve drive subsystem
@@ -26,10 +29,33 @@ public class SwerveDrive extends Subsystem {
 
     private void configureSteerMotor(CANTalon srx, double p, double i, double d) {
     	srx.changeControlMode(TalonControlMode.Position);
-    	srx.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-    	srx.configEncoderCodesPerRev(7); // the encoders on the swivel motors return 7 ticks per revolution
+    	srx.setFeedbackDevice(FeedbackDevice.AnalogEncoder);
     	srx.setPID(p, i, d); // TODO: Set these at some point
     	srx.setPosition(0); // Reset to initial position
+    }
+    
+    public enum ModulePosition {
+    	FRONT_LEFT,
+    	FRONT_RIGHT,
+    	BACK_LEFT,
+    	BACK_RIGHT
+    }
+    
+    public void reconfigurePID(ModulePosition mod, double p, double i, double d) {
+    	switch(mod) {
+    	case FRONT_LEFT:
+    		configureSteerMotor(fl_swiv, p, i, d);
+    		return;
+    	case FRONT_RIGHT:
+    		configureSteerMotor(fr_swiv, p, i, d);
+    		return;
+    	case BACK_LEFT:
+    		configureSteerMotor(bl_swiv, p, i, d);
+    		return;
+    	case BACK_RIGHT:
+    		configureSteerMotor(br_swiv, p, i, d);
+    		return;
+    	}
     }
 
     private void configureDriveMotor(CANTalon srx) {
@@ -38,13 +64,11 @@ public class SwerveDrive extends Subsystem {
     }
 
     public SwerveDrive() {
-    	/* XXX: Change the ports around as necessary! */
-
     	/* Init swivel (swerve? motor-turner?) motors */
-        fl_swiv = new CANTalon(RobotDrive.fl_steer);
-        fr_swiv = new CANTalon(RobotDrive.fr_steer);
-        bl_swiv = new CANTalon(RobotDrive.bl_steer);
-        br_swiv = new CANTalon(RobotDrive.br_steer);
+        fl_swiv = new CANTalon(RobotMap.fl_steer);
+        fr_swiv = new CANTalon(RobotMap.fr_steer);
+        bl_swiv = new CANTalon(RobotMap.bl_steer);
+        br_swiv = new CANTalon(RobotMap.br_steer);
 
         this.configureSteerMotor(fl_swiv, 0.0, 0.0, 0.0);
         this.configureSteerMotor(fr_swiv, 0.0, 0.0, 0.0);
@@ -52,13 +76,10 @@ public class SwerveDrive extends Subsystem {
         this.configureSteerMotor(br_swiv, 0.0, 0.0, 0.0);
 
         /* Init drive motors... */
-        fl_drive = new CANTalon(RobotDrive.fl_drive);
-        fr_drive = new CANTalon(RobotDrive.fr_drive);
-        bl_drive = new CANTalon(RobotDrive.bl_drive);
-        br_drive = new CANTalon(RobotDrive.br_drive);
-
-        /* We chain only the motors on each side together
-         * (to allow for turning) */
+        fl_drive = new CANTalon(RobotMap.fl_drive);
+        fr_drive = new CANTalon(RobotMap.fr_drive);
+        bl_drive = new CANTalon(RobotMap.bl_drive);
+        br_drive = new CANTalon(RobotMap.br_drive);
 
         /* Set main controls for driving... */
         this.configureDriveMotor(fl_drive);
@@ -66,11 +87,13 @@ public class SwerveDrive extends Subsystem {
         this.configureDriveMotor(bl_drive);
         this.configureDriveMotor(br_drive);
     }
-
-    /* Handy functions for getting master motor controllers directly. */
-    public CANTalon getLeftController() { return fl_drive; }
-    public CANTalon getRightController() { return fr_drive; }
-    public CANTalon getSwivelController() { return fl_swiv; }
+    
+    public void writePIDErrorToDashboard() {
+    	SmartDashboard.putNumber("FrontLeft-Steer-Error", fl_swiv.getClosedLoopError());
+    	SmartDashboard.putNumber("FrontRight-Steer-Error", fr_swiv.getClosedLoopError());
+    	SmartDashboard.putNumber("BackLeft-Steer-Error", bl_swiv.getClosedLoopError());
+    	SmartDashboard.putNumber("BackRight-Steer-Error", br_swiv.getClosedLoopError());
+    }
 
     public void setDriveOutput(double vbus_fl, double vbus_fr, double vbus_bl, double vbus_br) {
     	fl_drive.set(vbus_fl);
@@ -84,6 +107,23 @@ public class SwerveDrive extends Subsystem {
     	fr_swiv.set(pos_fr);
     	br_swiv.set(pos_bl);
     	br_swiv.set(pos_br);
+    }
+    
+    public void setSwervePosition(ModulePosition mod, double pos) {
+    	switch(mod) {
+    	case FRONT_LEFT:
+    		fl_swiv.set(pos);
+    		return;
+    	case FRONT_RIGHT:
+    		fr_swiv.set(pos);
+    		return;
+    	case BACK_LEFT:
+    		bl_swiv.set(pos);
+    		return;
+    	case BACK_RIGHT:
+    		br_swiv.set(pos);
+    		return;
+    	}
     }
 
     public void initDefaultCommand() {
