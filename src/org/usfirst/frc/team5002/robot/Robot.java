@@ -6,8 +6,11 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import org.usfirst.frc.team5002.robot.commands.Teleop;
-import org.usfirst.frc.team5002.robot.commands.PIDSteerTest;
+import org.usfirst.frc.team5002.robot.commands.KillDrivetrain;
+import org.usfirst.frc.team5002.robot.commands.PIDSteerTestSingle;
 import org.usfirst.frc.team5002.robot.subsystems.SwerveDrive;
 
 /**
@@ -32,6 +35,12 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		oi = new OI();
+		
+		/* Add PID Test commands. */
+		SmartDashboard.putData("PIDSteerTest-FrontLeft", new PIDSteerTestSingle(SwerveDrive.ModulePosition.FRONT_LEFT));
+		SmartDashboard.putData("PIDSteerTest-FrontRight", new PIDSteerTestSingle(SwerveDrive.ModulePosition.FRONT_RIGHT));
+		SmartDashboard.putData("PIDSteerTest-BackLeft", new PIDSteerTestSingle(SwerveDrive.ModulePosition.BACK_LEFT));
+		SmartDashboard.putData("PIDSteerTest-BackRight", new PIDSteerTestSingle(SwerveDrive.ModulePosition.BACK_RIGHT));
 	}
 
 	/**
@@ -62,8 +71,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		autonomousCommand = new PIDSteerTest();
-
+		autonomousCommand = new KillDrivetrain();
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
 		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand

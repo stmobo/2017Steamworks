@@ -33,6 +33,30 @@ public class SwerveDrive extends Subsystem {
     	srx.setPID(p, i, d); // TODO: Set these at some point
     	srx.setPosition(0); // Reset to initial position
     }
+    
+    public enum ModulePosition {
+    	FRONT_LEFT,
+    	FRONT_RIGHT,
+    	BACK_LEFT,
+    	BACK_RIGHT
+    }
+    
+    public void reconfigurePID(ModulePosition mod, double p, double i, double d) {
+    	switch(mod) {
+    	case FRONT_LEFT:
+    		configureSteerMotor(fl_swiv, p, i, d);
+    		return;
+    	case FRONT_RIGHT:
+    		configureSteerMotor(fr_swiv, p, i, d);
+    		return;
+    	case BACK_LEFT:
+    		configureSteerMotor(bl_swiv, p, i, d);
+    		return;
+    	case BACK_RIGHT:
+    		configureSteerMotor(br_swiv, p, i, d);
+    		return;
+    	}
+    }
 
     private void configureDriveMotor(CANTalon srx) {
     	srx.changeControlMode(TalonControlMode.PercentVbus);
@@ -83,6 +107,23 @@ public class SwerveDrive extends Subsystem {
     	fr_swiv.set(pos_fr);
     	br_swiv.set(pos_bl);
     	br_swiv.set(pos_br);
+    }
+    
+    public void setSwervePosition(ModulePosition mod, double pos) {
+    	switch(mod) {
+    	case FRONT_LEFT:
+    		fl_swiv.set(pos);
+    		return;
+    	case FRONT_RIGHT:
+    		fr_swiv.set(pos);
+    		return;
+    	case BACK_LEFT:
+    		bl_swiv.set(pos);
+    		return;
+    	case BACK_RIGHT:
+    		br_swiv.set(pos);
+    		return;
+    	}
     }
 
     public void initDefaultCommand() {
