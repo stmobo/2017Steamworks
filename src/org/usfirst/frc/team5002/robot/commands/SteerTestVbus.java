@@ -10,11 +10,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  * PIDSteerTest -- Flips one module's steer motor 180 degrees
  */
-public class PIDSteerTestSingle extends Command {
+public class SteerTestVbus extends Command {
 	private SwerveDrive.ModulePosition mod;
 
 	protected void execute(){
-		Robot.drivetrain.setSwervePosition(mod, 90.0*Robot.oi.getRotationAxis());
+		Robot.drivetrain.reconfigureSteer_vbus(mod, Robot.oi.getRotationAxis());
 	}
 
 	public PIDSteerTestSingle(SwerveDrive.ModulePosition mod) {
@@ -24,7 +24,7 @@ public class PIDSteerTestSingle extends Command {
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
-		Robot.drivetrain.reconfigurePID(mod, 20.0, 0, 0);
+		Robot.drivetrain.reconfigureSteer_vbus(mod);
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

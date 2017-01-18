@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team5002.robot.commands.Teleop;
 import org.usfirst.frc.team5002.robot.commands.KillDrivetrain;
 import org.usfirst.frc.team5002.robot.commands.PIDSteerTestSingle;
+import org.usfirst.frc.team5002.robot.commands.SteerTestVbus;
 import org.usfirst.frc.team5002.robot.subsystems.SwerveDrive;
 
 /**
@@ -41,6 +42,11 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("PIDSteerTest-FrontRight", new PIDSteerTestSingle(SwerveDrive.ModulePosition.FRONT_RIGHT));
 		SmartDashboard.putData("PIDSteerTest-BackLeft", new PIDSteerTestSingle(SwerveDrive.ModulePosition.BACK_LEFT));
 		SmartDashboard.putData("PIDSteerTest-BackRight", new PIDSteerTestSingle(SwerveDrive.ModulePosition.BACK_RIGHT));
+		
+		SmartDashboard.putData("SteerTestVbus-FrontLeft", new SteerTestVbus(SwerveDrive.ModulePosition.FRONT_LEFT));
+		SmartDashboard.putData("SteerTestVbus-FrontRight", new SteerTestVbus(SwerveDrive.ModulePosition.FRONT_RIGHT));
+		SmartDashboard.putData("SteerTestVbus-BackLeft", new SteerTestVbus(SwerveDrive.ModulePosition.BACK_LEFT));
+		SmartDashboard.putData("SteerTestVbus-BackRight", new SteerTestVbus(SwerveDrive.ModulePosition.BACK_RIGHT));
 	}
 
 	/**
