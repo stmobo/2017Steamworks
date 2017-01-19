@@ -31,7 +31,7 @@ public class SwerveDrive extends Subsystem {
     	srx.changeControlMode(TalonControlMode.Position);
     	srx.setFeedbackDevice(FeedbackDevice.AnalogEncoder);
     	srx.setPID(p, i, d); // TODO: Set these at some point
-    	srx.setPosition(0); // Reset to initial position
+    	srx.set(0); // Reset to initial position
     }
     
     public enum ModulePosition {
@@ -39,6 +39,24 @@ public class SwerveDrive extends Subsystem {
     	FRONT_RIGHT,
     	BACK_LEFT,
     	BACK_RIGHT
+    }
+    
+    /* Testing only! */
+    public void reconfigureSteer_vbus(ModulePosition mod) {
+    	switch(mod) {
+    	case FRONT_LEFT:
+    		configureDriveMotor(fl_swiv);
+    		return;
+    	case FRONT_RIGHT:
+    		configureDriveMotor(fr_swiv);
+    		return;
+    	case BACK_LEFT:
+    		configureDriveMotor(bl_swiv);
+    		return;
+    	case BACK_RIGHT:
+    		configureDriveMotor(br_swiv);
+    		return;
+    	}
     }
     
     public void reconfigurePID(ModulePosition mod, double p, double i, double d) {
