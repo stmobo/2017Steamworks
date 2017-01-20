@@ -32,10 +32,9 @@ public class Teleop extends Command {
 	 * @return		Array of Doubles matching ws1-ws4 and wa1-wa4
 	 */
 	protected void execute(){
-		Joystick stick = Robot.oi.getJoystick();
-		double fwd = (Math.abs(stick.getX()) > joystickDeadband) ? stick.getX() : 0.0;
-		double str = (Math.abs(stick.getY()) > joystickDeadband) ? stick.getY() : 0.0;
-		double rcw = (Math.abs(stick.getZ()) > joystickDeadband) ? stick.getZ() : 0.0;
+		double fwd = (Math.abs(Robot.oi.getForwardAxis()) > joystickDeadband) ? Robot.oi.getForwardAxis() : 0.0;
+		double str = (Math.abs(Robot.oi.getHorizontalAxis()) > joystickDeadband) ? Robot.oi.getHorizontalAxis() : 0.0;
+		double rcw = (Math.abs(Robot.oi.getTurnAxis()) > joystickDeadband) ? Robot.oi.getTurnAxis() : 0.0;
 
 		if(Math.abs(fwd)>1.0 || Math.abs(str)>1.0 || Math.abs(rcw)>1.0){
 			return;

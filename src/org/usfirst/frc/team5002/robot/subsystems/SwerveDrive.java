@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.networktables.NetworkTablesJNI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
+ * @author elweb @version Last Modified 1/18/17
  * SwerveDrive.java -- swerve drive subsystem
  * Fill in the port numbers to be first!
  */
@@ -146,5 +147,52 @@ public class SwerveDrive extends Subsystem {
 
     public void initDefaultCommand() {
     	this.setDefaultCommand(new KillDrivetrain());
+    }
+    
+    /*
+     * sends data to the SmartDashboard
+     */
+    public void UpdateSD(){
+    	SmartDashboard.putNumber("Swiv get", fl_swiv.get());
+		SmartDashboard.putNumber("Swiv get", fr_swiv.get());
+		SmartDashboard.putNumber("Swiv get", bl_swiv.get());
+		SmartDashboard.putNumber("Swiv get", br_swiv.get());
+		//necessary to begin collecting data from the motors that control the rotation of the wheels
+		SmartDashboard.putNumber("Drive get", fl_drive.get());
+		SmartDashboard.putNumber("Drive get", fr_drive.get());
+		SmartDashboard.putNumber("Drive get", bl_drive.get());
+		SmartDashboard.putNumber("Drive get", br_drive.get());
+		//necessary to begin collecting data from the motors that drive the wheels
+		SmartDashboard.putNumber("Drive BusVoltage", fl_drive.getBusVoltage());
+		SmartDashboard.putNumber("Drive BusVoltage", fr_drive.getBusVoltage());
+		SmartDashboard.putNumber("Drive BusVoltage", bl_drive.getBusVoltage());
+		SmartDashboard.putNumber("Drive BusVoltage", br_drive.getBusVoltage());
+		//Measures the voltage distributed to the motors
+		SmartDashboard.putNumber("Drive ClosedLoopError", fl_drive.getClosedLoopError());
+		SmartDashboard.putNumber("Drive ClosedLoopError", fr_drive.getClosedLoopError());
+		SmartDashboard.putNumber("Drive ClosedLoopError", bl_drive.getClosedLoopError());
+		SmartDashboard.putNumber("Drive ClosedLoopError", br_drive.getClosedLoopError());
+		//Displays an error if the drive loop is broken
+		SmartDashboard.putNumber("Drive OutputVoltage", fl_drive.getOutputVoltage());
+		SmartDashboard.putNumber("Drive OutputVoltage", fr_drive.getOutputVoltage());
+		SmartDashboard.putNumber("Drive OutputVoltage", bl_drive.getOutputVoltage());
+		SmartDashboard.putNumber("Drive OutputVoltage", br_drive.getOutputVoltage());
+		//measure the actual voltage the motor receives
+		SmartDashboard.putNumber("Drive OutputCurrent", fl_drive.getOutputCurrent());
+		SmartDashboard.putNumber("Drive OutputCurrent", fr_drive.getOutputCurrent());
+		SmartDashboard.putNumber("Drive OutputCurrent", bl_drive.getOutputCurrent());
+		SmartDashboard.putNumber("Drive OutputCurrent", br_drive.getOutputCurrent());
+		//measures the amperage the motor receives (so we don't burn through the insulation on the wires)
+		SmartDashboard.putNumber("Swiv OutputVoltage", fl_swiv.getOutputVoltage());
+		SmartDashboard.putNumber("Swiv OutputVoltage", fr_swiv.getOutputVoltage());
+		SmartDashboard.putNumber("Swiv OutputVoltage", bl_swiv.getOutputVoltage());
+		SmartDashboard.putNumber("Swiv OutputVoltage", br_swiv.getOutputVoltage());
+		//measures the voltage the Swivel motors receive
+		SmartDashboard.putNumber("Swiv OutputCurrent", fl_swiv.getOutputCurrent());
+		SmartDashboard.putNumber("Swiv OutputCurrent", fr_swiv.getOutputCurrent());
+		SmartDashboard.putNumber("Swiv OutputCurrent", bl_swiv.getOutputCurrent());
+		SmartDashboard.putNumber("Swiv OutputCurrent", br_swiv.getOutputCurrent());
+		//measures the amperage the Swivel motors receive
+    	
     }
 }
