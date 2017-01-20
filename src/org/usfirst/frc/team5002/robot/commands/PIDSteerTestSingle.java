@@ -14,7 +14,7 @@ public class PIDSteerTestSingle extends Command {
 	private SwerveDrive.ModulePosition mod;
 
 	protected void execute(){
-		Robot.drivetrain.setSwervePosition(mod, Robot.oi.getTurnAxis());
+		Robot.drivetrain.setSteerPosition_rev(mod, Robot.oi.getTurnAxis());
 	}
 
 	public PIDSteerTestSingle(SwerveDrive.ModulePosition mod) {
