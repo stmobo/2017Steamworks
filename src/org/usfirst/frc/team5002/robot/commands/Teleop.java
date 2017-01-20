@@ -17,7 +17,7 @@ public class Teleop extends Command {
 	private double speedlimit(double speedIn) {
 		return (Math.abs(speedIn) > maxDriveOutput) ? Math.signum(speedIn)*maxDriveOutput : speedIn;
 	}
-	
+
 	/**
 	 * Given forward, left/right and rotational clockwise speeds return an array of doubles matching:
 	 * WS1 (front right wheel speed command, 0 to +1)
@@ -25,7 +25,7 @@ public class Teleop extends Command {
 	 * WS3 (rear left wheel speed command, 0 to +1)
 	 * WS4 (rear right wheel speed command, 0 to +1)
 	 *
-	 
+
 	 * @param fwd	-1.0 to 1.0, forward to reverse velocity
 	 * @param str	-1.0 to 1.0, left to right velocity
 	 * @param rcw	-1.0 to 1.0, clockwise rotational velocity
@@ -79,7 +79,7 @@ public class Teleop extends Command {
 		double ang_bl = (d==0 && a==0) ? 0.0 : (Math.atan2(a, d) * 180 / Math.PI);
 		double ang_br = (c==0 && a==0) ? 0.0 : (Math.atan2(a, c) * 180 / Math.PI);
 
-		Robot.drivetrain.setSwervePosition(ang_fl, ang_fr, ang_bl, ang_br);
+		Robot.drivetrain.setSteerPosition_deg(ang_fl, ang_fr, ang_bl, ang_br);
 		Robot.drivetrain.setDriveOutput(
 				speedlimit(spd_fl),
 				speedlimit(spd_fr),

@@ -126,7 +126,7 @@ public class SwerveDrive extends Subsystem {
     		br_steer.set(pos);
     		return;
 		default:
-			return
+			return;
     	}
     }
 
@@ -145,7 +145,7 @@ public class SwerveDrive extends Subsystem {
     		br_steer.set(pos/360.0);
     		return;
 		default:
-			return
+			return;
     	}
     }
 
