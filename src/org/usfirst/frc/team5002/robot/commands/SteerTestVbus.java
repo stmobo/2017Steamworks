@@ -14,10 +14,11 @@ public class SteerTestVbus extends Command {
 	private SwerveDrive.ModulePosition mod;
 
 	protected void execute(){
-		Robot.drivetrain.reconfigureSteer_vbus(mod, Robot.oi.getRotationAxis());
+		/* HACK: in lieu of an actual _vbus method, we just call _rev which calls through directly to srx.set */
+		Robot.drivetrain.setSteerPosition_rev(mod, Robot.oi.getTurnAxis());
 	}
 
-	public PIDSteerTestSingle(SwerveDrive.ModulePosition mod) {
+	public SteerTestVbus(SwerveDrive.ModulePosition mod) {
 		requires(Robot.drivetrain);
 		this.mod = mod;
 	}

@@ -14,7 +14,7 @@ public class PIDSteerTestSingle extends Command {
 	private SwerveDrive.ModulePosition mod;
 
 	protected void execute(){
-		Robot.drivetrain.setSwervePosition(mod, 90.0*Robot.oi.getRotationAxis());
+		Robot.drivetrain.setSteerPosition_rev(mod, Robot.oi.getTurnAxis());
 	}
 
 	public PIDSteerTestSingle(SwerveDrive.ModulePosition mod) {
@@ -23,9 +23,7 @@ public class PIDSteerTestSingle extends Command {
 	}
 
 	// Called just before this Command runs the first time
-	protected void initialize() {
-		Robot.drivetrain.reconfigurePID(mod, 20.0, 0, 0);
-	}
+	protected void initialize() {}
 
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
