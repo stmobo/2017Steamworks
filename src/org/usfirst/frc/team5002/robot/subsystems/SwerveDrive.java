@@ -23,26 +23,26 @@ public class SwerveDrive extends Subsystem {
     }
 
     // The actual steer motors...
-    private CANTalon fl_steer;
-    private CANTalon fr_steer;
-    private CANTalon bl_steer;
-    private CANTalon br_steer;
+    public CANTalon fl_steer;
+    public CANTalon fr_steer;
+    public CANTalon bl_steer;
+    public CANTalon br_steer;
 
     // The main drive motors...
-    private CANTalon fl_drive;
-    private CANTalon fr_drive;
-    private CANTalon bl_drive;
-    private CANTalon br_drive;
+    public CANTalon fl_drive;
+    public CANTalon fr_drive;
+    public CANTalon bl_drive;
+    public CANTalon br_drive;
 
-	private static boolean reverse_fl_steer = true;
-	private static boolean reverse_fr_steer = true;
-	private static boolean reverse_bl_steer = false;
-	private static boolean reverse_br_steer = false;
+	public static boolean reverse_fl_steer = true;
+	public static boolean reverse_fr_steer = true;
+	public static boolean reverse_bl_steer = false;
+	public static boolean reverse_br_steer = false;
 
-	private static boolean reverse_fl_drive = false;
-	private static boolean reverse_fr_drive = false;
-	private static boolean reverse_bl_drive = false;
-	private static boolean reverse_br_drive = false;
+	public static boolean reverse_fl_drive = false;
+	public static boolean reverse_fr_drive = false;
+	public static boolean reverse_bl_drive = false;
+	public static boolean reverse_br_drive = false;
 
 	public SwerveDrive() {
     	/* Init steer (swerve? motor-turner?) motors */
