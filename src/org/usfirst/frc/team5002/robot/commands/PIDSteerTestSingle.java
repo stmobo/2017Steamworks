@@ -3,6 +3,8 @@ package org.usfirst.frc.team5002.robot.commands;
 import org.usfirst.frc.team5002.robot.Robot;
 import org.usfirst.frc.team5002.robot.subsystems.SwerveDrive;
 
+import com.ctre.CANTalon;
+
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
