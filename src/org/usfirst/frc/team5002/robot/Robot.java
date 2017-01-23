@@ -36,17 +36,12 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		oi = new OI();
-		
+
 		/* Add PID Test commands. */
 		SmartDashboard.putData("PIDSteerTest-FrontLeft", new PIDSteerTestSingle(SwerveDrive.ModulePosition.FRONT_LEFT));
 		SmartDashboard.putData("PIDSteerTest-FrontRight", new PIDSteerTestSingle(SwerveDrive.ModulePosition.FRONT_RIGHT));
 		SmartDashboard.putData("PIDSteerTest-BackLeft", new PIDSteerTestSingle(SwerveDrive.ModulePosition.BACK_LEFT));
 		SmartDashboard.putData("PIDSteerTest-BackRight", new PIDSteerTestSingle(SwerveDrive.ModulePosition.BACK_RIGHT));
-		
-		SmartDashboard.putData("SteerTestVbus-FrontLeft", new SteerTestVbus(SwerveDrive.ModulePosition.FRONT_LEFT));
-		SmartDashboard.putData("SteerTestVbus-FrontRight", new SteerTestVbus(SwerveDrive.ModulePosition.FRONT_RIGHT));
-		SmartDashboard.putData("SteerTestVbus-BackLeft", new SteerTestVbus(SwerveDrive.ModulePosition.BACK_LEFT));
-		SmartDashboard.putData("SteerTestVbus-BackRight", new SteerTestVbus(SwerveDrive.ModulePosition.BACK_RIGHT));
 	}
 
 	/**
@@ -106,7 +101,7 @@ public class Robot extends IterativeRobot {
 		// this line or comment it out.
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
-		
+
 		Teleop teleCmd = new Teleop();
 		Scheduler.getInstance().add(teleCmd);
 	}
