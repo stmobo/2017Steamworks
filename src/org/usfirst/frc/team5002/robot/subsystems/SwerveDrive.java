@@ -69,35 +69,48 @@ public class SwerveDrive extends Subsystem {
         this.configureDriveMotor(br_drive);
     }
 
-    private void configureSteerMotor(CANTalon srx) {
+    public void configureSteerMotor(CANTalon srx) {
     	srx.changeControlMode(TalonControlMode.Position);
     	srx.setFeedbackDevice(FeedbackDevice.AnalogEncoder);
     	srx.configPotentiometerTurns(1);
 		srx.setProfile(0);
+        srx.setPosition(0);
     	srx.set(0); // Reset to initial position
     }
 
-    /* Testing only! */
-    public void reconfigureSteer_vbus(ModulePosition mod) {
-    	switch(mod) {
-    	case FRONT_LEFT:
-    		configureDriveMotor(fl_steer);
-    		return;
-    	case FRONT_RIGHT:
-    		configureDriveMotor(fr_steer);
-    		return;
-    	case BACK_LEFT:
-    		configureDriveMotor(bl_steer);
-    		return;
-    	case BACK_RIGHT:
-    		configureDriveMotor(br_steer);
-    		return;
-    	}
-    }
-
-    private void configureDriveMotor(CANTalon srx) {
+    public void configureDriveMotor(CANTalon srx) {
     	srx.changeControlMode(TalonControlMode.PercentVbus);
     	srx.set(0); // Reset to initial position
+    }
+
+    public CANTalon getSteerMotor(ModulePosition position) {
+        switch (position) {
+            case FRONT_LEFT:
+                return fl_steer;
+            case FRONT_RIGHT:
+                return fr_steer;
+            case BACK_LEFT:
+                return bl_steer;
+            case BACK_RIGHT:
+                return br_steer;
+            default:
+                return null;
+        }
+    }
+
+    public CANTalon getDriveMotor(ModulePosition position) {
+        switch (position) {
+            case FRONT_LEFT:
+                return fl_drive;
+            case FRONT_RIGHT:
+                return fr_drive;
+            case BACK_LEFT:
+                return bl_drive;
+            case BACK_RIGHT:
+                return br_drive;
+            default:
+                return null;
+        }
     }
 
     public void setDriveOutput(double vbus_fl, double vbus_fr, double vbus_bl, double vbus_br) {
@@ -119,44 +132,6 @@ public class SwerveDrive extends Subsystem {
     	fr_steer.set(pos_fr/360.0 * (this.reverse_fr_steer ? -1 : 1));
     	bl_steer.set(pos_bl/360.0 * (this.reverse_bl_steer ? -1 : 1));
     	br_steer.set(pos_br/360.0 * (this.reverse_br_steer ? -1 : 1));
-    }
-
-    public void setSteerPosition_rev(ModulePosition mod, double pos) {
-    	switch(mod) {
-    	case FRONT_LEFT:
-    		fl_steer.set(pos * (this.reverse_fl_steer ? -1 : 1));
-    		return;
-    	case FRONT_RIGHT:
-    		fr_steer.set(pos * (this.reverse_fr_steer ? -1 : 1));
-    		return;
-    	case BACK_LEFT:
-    		bl_steer.set(pos * (this.reverse_bl_steer ? -1 : 1));
-    		return;
-    	case BACK_RIGHT:
-    		br_steer.set(pos * (this.reverse_br_steer ? -1 : 1));
-    		return;
-		default:
-			return;
-    	}
-    }
-
-	public void setSteerPosition_deg(ModulePosition mod, double pos) {
-    	switch(mod) {
-    	case FRONT_LEFT:
-    		fl_steer.set(pos/360.0 * (this.reverse_fl_steer ? -1 : 1));
-    		return;
-    	case FRONT_RIGHT:
-    		fr_steer.set(pos/360.0 * (this.reverse_fr_steer ? -1 : 1));
-    		return;
-    	case BACK_LEFT:
-    		bl_steer.set(pos/360.0 * (this.reverse_bl_steer ? -1 : 1));
-    		return;
-    	case BACK_RIGHT:
-    		br_steer.set(pos/360.0 * (this.reverse_br_steer ? -1 : 1));
-    		return;
-		default:
-			return;
-    	}
     }
 
     public void initDefaultCommand() {
