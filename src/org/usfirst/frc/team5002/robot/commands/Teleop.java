@@ -47,7 +47,7 @@ public class Teleop extends Command {
 		double c = fwd - rcw * (WIDTH_INCHES / r);
 		double d = fwd + rcw * (WIDTH_INCHES / r);
 
-		System.out.println("r:"+r+", a:"+a+", b:"+b+", c:"+c+", d:"+d);
+		//System.out.println("r:"+r+", a:"+a+", b:"+b+", c:"+c+", d:"+d);
 
 		double maxWs;
 
@@ -63,29 +63,32 @@ public class Teleop extends Command {
 		double spd_br = Math.sqrt(Math.pow(a, 2) + Math.pow(c, 2));
 		maxWs = spd_br > maxWs ? spd_br : maxWs;
 
-		spd_fr = maxWs > 1 ? spd_fr / maxWs : spd_fr;
-		spd_fl = maxWs > 1 ? spd_fl / maxWs : spd_fl;
-		spd_bl = maxWs > 1 ? spd_bl / maxWs : spd_bl;
-		spd_br = maxWs > 1 ? spd_br / maxWs : spd_br;
+		double[] angles = new double[4];
+		double[] speeds = new double[4];
 
-		/*
-		 * WA1 (front right clockwise angle, degrees)
-		 * WA2 (front left clockwise angle, degrees)
-		 * WA3 (rear left clockwise angle, degrees)
-		 * WA4 (rear right clockwise angle, degrees)
-		 */
-		double ang_fr = (c==0 && b==0) ? 0.0 : (Math.atan2(b, c) * 180 / Math.PI);
-		double ang_fl = (d==0 && b==0) ? 0.0 : (Math.atan2(b, d) * 180 / Math.PI);
-		double ang_bl = (d==0 && a==0) ? 0.0 : (Math.atan2(a, d) * 180 / Math.PI);
-		double ang_br = (c==0 && a==0) ? 0.0 : (Math.atan2(a, c) * 180 / Math.PI);
+		speeds[0] = maxWs > 1 ? spd_fr / maxWs : spd_fr;
+		speeds[1] = maxWs > 1 ? spd_fl / maxWs : spd_fl;
+		speeds[2] = maxWs > 1 ? spd_bl / maxWs : spd_bl;
+		speeds[3] = maxWs > 1 ? spd_br / maxWs : spd_br;
 
-		Robot.drivetrain.setSteerPosition_deg(ang_fl, ang_fr, ang_bl, ang_br);
-		Robot.drivetrain.setDriveOutput(
-				speedlimit(spd_fl),
-				speedlimit(spd_fr),
-				speedlimit(spd_bl),
-				speedlimit(spd_br)
-			);
+		angles[0] = (c==0 && b==0) ? 0.0 : (Math.atan2(b, c) * 180 / Math.PI); // front right
+		angles[1] = (d==0 && b==0) ? 0.0 : (Math.atan2(b, d) * 180 / Math.PI); // front left
+		angles[2] = (d==0 && a==0) ? 0.0 : (Math.atan2(a, d) * 180 / Math.PI); // back left
+		angles[3] = (c==0 && a==0) ? 0.0 : (Math.atan2(a, c) * 180 / Math.PI); // back right
+
+		setDrivetrain(angles, speeds);
+	}
+
+	public void setDrivetrain(double[] ang, double[] spd) {
+		Robot.drivetrain.fr_steer.set(ang[0]);
+		Robot.drivetrain.fl_steer.set(ang[1]);
+		Robot.drivetrain.bl_steer.set(ang[2]);
+		Robot.drivetrain.br_steer.set(ang[3]);
+
+		Robot.drivetrain.fr_drive.set(spd[0]);
+		Robot.drivetrain.fl_drive.set(spd[1]);
+		Robot.drivetrain.bl_drive.set(spd[2]);
+		Robot.drivetrain.br_drive.set(spd[3]);
 	}
 
     public Teleop() {
