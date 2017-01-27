@@ -1,6 +1,7 @@
 package org.usfirst.frc.team5002.robot.commands;
 
 import org.usfirst.frc.team5002.robot.Robot;
+import org.usfirst.frc.team5002.robot.OI;
 import org.usfirst.frc.team5002.robot.subsystems.SwerveDrive;
 
 import com.ctre.CANTalon;
@@ -13,6 +14,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * PIDSteerCollective -- Steer all swerve modules collectively.
  */
 public class PIDSteerCollective extends Command {
+	private static final double joystickDeadband = 0.10;
+	private static final double maxDriveOutput = 1.0;
+	
 	protected void execute(){
 		double fwd = (Math.abs(Robot.oi.getForwardAxis()) > joystickDeadband) ? Robot.oi.getForwardAxis() : 0.0;
 		double str = (Math.abs(Robot.oi.getHorizontalAxis()) > joystickDeadband) ? Robot.oi.getHorizontalAxis() : 0.0;

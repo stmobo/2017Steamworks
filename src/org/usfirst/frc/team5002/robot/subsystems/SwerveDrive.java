@@ -57,14 +57,14 @@ public class SwerveDrive extends Subsystem {
     	srx.configPotentiometerTurns(1);
 		srx.setProfile(0);
         //srx.setPosition(0);
-		srx.setMotorInverted(reverse);
+		srx.reverseOutput(reverse);
 		srx.set(0.5); // reset to midpoint
     }
 
-    public void configureDriveMotor(CANTalon srx) {
+    public void configureDriveMotor(CANTalon srx, boolean reverse) {
     	srx.changeControlMode(TalonControlMode.PercentVbus);
     	srx.set(0); // Reset to stopped
-		srx.setMotorInverted(reverse);
+		srx.reverseOutput(reverse);
     }
 
     public void initDefaultCommand() {

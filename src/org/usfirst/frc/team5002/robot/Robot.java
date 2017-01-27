@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team5002.robot.commands.Teleop;
 import org.usfirst.frc.team5002.robot.commands.KillDrivetrain;
 import org.usfirst.frc.team5002.robot.commands.PIDSteerTestSingle;
-import org.usfirst.frc.team5002.robot.commands.SteerTestVbus;
 import org.usfirst.frc.team5002.robot.subsystems.SwerveDrive;
 
 /**
@@ -38,10 +37,10 @@ public class Robot extends IterativeRobot {
 		oi = new OI();
 
 		/* Add PID Test commands. */
-		SmartDashboard.putData("PIDSteerTest-FrontLeft", new PIDSteerTestSingle(Robot.drivetrain.steer_fl));
-		SmartDashboard.putData("PIDSteerTest-FrontRight", new PIDSteerTestSingle(Robot.drivetrain.steer_fr));
-		SmartDashboard.putData("PIDSteerTest-BackLeft", new PIDSteerTestSingle(Robot.drivetrain.steer_bl);
-		SmartDashboard.putData("PIDSteerTest-BackRight", new PIDSteerTestSingle(Robot.drivetrain.steer_br));
+		SmartDashboard.putData("PIDSteerTest-FrontLeft", new PIDSteerTestSingle(drivetrain.fl_steer));
+		SmartDashboard.putData("PIDSteerTest-FrontRight", new PIDSteerTestSingle(drivetrain.fr_steer));
+		SmartDashboard.putData("PIDSteerTest-BackLeft", new PIDSteerTestSingle(drivetrain.bl_steer));
+		SmartDashboard.putData("PIDSteerTest-BackRight", new PIDSteerTestSingle(drivetrain.br_steer));
 	}
 
 	/**
