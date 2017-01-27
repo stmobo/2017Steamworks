@@ -38,10 +38,10 @@ public class Robot extends IterativeRobot {
 		oi = new OI();
 
 		/* Add PID Test commands. */
-		SmartDashboard.putData("PIDSteerTest-FrontLeft", new PIDSteerTestSingle(SwerveDrive.ModulePosition.FRONT_LEFT));
-		SmartDashboard.putData("PIDSteerTest-FrontRight", new PIDSteerTestSingle(SwerveDrive.ModulePosition.FRONT_RIGHT));
-		SmartDashboard.putData("PIDSteerTest-BackLeft", new PIDSteerTestSingle(SwerveDrive.ModulePosition.BACK_LEFT));
-		SmartDashboard.putData("PIDSteerTest-BackRight", new PIDSteerTestSingle(SwerveDrive.ModulePosition.BACK_RIGHT));
+		SmartDashboard.putData("PIDSteerTest-FrontLeft", new PIDSteerTestSingle(Robot.drivetrain.steer_fl));
+		SmartDashboard.putData("PIDSteerTest-FrontRight", new PIDSteerTestSingle(Robot.drivetrain.steer_fr));
+		SmartDashboard.putData("PIDSteerTest-BackLeft", new PIDSteerTestSingle(Robot.drivetrain.steer_bl);
+		SmartDashboard.putData("PIDSteerTest-BackRight", new PIDSteerTestSingle(Robot.drivetrain.steer_br));
 	}
 
 	/**

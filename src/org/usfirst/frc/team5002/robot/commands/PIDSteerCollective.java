@@ -10,18 +10,26 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * PIDSteerTest -- Flips one module's steer motor 180 degrees
+ * PIDSteerCollective -- Steer all swerve modules collectively.
  */
-public class PIDSteerTestSingle extends Command {
-	private CANTalon srx;
-
+public class PIDSteerCollective extends Command {
 	protected void execute(){
-		this.srx.set(Robot.oi.getForwardAxis());
+		double fwd = (Math.abs(Robot.oi.getForwardAxis()) > joystickDeadband) ? Robot.oi.getForwardAxis() : 0.0;
+		double str = (Math.abs(Robot.oi.getHorizontalAxis()) > joystickDeadband) ? Robot.oi.getHorizontalAxis() : 0.0;
+
+		Robot.drivetrain.fr_steer.set(str);
+		Robot.drivetrain.fl_steer.set(str);
+		Robot.drivetrain.br_steer.set(str);
+		Robot.drivetrain.bl_steer.set(str);
+
+		Robot.drivetrain.fr_drive.set(fwd);
+		Robot.drivetrain.fl_drive.set(fwd);
+		Robot.drivetrain.br_drive.set(fwd);
+		Robot.drivetrain.bl_drive.set(fwd);
 	}
 
-	public PIDSteerTestSingle(CANTalon motor) {
+	public PIDSteerCollective() {
 		requires(Robot.drivetrain);
-		this.srx = motor;
 	}
 
 	// Called just before this Command runs the first time
