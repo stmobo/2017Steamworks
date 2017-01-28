@@ -14,35 +14,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * SwerveDrive.java -- swerve drive subsystem
  */
 public class SwerveDrive extends Subsystem {
-
-    public enum ModulePosition {
-      FRONT_LEFT,
-      FRONT_RIGHT,
-      BACK_LEFT,
-      BACK_RIGHT
-    }
-
     // The actual steer motors...
-    private CANTalon fl_steer;
-    private CANTalon fr_steer;
-    private CANTalon bl_steer;
-    private CANTalon br_steer;
+    public CANTalon fl_steer;
+    public CANTalon fr_steer;
+    public CANTalon bl_steer;
+    public CANTalon br_steer;
 
     // The main drive motors...
-    private CANTalon fl_drive;
-    private CANTalon fr_drive;
-    private CANTalon bl_drive;
-    private CANTalon br_drive;
-
-	private static boolean reverse_fl_steer = true;
-	private static boolean reverse_fr_steer = true;
-	private static boolean reverse_bl_steer = false;
-	private static boolean reverse_br_steer = false;
-
-	private static boolean reverse_fl_drive = false;
-	private static boolean reverse_fr_drive = false;
-	private static boolean reverse_bl_drive = false;
-	private static boolean reverse_br_drive = false;
+    public CANTalon fl_drive;
+    public CANTalon fr_drive;
+    public CANTalon bl_drive;
+    public CANTalon br_drive;
 
 	public SwerveDrive() {
     	/* Init steer (swerve? motor-turner?) motors */
@@ -51,10 +33,10 @@ public class SwerveDrive extends Subsystem {
         bl_steer = new CANTalon(RobotMap.bl_steer);
         br_steer = new CANTalon(RobotMap.br_steer);
 
-        this.configureSteerMotor(fl_steer);
-        this.configureSteerMotor(fr_steer);
-        this.configureSteerMotor(bl_steer);
-        this.configureSteerMotor(br_steer);
+		this.configureSteerMotor(fr_steer, false);
+        this.configureSteerMotor(fl_steer, false);
+        this.configureSteerMotor(bl_steer, false);
+        this.configureSteerMotor(br_steer, false);
 
         /* Init drive motors... */
         fl_drive = new CANTalon(RobotMap.fl_drive);
@@ -63,100 +45,26 @@ public class SwerveDrive extends Subsystem {
         br_drive = new CANTalon(RobotMap.br_drive);
 
         /* Set main controls for driving... */
-        this.configureDriveMotor(fl_drive);
-        this.configureDriveMotor(fr_drive);
-        this.configureDriveMotor(bl_drive);
-        this.configureDriveMotor(br_drive);
+        this.configureDriveMotor(fl_drive, false);
+        this.configureDriveMotor(fr_drive, true);
+        this.configureDriveMotor(bl_drive, false);
+        this.configureDriveMotor(br_drive, true);
     }
 
-    private void configureSteerMotor(CANTalon srx) {
+    public void configureSteerMotor(CANTalon srx, boolean reverse) {
     	srx.changeControlMode(TalonControlMode.Position);
     	srx.setFeedbackDevice(FeedbackDevice.AnalogEncoder);
     	srx.configPotentiometerTurns(1);
 		srx.setProfile(0);
-    	srx.set(0); // Reset to initial position
+        //srx.setPosition(0);
+		srx.reverseOutput(reverse);
+		srx.set(0.5); // reset to midpoint
     }
 
-    /* Testing only! */
-    public void reconfigureSteer_vbus(ModulePosition mod) {
-    	switch(mod) {
-    	case FRONT_LEFT:
-    		configureDriveMotor(fl_steer);
-    		return;
-    	case FRONT_RIGHT:
-    		configureDriveMotor(fr_steer);
-    		return;
-    	case BACK_LEFT:
-    		configureDriveMotor(bl_steer);
-    		return;
-    	case BACK_RIGHT:
-    		configureDriveMotor(br_steer);
-    		return;
-    	}
-    }
-
-    private void configureDriveMotor(CANTalon srx) {
+    public void configureDriveMotor(CANTalon srx, boolean reverse) {
     	srx.changeControlMode(TalonControlMode.PercentVbus);
-    	srx.set(0); // Reset to initial position
-    }
-
-    public void setDriveOutput(double vbus_fl, double vbus_fr, double vbus_bl, double vbus_br) {
-    	fl_drive.set(vbus_fl * (this.reverse_fl_drive ? -1 : 1));
-    	fr_drive.set(vbus_fr * (this.reverse_fr_drive ? -1 : 1));
-    	bl_drive.set(vbus_bl * (this.reverse_bl_drive ? -1 : 1));
-    	br_drive.set(vbus_br * (this.reverse_br_drive ? -1 : 1));
-    }
-
-    public void setSteerPosition_rev(double pos_fl, double pos_fr, double pos_bl, double pos_br) {
-    	fl_steer.set(pos_fl * (this.reverse_fl_steer ? -1 : 1));
-    	fr_steer.set(pos_fr * (this.reverse_fr_steer ? -1 : 1));
-    	bl_steer.set(pos_bl * (this.reverse_bl_steer ? -1 : 1));
-    	br_steer.set(pos_br * (this.reverse_br_steer ? -1 : 1));
-    }
-
-	public void setSteerPosition_deg(double pos_fl, double pos_fr, double pos_bl, double pos_br) {
-    	fl_steer.set(pos_fl/360.0 * (this.reverse_fl_steer ? -1 : 1));
-    	fr_steer.set(pos_fr/360.0 * (this.reverse_fr_steer ? -1 : 1));
-    	bl_steer.set(pos_bl/360.0 * (this.reverse_bl_steer ? -1 : 1));
-    	br_steer.set(pos_br/360.0 * (this.reverse_br_steer ? -1 : 1));
-    }
-
-    public void setSteerPosition_rev(ModulePosition mod, double pos) {
-    	switch(mod) {
-    	case FRONT_LEFT:
-    		fl_steer.set(pos * (this.reverse_fl_steer ? -1 : 1));
-    		return;
-    	case FRONT_RIGHT:
-    		fr_steer.set(pos * (this.reverse_fr_steer ? -1 : 1));
-    		return;
-    	case BACK_LEFT:
-    		bl_steer.set(pos * (this.reverse_bl_steer ? -1 : 1));
-    		return;
-    	case BACK_RIGHT:
-    		br_steer.set(pos * (this.reverse_br_steer ? -1 : 1));
-    		return;
-		default:
-			return;
-    	}
-    }
-
-	public void setSteerPosition_deg(ModulePosition mod, double pos) {
-    	switch(mod) {
-    	case FRONT_LEFT:
-    		fl_steer.set(pos/360.0 * (this.reverse_fl_steer ? -1 : 1));
-    		return;
-    	case FRONT_RIGHT:
-    		fr_steer.set(pos/360.0 * (this.reverse_fr_steer ? -1 : 1));
-    		return;
-    	case BACK_LEFT:
-    		bl_steer.set(pos/360.0 * (this.reverse_bl_steer ? -1 : 1));
-    		return;
-    	case BACK_RIGHT:
-    		br_steer.set(pos/360.0 * (this.reverse_br_steer ? -1 : 1));
-    		return;
-		default:
-			return;
-    	}
+    	srx.set(0); // Reset to stopped
+		srx.reverseOutput(reverse);
     }
 
     public void initDefaultCommand() {
