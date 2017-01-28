@@ -8,12 +8,10 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-
-import org.usfirst.frc.team5002.robot.commands.ForwardsAuto;
-
 import org.usfirst.frc.team5002.robot.commands.Teleop;
+import org.usfirst.frc.team5002.robot.commands.KillDrivetrain;
+import org.usfirst.frc.team5002.robot.commands.PIDSteerTestSingle;
 import org.usfirst.frc.team5002.robot.subsystems.SwerveDrive;
-
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -24,11 +22,7 @@ import org.usfirst.frc.team5002.robot.subsystems.SwerveDrive;
  */
 public class Robot extends IterativeRobot {
 
-
-	
-
 	public static final SwerveDrive drivetrain = new SwerveDrive();
-
 	public static OI oi;
 
 	Command autonomousCommand;
@@ -42,10 +36,11 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		oi = new OI();
 
-		chooser.addDefault("Default Auto", new ForwardsAuto());
-		// chooser.addObject("My Auto", new MyAutoCommand());
-		SmartDashboard.putData("Auto mode", chooser);
-
+		/* Add PID Test commands. */
+		SmartDashboard.putData("PIDSteerTest-FrontLeft", new PIDSteerTestSingle(drivetrain.fl_steer));
+		SmartDashboard.putData("PIDSteerTest-FrontRight", new PIDSteerTestSingle(drivetrain.fr_steer));
+		SmartDashboard.putData("PIDSteerTest-BackLeft", new PIDSteerTestSingle(drivetrain.bl_steer));
+		SmartDashboard.putData("PIDSteerTest-BackRight", new PIDSteerTestSingle(drivetrain.br_steer));
 	}
 
 	/**
@@ -76,8 +71,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		autonomousCommand = chooser.getSelected();
-
+		autonomousCommand = new KillDrivetrain();
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
 		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
@@ -106,7 +100,7 @@ public class Robot extends IterativeRobot {
 		// this line or comment it out.
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
-		
+
 		Teleop teleCmd = new Teleop();
 		Scheduler.getInstance().add(teleCmd);
 	}

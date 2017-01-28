@@ -1,93 +1,120 @@
 package org.usfirst.frc.team5002.robot.subsystems;
 
+import org.usfirst.frc.team5002.robot.RobotMap;
 import org.usfirst.frc.team5002.robot.commands.KillDrivetrain;
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.networktables.NetworkTablesJNI;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
+ * @author stmobo @version Last Modified 1/18/17
  * SwerveDrive.java -- swerve drive subsystem
- * Fill in the port numbers to be first!
  */
 public class SwerveDrive extends Subsystem {
-	   
-    // The actual swivel motors...
-    private CANTalon fl_swiv;
-    private CANTalon fr_swiv;
-    private CANTalon bl_swiv;
-    private CANTalon br_swiv;
-    
+    // The actual steer motors...
+    public CANTalon fl_steer;
+    public CANTalon fr_steer;
+    public CANTalon bl_steer;
+    public CANTalon br_steer;
+
     // The main drive motors...
-    private CANTalon fl_drive;
-    private CANTalon fr_drive;
-    private CANTalon bl_drive;
-    private CANTalon br_drive;
-    
-    private void configureSteerMotor(CANTalon srx, double p, double i, double d) {
-    	srx.changeControlMode(TalonControlMode.Position);
-    	srx.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-    	srx.configEncoderCodesPerRev(7); // the encoders on the swivel motors return 7 ticks per revolution
-    	srx.setPID(p, i, d); // TODO: Set these at some point
-    	srx.setPosition(0); // Reset to initial position
-    }
-    
-    private void configureDriveMotor(CANTalon srx) {
-    	srx.changeControlMode(TalonControlMode.PercentVbus);
-    	srx.set(0); // Reset to initial position
-    }
-    
-    public SwerveDrive() {
-    	/* XXX: Change the ports around as necessary! */
-    	
-    	/* Init swivel (swerve? motor-turner?) motors */
-        fl_swiv = new CANTalon(0);
-        fr_swiv = new CANTalon(2);
-        bl_swiv = new CANTalon(4);
-        br_swiv = new CANTalon(6);
-        
-        this.configureSteerMotor(fl_swiv, 0.0, 0.0, 0.0);
-        this.configureSteerMotor(fr_swiv, 0.0, 0.0, 0.0);
-        this.configureSteerMotor(bl_swiv, 0.0, 0.0, 0.0);
-        this.configureSteerMotor(br_swiv, 0.0, 0.0, 0.0);
-        
+    public CANTalon fl_drive;
+    public CANTalon fr_drive;
+    public CANTalon bl_drive;
+    public CANTalon br_drive;
+
+	public SwerveDrive() {
+    	/* Init steer (swerve? motor-turner?) motors */
+        fl_steer = new CANTalon(RobotMap.fl_steer);
+        fr_steer = new CANTalon(RobotMap.fr_steer);
+        bl_steer = new CANTalon(RobotMap.bl_steer);
+        br_steer = new CANTalon(RobotMap.br_steer);
+
+		this.configureSteerMotor(fr_steer, false);
+        this.configureSteerMotor(fl_steer, false);
+        this.configureSteerMotor(bl_steer, false);
+        this.configureSteerMotor(br_steer, false);
+
         /* Init drive motors... */
-        fl_drive = new CANTalon(1);
-        fr_drive = new CANTalon(3);
-        bl_drive = new CANTalon(5);
-        br_drive = new CANTalon(7);
-        
-        /* We chain only the motors on each side together
-         * (to allow for turning) */
-        
+        fl_drive = new CANTalon(RobotMap.fl_drive);
+        fr_drive = new CANTalon(RobotMap.fr_drive);
+        bl_drive = new CANTalon(RobotMap.bl_drive);
+        br_drive = new CANTalon(RobotMap.br_drive);
+
         /* Set main controls for driving... */
-        this.configureDriveMotor(fl_drive);
-        this.configureDriveMotor(fr_drive);
-        this.configureDriveMotor(bl_drive);
-        this.configureDriveMotor(br_drive);
+        this.configureDriveMotor(fl_drive, false);
+        this.configureDriveMotor(fr_drive, true);
+        this.configureDriveMotor(bl_drive, false);
+        this.configureDriveMotor(br_drive, true);
     }
-    
-    /* Handy functions for getting master motor controllers directly. */
-    public CANTalon getLeftController() { return fl_drive; }
-    public CANTalon getRightController() { return fr_drive; }
-    public CANTalon getSwivelController() { return fl_swiv; }
-    
-    public void setDriveOutput(double vbus_fl, double vbus_fr, double vbus_bl, double vbus_br) {
-    	fl_drive.set(vbus_fl);
-    	fr_drive.set(vbus_fr);
-    	bl_drive.set(vbus_bl);
-    	br_drive.set(vbus_br);
+
+    public void configureSteerMotor(CANTalon srx, boolean reverse) {
+    	srx.changeControlMode(TalonControlMode.Position);
+    	srx.setFeedbackDevice(FeedbackDevice.AnalogEncoder);
+    	srx.configPotentiometerTurns(1);
+		srx.setProfile(0);
+        //srx.setPosition(0);
+		srx.reverseOutput(reverse);
+		srx.set(0.5); // reset to midpoint
     }
-    
-    public void setSwervePosition(double pos_fl, double pos_fr, double pos_bl, double pos_br) {
-    	fl_swiv.set(pos_fl);
-    	fr_swiv.set(pos_fr);
-    	br_swiv.set(pos_bl);
-    	br_swiv.set(pos_br);
+
+    public void configureDriveMotor(CANTalon srx, boolean reverse) {
+    	srx.changeControlMode(TalonControlMode.PercentVbus);
+    	srx.set(0); // Reset to stopped
+		srx.reverseOutput(reverse);
     }
-    
+
     public void initDefaultCommand() {
     	this.setDefaultCommand(new KillDrivetrain());
     }
-}
 
+    /*
+     * sends data to the SmartDashboard
+     */
+    public void UpdateSD(){
+    	SmartDashboard.putNumber("SteerFL get", fl_steer.get());
+		SmartDashboard.putNumber("SteerFR get", fr_steer.get());
+		SmartDashboard.putNumber("SteerBL get", bl_steer.get());
+		SmartDashboard.putNumber("SteerBR get", br_steer.get());
+		//necessary to begin collecting data from the motors that control the rotation of the wheels
+		SmartDashboard.putNumber("DriveFL get", fl_drive.get());
+		SmartDashboard.putNumber("DriveFR get", fr_drive.get());
+		SmartDashboard.putNumber("DriveBL get", bl_drive.get());
+		SmartDashboard.putNumber("DriveBR get", br_drive.get());
+		//necessary to begin collecting data from the motors that drive the wheels
+		SmartDashboard.putNumber("DriveFL BusVoltage", fl_drive.getBusVoltage());
+		SmartDashboard.putNumber("DriveFR BusVoltage", fr_drive.getBusVoltage());
+		SmartDashboard.putNumber("DriveBL BusVoltage", bl_drive.getBusVoltage());
+		SmartDashboard.putNumber("DriveBR BusVoltage", br_drive.getBusVoltage());
+		//Measures the voltage distributed to the motors
+		SmartDashboard.putNumber("DriveFL ClosedLoopError", fl_drive.getClosedLoopError());
+		SmartDashboard.putNumber("DriveFR ClosedLoopError", fr_drive.getClosedLoopError());
+		SmartDashboard.putNumber("DriveBL ClosedLoopError", bl_drive.getClosedLoopError());
+		SmartDashboard.putNumber("DriveBR ClosedLoopError", br_drive.getClosedLoopError());
+		//Displays an error if the drive loop is broken
+		SmartDashboard.putNumber("DriveFL OutputVoltage", fl_drive.getOutputVoltage());
+		SmartDashboard.putNumber("DriveFR OutputVoltage", fr_drive.getOutputVoltage());
+		SmartDashboard.putNumber("DriveBL OutputVoltage", bl_drive.getOutputVoltage());
+		SmartDashboard.putNumber("DriveBR OutputVoltage", br_drive.getOutputVoltage());
+		//measure the actual voltage the motor receives
+		SmartDashboard.putNumber("DriveFL OutputCurrent", fl_drive.getOutputCurrent());
+		SmartDashboard.putNumber("DriveFR OutputCurrent", fr_drive.getOutputCurrent());
+		SmartDashboard.putNumber("DriveBL OutputCurrent", bl_drive.getOutputCurrent());
+		SmartDashboard.putNumber("DriveBR OutputCurrent", br_drive.getOutputCurrent());
+		//measures the amperage the motor receives (so we don't burn through the insulation on the wires)
+		SmartDashboard.putNumber("SteerFL OutputVoltage", fl_steer.getOutputVoltage());
+		SmartDashboard.putNumber("SteerFR OutputVoltage", fr_steer.getOutputVoltage());
+		SmartDashboard.putNumber("SteerBL OutputVoltage", bl_steer.getOutputVoltage());
+		SmartDashboard.putNumber("SteerBR OutputVoltage", br_steer.getOutputVoltage());
+		//measures the voltage the steer motors receive
+		SmartDashboard.putNumber("SteerFL OutputCurrent", fl_steer.getOutputCurrent());
+		SmartDashboard.putNumber("SteerFR OutputCurrent", fr_steer.getOutputCurrent());
+		SmartDashboard.putNumber("SteerBL OutputCurrent", bl_steer.getOutputCurrent());
+		SmartDashboard.putNumber("SteerBR OutputCurrent", br_steer.getOutputCurrent());
+		//measures the amperage the steer motors receive
+
+    }
+}

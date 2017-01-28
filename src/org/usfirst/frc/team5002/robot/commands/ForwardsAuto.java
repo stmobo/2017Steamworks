@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public class ForwardsAuto extends Command {
 
     public ForwardsAuto() {
-        //define stuff and junk idk
+    	requires(Robot.drivetrain);	
     }
 
     // Called just before this Command runs the first time
