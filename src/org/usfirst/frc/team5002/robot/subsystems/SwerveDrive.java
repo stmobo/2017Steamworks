@@ -42,7 +42,7 @@ public class SwerveDrive extends Subsystem {
      * BR: 24 / 0.0015  / 350 / 0 / 0    / 15
      */
     
-    public static double[] steer_offsets = {  -0.54*1024, -0.04*1024, -0.35*1024, -0.33*1024  };
+    public static double[] steer_offsets = { -289.0, -49.0, -555.0, 27.0 };
     
 	public SwerveDrive() {
     	/* Init steer (swerve? motor-turner?) motors */
@@ -64,9 +64,9 @@ public class SwerveDrive extends Subsystem {
 
         /* Set main controls for driving... */
         this.configureDriveMotor(fl_drive, false);
-        this.configureDriveMotor(fr_drive, true);
+        this.configureDriveMotor(fr_drive, false);
         this.configureDriveMotor(bl_drive, false);
-        this.configureDriveMotor(br_drive, true);
+        this.configureDriveMotor(br_drive, false);
     }
 
     public void configureSteerMotor(CANTalon srx, boolean reverse) {

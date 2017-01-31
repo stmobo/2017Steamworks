@@ -17,15 +17,15 @@ public class OI {
 	}
 	
 	public double getForwardAxis() {
-		return arcadeStick.getY();//allows the Joystick to command the Robot's forwards and backwards movement
+		return arcadeStick.getRawAxis(1) * -1.0;//allows the Joystick to command the Robot's forwards and backwards movement
 	}
 	
 	public double getHorizontalAxis(){
-		return arcadeStick.getX();//allows the Joystick to command the Robot's side to side movement
+		return arcadeStick.getRawAxis(0) * -1.0;//allows the Joystick to command the Robot's side to side movement
 	}
 	
 	public double getTurnAxis(){
-		return arcadeStick.getZ();//allows the Joystick to command the rotation of the Robot
+		return arcadeStick.getRawAxis(4);//allows the Joystick to command the rotation of the Robot
 	}
 	public void UpdateSD(){
 		Robot.drivetrain.UpdateSD();//sends all the data from SwerveDrive subsystem to the SmartDashboard
