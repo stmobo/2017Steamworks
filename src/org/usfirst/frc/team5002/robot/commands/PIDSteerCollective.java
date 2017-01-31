@@ -17,19 +17,33 @@ public class PIDSteerCollective extends Command {
 	private static final double joystickDeadband = 0.10;
 	private static final double maxDriveOutput = 1.0;
 	
+	private double strRevs = 0;
+	
 	protected void execute(){
+		if(Robot.oi.arcadeStick.getRawButton(1)) {
+			strRevs = Robot.oi.getHorizontalAxis() * 1024.0;
+		}
 		double fwd = (Math.abs(Robot.oi.getForwardAxis()) > joystickDeadband) ? Robot.oi.getForwardAxis() : 0.0;
-		double str = (Math.abs(Robot.oi.getHorizontalAxis()) > joystickDeadband) ? Robot.oi.getHorizontalAxis() : 0.0;
 
-		Robot.drivetrain.fr_steer.set(str);
-		Robot.drivetrain.fl_steer.set(str);
-		Robot.drivetrain.br_steer.set(str);
-		Robot.drivetrain.bl_steer.set(str);
+		Robot.drivetrain.fl_steer.set(strRevs+Robot.drivetrain.steer_offsets[0]);
+		Robot.drivetrain.fr_steer.set(strRevs+Robot.drivetrain.steer_offsets[1]);
+		Robot.drivetrain.bl_steer.set(strRevs+Robot.drivetrain.steer_offsets[2]);
+		Robot.drivetrain.br_steer.set(strRevs+Robot.drivetrain.steer_offsets[3]);
 
+		/*
 		Robot.drivetrain.fr_drive.set(fwd);
 		Robot.drivetrain.fl_drive.set(fwd);
 		Robot.drivetrain.br_drive.set(fwd);
 		Robot.drivetrain.bl_drive.set(fwd);
+		*/
+		
+		SmartDashboard.putNumber("FL-Pos", Robot.drivetrain.fl_steer.getPosition());
+		SmartDashboard.putNumber("FR-Pos", Robot.drivetrain.fr_steer.getPosition());
+		SmartDashboard.putNumber("BL-Pos", Robot.drivetrain.bl_steer.getPosition());
+		SmartDashboard.putNumber("BR-Pos", Robot.drivetrain.br_steer.getPosition());
+		
+		
+		//SmartDashboard.putNumber("Steer Cmd", strRevs);
 	}
 
 	public PIDSteerCollective() {
@@ -38,6 +52,12 @@ public class PIDSteerCollective extends Command {
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
+		/*
+		Robot.drivetrain.fl_steer.setPosition(0);
+		Robot.drivetrain.bl_steer.setPosition(0);
+		Robot.drivetrain.br_steer.setPosition(0);
+		Robot.drivetrain.fr_steer.setPosition(0);
+		*/
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

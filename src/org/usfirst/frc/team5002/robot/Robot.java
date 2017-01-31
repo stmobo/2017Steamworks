@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team5002.robot.commands.Teleop;
 import org.usfirst.frc.team5002.robot.commands.KillDrivetrain;
+import org.usfirst.frc.team5002.robot.commands.PIDSteerCollective;
 import org.usfirst.frc.team5002.robot.commands.PIDSteerTestSingle;
 import org.usfirst.frc.team5002.robot.subsystems.SwerveDrive;
 
@@ -55,6 +56,16 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void disabledPeriodic() {
+		SmartDashboard.putNumber("FL-Pos", Robot.drivetrain.fl_steer.getPosition());
+		SmartDashboard.putNumber("FR-Pos", Robot.drivetrain.fr_steer.getPosition());
+		SmartDashboard.putNumber("BL-Pos", Robot.drivetrain.bl_steer.getPosition());
+		SmartDashboard.putNumber("BR-Pos", Robot.drivetrain.br_steer.getPosition());
+		
+		//Robot.drivetrain.UpdateSDSingle(Robot.drivetrain.fr_steer);
+		//Robot.drivetrain.UpdateSDSingle(Robot.drivetrain.fl_steer);
+		
+		Robot.drivetrain.UpdateSD();
+		
 		Scheduler.getInstance().run();
 	}
 
@@ -101,8 +112,10 @@ public class Robot extends IterativeRobot {
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
 
-		Teleop teleCmd = new Teleop();
-		Scheduler.getInstance().add(teleCmd);
+		//PIDSteerCollective PIDTest = new PIDSteerCollective();
+		Teleop teleopTest = new Teleop();
+		Scheduler.getInstance().add(teleopTest);
+		//Scheduler.getInstance().add(PIDTest);
 	}
 
 	/**
