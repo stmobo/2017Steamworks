@@ -2,6 +2,8 @@ package org.usfirst.frc.team5002.robot.commands;
 
 import org.usfirst.frc.team5002.robot.Robot;
 
+import com.ctre.CANTalon;
+
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -19,7 +21,11 @@ public class KillDrivetrain extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.drivetrain.setDriveOutput(0.0, 0.0, 0.0, 0.0);
+    	Robot.drivetrain.fl_drive.set(0.0);
+    	Robot.drivetrain.fr_drive.set(0.0);
+    	Robot.drivetrain.bl_drive.set(0.0);
+    	Robot.drivetrain.br_drive.set(0.0);
+  
     }
 
     // Make this return true when this Command no longer needs to run execute()

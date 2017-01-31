@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.Joystick;
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
-	private Joystick arcadeStick; //named Joystick
+	public Joystick arcadeStick; //named Joystick
 	
 	public OI(){
 		arcadeStick = new Joystick(0); //gave Joystick a job
