@@ -34,8 +34,9 @@ public class Teleop extends Command {
 	protected void execute(){
 		double fwd = (Math.abs(Robot.oi.getForwardAxis()) > joystickDeadband) ? Robot.oi.getForwardAxis() : 0.0;
 		double str = (Math.abs(Robot.oi.getHorizontalAxis()) > joystickDeadband) ? Robot.oi.getHorizontalAxis() : 0.0;
-		double rcw = (Math.abs(Robot.oi.getTurnAxis()) > joystickDeadband) ? Robot.oi.getTurnAxis() : 0.0;
-
+		//double rcw = 0.0;
+		double rcw = (Math.abs(Robot.oi.getTurnAxis()) > joystickDeadband) ? Robot.oi.getTurnAxis() : 0.0; 
+		
 		if(Math.abs(fwd)>1.0 || Math.abs(str)>1.0 || Math.abs(rcw)>1.0){
 			return;
 		}
@@ -80,14 +81,14 @@ public class Teleop extends Command {
 	}
 
 	public void setDrivetrain(double[] ang, double[] spd) {
-		Robot.drivetrain.fr_steer.set(ang[0]);
-		Robot.drivetrain.fl_steer.set(ang[1]);
-		Robot.drivetrain.bl_steer.set(ang[2]);
-		Robot.drivetrain.br_steer.set(ang[3]);
+		Robot.drivetrain.fr_steer.set(ang[3] * (1024.0 / 360.0) + Robot.drivetrain.steer_offsets[1]);
+		Robot.drivetrain.fl_steer.set(ang[2] * (1024.0 / 360.0) + Robot.drivetrain.steer_offsets[0]);
+		Robot.drivetrain.bl_steer.set(ang[1] * (1024.0 / 360.0) + Robot.drivetrain.steer_offsets[2]);
+		Robot.drivetrain.br_steer.set(ang[0] * (1024.0 / 360.0) + Robot.drivetrain.steer_offsets[3]);
 
 		Robot.drivetrain.fr_drive.set(spd[0]);
-		Robot.drivetrain.fl_drive.set(spd[1]);
-		Robot.drivetrain.bl_drive.set(spd[2]);
+		Robot.drivetrain.fl_drive.set(spd[1] * -1.0);
+		Robot.drivetrain.bl_drive.set(spd[2] * -1.0);
 		Robot.drivetrain.br_drive.set(spd[3]);
 	}
 
