@@ -27,4 +27,12 @@
 
   <import file="${wpilib.ant.dir}/build.xml"/>
 
+  <target name="protobuf">
+      <exec executable="protoc">
+          <arg prefix="-I=" file="${src.dir}" />
+          <arg prefix="--java_out=" file="${src.dir}" />
+          <arg file="${src.dir}/org/usfirst/frc/team5002/robot/replay.proto" />
+      </exec>
+  </target>
+
 </project>
