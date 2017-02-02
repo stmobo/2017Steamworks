@@ -56,15 +56,7 @@ public interface ReplayOrBuilder extends
    * Frequency of state updates, in Hz
    * </pre>
    *
-   * <code>optional double replay_frequency = 2 [default = 30];</code>
-   */
-  boolean hasReplayFrequency();
-  /**
-   * <pre>
-   * Frequency of state updates, in Hz
-   * </pre>
-   *
-   * <code>optional double replay_frequency = 2 [default = 30];</code>
+   * <code>optional double replay_frequency = 2;</code>
    */
   double getReplayFrequency();
 
@@ -73,15 +65,7 @@ public interface ReplayOrBuilder extends
    * Battery level at the beginning of the recording session, in volts.
    * </pre>
    *
-   * <code>optional double replay_battery_level = 3 [default = 12];</code>
+   * <code>optional double battery_voltage = 3;</code>
    */
-  boolean hasReplayBatteryLevel();
-  /**
-   * <pre>
-   * Battery level at the beginning of the recording session, in volts.
-   * </pre>
-   *
-   * <code>optional double replay_battery_level = 3 [default = 12];</code>
-   */
-  double getReplayBatteryLevel();
+  double getBatteryVoltage();
 }

@@ -14,14 +14,6 @@ public interface ControlStateOrBuilder extends
    *
    * <code>optional double forward_axis = 1;</code>
    */
-  boolean hasForwardAxis();
-  /**
-   * <pre>
-   * Forward / backward movement axis.
-   * </pre>
-   *
-   * <code>optional double forward_axis = 1;</code>
-   */
   double getForwardAxis();
 
   /**
@@ -31,24 +23,8 @@ public interface ControlStateOrBuilder extends
    *
    * <code>optional double horizontal_axis = 2;</code>
    */
-  boolean hasHorizontalAxis();
-  /**
-   * <pre>
-   * Left / right strafing axis.
-   * </pre>
-   *
-   * <code>optional double horizontal_axis = 2;</code>
-   */
   double getHorizontalAxis();
 
-  /**
-   * <pre>
-   * CW / CCW rotation axis.
-   * </pre>
-   *
-   * <code>optional double turn_axis = 3;</code>
-   */
-  boolean hasTurnAxis();
   /**
    * <pre>
    * CW / CCW rotation axis.

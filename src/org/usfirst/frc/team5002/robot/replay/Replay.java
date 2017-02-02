@@ -16,14 +16,14 @@ public  final class Replay extends
   }
   private Replay() {
     state_ = java.util.Collections.emptyList();
-    replayFrequency_ = 30D;
-    replayBatteryLevel_ = 12D;
+    replayFrequency_ = 0D;
+    batteryVoltage_ = 0D;
   }
 
   @java.lang.Override
   public final com.google.protobuf.UnknownFieldSet
   getUnknownFields() {
-    return this.unknownFields;
+    return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
   }
   private Replay(
       com.google.protobuf.CodedInputStream input,
@@ -31,8 +31,6 @@ public  final class Replay extends
       throws com.google.protobuf.InvalidProtocolBufferException {
     this();
     int mutable_bitField0_ = 0;
-    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-        com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
       boolean done = false;
       while (!done) {
@@ -42,8 +40,7 @@ public  final class Replay extends
             done = true;
             break;
           default: {
-            if (!parseUnknownField(input, unknownFields,
-                                   extensionRegistry, tag)) {
+            if (!input.skipField(tag)) {
               done = true;
             }
             break;
@@ -54,17 +51,17 @@ public  final class Replay extends
               mutable_bitField0_ |= 0x00000001;
             }
             state_.add(
-                input.readMessage(org.usfirst.frc.team5002.robot.replay.ControlState.PARSER, extensionRegistry));
+                input.readMessage(org.usfirst.frc.team5002.robot.replay.ControlState.parser(), extensionRegistry));
             break;
           }
           case 17: {
-            bitField0_ |= 0x00000001;
+
             replayFrequency_ = input.readDouble();
             break;
           }
           case 25: {
-            bitField0_ |= 0x00000002;
-            replayBatteryLevel_ = input.readDouble();
+
+            batteryVoltage_ = input.readDouble();
             break;
           }
         }
@@ -78,7 +75,6 @@ public  final class Replay extends
       if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
         state_ = java.util.Collections.unmodifiableList(state_);
       }
-      this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
     }
   }
@@ -157,43 +153,23 @@ public  final class Replay extends
    * Frequency of state updates, in Hz
    * </pre>
    *
-   * <code>optional double replay_frequency = 2 [default = 30];</code>
-   */
-  public boolean hasReplayFrequency() {
-    return ((bitField0_ & 0x00000001) == 0x00000001);
-  }
-  /**
-   * <pre>
-   * Frequency of state updates, in Hz
-   * </pre>
-   *
-   * <code>optional double replay_frequency = 2 [default = 30];</code>
+   * <code>optional double replay_frequency = 2;</code>
    */
   public double getReplayFrequency() {
     return replayFrequency_;
   }
 
-  public static final int REPLAY_BATTERY_LEVEL_FIELD_NUMBER = 3;
-  private double replayBatteryLevel_;
+  public static final int BATTERY_VOLTAGE_FIELD_NUMBER = 3;
+  private double batteryVoltage_;
   /**
    * <pre>
    * Battery level at the beginning of the recording session, in volts.
    * </pre>
    *
-   * <code>optional double replay_battery_level = 3 [default = 12];</code>
+   * <code>optional double battery_voltage = 3;</code>
    */
-  public boolean hasReplayBatteryLevel() {
-    return ((bitField0_ & 0x00000002) == 0x00000002);
-  }
-  /**
-   * <pre>
-   * Battery level at the beginning of the recording session, in volts.
-   * </pre>
-   *
-   * <code>optional double replay_battery_level = 3 [default = 12];</code>
-   */
-  public double getReplayBatteryLevel() {
-    return replayBatteryLevel_;
+  public double getBatteryVoltage() {
+    return batteryVoltage_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -211,13 +187,12 @@ public  final class Replay extends
     for (int i = 0; i < state_.size(); i++) {
       output.writeMessage(1, state_.get(i));
     }
-    if (((bitField0_ & 0x00000001) == 0x00000001)) {
+    if (replayFrequency_ != 0D) {
       output.writeDouble(2, replayFrequency_);
     }
-    if (((bitField0_ & 0x00000002) == 0x00000002)) {
-      output.writeDouble(3, replayBatteryLevel_);
+    if (batteryVoltage_ != 0D) {
+      output.writeDouble(3, batteryVoltage_);
     }
-    unknownFields.writeTo(output);
   }
 
   public int getSerializedSize() {
@@ -229,15 +204,14 @@ public  final class Replay extends
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(1, state_.get(i));
     }
-    if (((bitField0_ & 0x00000001) == 0x00000001)) {
+    if (replayFrequency_ != 0D) {
       size += com.google.protobuf.CodedOutputStream
         .computeDoubleSize(2, replayFrequency_);
     }
-    if (((bitField0_ & 0x00000002) == 0x00000002)) {
+    if (batteryVoltage_ != 0D) {
       size += com.google.protobuf.CodedOutputStream
-        .computeDoubleSize(3, replayBatteryLevel_);
+        .computeDoubleSize(3, batteryVoltage_);
     }
-    size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
   }
@@ -256,21 +230,14 @@ public  final class Replay extends
     boolean result = true;
     result = result && getStateList()
         .equals(other.getStateList());
-    result = result && (hasReplayFrequency() == other.hasReplayFrequency());
-    if (hasReplayFrequency()) {
-      result = result && (
-          java.lang.Double.doubleToLongBits(getReplayFrequency())
-          == java.lang.Double.doubleToLongBits(
-              other.getReplayFrequency()));
-    }
-    result = result && (hasReplayBatteryLevel() == other.hasReplayBatteryLevel());
-    if (hasReplayBatteryLevel()) {
-      result = result && (
-          java.lang.Double.doubleToLongBits(getReplayBatteryLevel())
-          == java.lang.Double.doubleToLongBits(
-              other.getReplayBatteryLevel()));
-    }
-    result = result && unknownFields.equals(other.unknownFields);
+    result = result && (
+        java.lang.Double.doubleToLongBits(getReplayFrequency())
+        == java.lang.Double.doubleToLongBits(
+            other.getReplayFrequency()));
+    result = result && (
+        java.lang.Double.doubleToLongBits(getBatteryVoltage())
+        == java.lang.Double.doubleToLongBits(
+            other.getBatteryVoltage()));
     return result;
   }
 
@@ -285,16 +252,12 @@ public  final class Replay extends
       hash = (37 * hash) + STATE_FIELD_NUMBER;
       hash = (53 * hash) + getStateList().hashCode();
     }
-    if (hasReplayFrequency()) {
-      hash = (37 * hash) + REPLAY_FREQUENCY_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          java.lang.Double.doubleToLongBits(getReplayFrequency()));
-    }
-    if (hasReplayBatteryLevel()) {
-      hash = (37 * hash) + REPLAY_BATTERY_LEVEL_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          java.lang.Double.doubleToLongBits(getReplayBatteryLevel()));
-    }
+    hash = (37 * hash) + REPLAY_FREQUENCY_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        java.lang.Double.doubleToLongBits(getReplayFrequency()));
+    hash = (37 * hash) + BATTERY_VOLTAGE_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        java.lang.Double.doubleToLongBits(getBatteryVoltage()));
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -420,10 +383,10 @@ public  final class Replay extends
       } else {
         stateBuilder_.clear();
       }
-      replayFrequency_ = 30D;
-      bitField0_ = (bitField0_ & ~0x00000002);
-      replayBatteryLevel_ = 12D;
-      bitField0_ = (bitField0_ & ~0x00000004);
+      replayFrequency_ = 0D;
+
+      batteryVoltage_ = 0D;
+
       return this;
     }
 
@@ -457,14 +420,8 @@ public  final class Replay extends
       } else {
         result.state_ = stateBuilder_.build();
       }
-      if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-        to_bitField0_ |= 0x00000001;
-      }
       result.replayFrequency_ = replayFrequency_;
-      if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-        to_bitField0_ |= 0x00000002;
-      }
-      result.replayBatteryLevel_ = replayBatteryLevel_;
+      result.batteryVoltage_ = batteryVoltage_;
       result.bitField0_ = to_bitField0_;
       onBuilt();
       return result;
@@ -533,13 +490,12 @@ public  final class Replay extends
           }
         }
       }
-      if (other.hasReplayFrequency()) {
+      if (other.getReplayFrequency() != 0D) {
         setReplayFrequency(other.getReplayFrequency());
       }
-      if (other.hasReplayBatteryLevel()) {
-        setReplayBatteryLevel(other.getReplayBatteryLevel());
+      if (other.getBatteryVoltage() != 0D) {
+        setBatteryVoltage(other.getBatteryVoltage());
       }
-      this.mergeUnknownFields(other.unknownFields);
       onChanged();
       return this;
     }
@@ -879,23 +835,13 @@ public  final class Replay extends
       return stateBuilder_;
     }
 
-    private double replayFrequency_ = 30D;
+    private double replayFrequency_ ;
     /**
      * <pre>
      * Frequency of state updates, in Hz
      * </pre>
      *
-     * <code>optional double replay_frequency = 2 [default = 30];</code>
-     */
-    public boolean hasReplayFrequency() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    /**
-     * <pre>
-     * Frequency of state updates, in Hz
-     * </pre>
-     *
-     * <code>optional double replay_frequency = 2 [default = 30];</code>
+     * <code>optional double replay_frequency = 2;</code>
      */
     public double getReplayFrequency() {
       return replayFrequency_;
@@ -905,10 +851,10 @@ public  final class Replay extends
      * Frequency of state updates, in Hz
      * </pre>
      *
-     * <code>optional double replay_frequency = 2 [default = 30];</code>
+     * <code>optional double replay_frequency = 2;</code>
      */
     public Builder setReplayFrequency(double value) {
-      bitField0_ |= 0x00000002;
+      
       replayFrequency_ = value;
       onChanged();
       return this;
@@ -918,46 +864,36 @@ public  final class Replay extends
      * Frequency of state updates, in Hz
      * </pre>
      *
-     * <code>optional double replay_frequency = 2 [default = 30];</code>
+     * <code>optional double replay_frequency = 2;</code>
      */
     public Builder clearReplayFrequency() {
-      bitField0_ = (bitField0_ & ~0x00000002);
-      replayFrequency_ = 30D;
+      
+      replayFrequency_ = 0D;
       onChanged();
       return this;
     }
 
-    private double replayBatteryLevel_ = 12D;
+    private double batteryVoltage_ ;
     /**
      * <pre>
      * Battery level at the beginning of the recording session, in volts.
      * </pre>
      *
-     * <code>optional double replay_battery_level = 3 [default = 12];</code>
+     * <code>optional double battery_voltage = 3;</code>
      */
-    public boolean hasReplayBatteryLevel() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
+    public double getBatteryVoltage() {
+      return batteryVoltage_;
     }
     /**
      * <pre>
      * Battery level at the beginning of the recording session, in volts.
      * </pre>
      *
-     * <code>optional double replay_battery_level = 3 [default = 12];</code>
+     * <code>optional double battery_voltage = 3;</code>
      */
-    public double getReplayBatteryLevel() {
-      return replayBatteryLevel_;
-    }
-    /**
-     * <pre>
-     * Battery level at the beginning of the recording session, in volts.
-     * </pre>
-     *
-     * <code>optional double replay_battery_level = 3 [default = 12];</code>
-     */
-    public Builder setReplayBatteryLevel(double value) {
-      bitField0_ |= 0x00000004;
-      replayBatteryLevel_ = value;
+    public Builder setBatteryVoltage(double value) {
+      
+      batteryVoltage_ = value;
       onChanged();
       return this;
     }
@@ -966,22 +902,22 @@ public  final class Replay extends
      * Battery level at the beginning of the recording session, in volts.
      * </pre>
      *
-     * <code>optional double replay_battery_level = 3 [default = 12];</code>
+     * <code>optional double battery_voltage = 3;</code>
      */
-    public Builder clearReplayBatteryLevel() {
-      bitField0_ = (bitField0_ & ~0x00000004);
-      replayBatteryLevel_ = 12D;
+    public Builder clearBatteryVoltage() {
+      
+      batteryVoltage_ = 0D;
       onChanged();
       return this;
     }
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return super.setUnknownFields(unknownFields);
+      return this;
     }
 
     public final Builder mergeUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return super.mergeUnknownFields(unknownFields);
+      return this;
     }
 
 
@@ -998,7 +934,7 @@ public  final class Replay extends
     return DEFAULT_INSTANCE;
   }
 
-  @java.lang.Deprecated public static final com.google.protobuf.Parser<Replay>
+  private static final com.google.protobuf.Parser<Replay>
       PARSER = new com.google.protobuf.AbstractParser<Replay>() {
     public Replay parsePartialFrom(
         com.google.protobuf.CodedInputStream input,

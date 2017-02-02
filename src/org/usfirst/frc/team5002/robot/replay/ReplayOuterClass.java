@@ -36,11 +36,11 @@ public final class ReplayOuterClass {
       "\n+org/usfirst/frc/team5002/robot/replay." +
       "proto\022\010team5002\"P\n\014ControlState\022\024\n\014forwa" +
       "rd_axis\030\001 \001(\001\022\027\n\017horizontal_axis\030\002 \001(\001\022\021" +
-      "\n\tturn_axis\030\003 \001(\001\"o\n\006Replay\022%\n\005state\030\001 \003" +
-      "(\0132\026.team5002.ControlState\022\034\n\020replay_fre" +
-      "quency\030\002 \001(\001:\00230\022 \n\024replay_battery_level" +
-      "\030\003 \001(\001:\00212B)\n%org.usfirst.frc.team5002.r" +
-      "obot.replayP\001"
+      "\n\tturn_axis\030\003 \001(\001\"b\n\006Replay\022%\n\005state\030\001 \003" +
+      "(\0132\026.team5002.ControlState\022\030\n\020replay_fre" +
+      "quency\030\002 \001(\001\022\027\n\017battery_voltage\030\003 \001(\001B)\n" +
+      "%org.usfirst.frc.team5002.robot.replayP\001" +
+      "b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -65,7 +65,7 @@ public final class ReplayOuterClass {
     internal_static_team5002_Replay_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_team5002_Replay_descriptor,
-        new java.lang.String[] { "State", "ReplayFrequency", "ReplayBatteryLevel", });
+        new java.lang.String[] { "State", "ReplayFrequency", "BatteryVoltage", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

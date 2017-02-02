@@ -23,7 +23,7 @@ public  final class ControlState extends
   @java.lang.Override
   public final com.google.protobuf.UnknownFieldSet
   getUnknownFields() {
-    return this.unknownFields;
+    return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
   }
   private ControlState(
       com.google.protobuf.CodedInputStream input,
@@ -31,8 +31,6 @@ public  final class ControlState extends
       throws com.google.protobuf.InvalidProtocolBufferException {
     this();
     int mutable_bitField0_ = 0;
-    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-        com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
       boolean done = false;
       while (!done) {
@@ -42,24 +40,23 @@ public  final class ControlState extends
             done = true;
             break;
           default: {
-            if (!parseUnknownField(input, unknownFields,
-                                   extensionRegistry, tag)) {
+            if (!input.skipField(tag)) {
               done = true;
             }
             break;
           }
           case 9: {
-            bitField0_ |= 0x00000001;
+
             forwardAxis_ = input.readDouble();
             break;
           }
           case 17: {
-            bitField0_ |= 0x00000002;
+
             horizontalAxis_ = input.readDouble();
             break;
           }
           case 25: {
-            bitField0_ |= 0x00000004;
+
             turnAxis_ = input.readDouble();
             break;
           }
@@ -71,7 +68,6 @@ public  final class ControlState extends
       throw new com.google.protobuf.InvalidProtocolBufferException(
           e).setUnfinishedMessage(this);
     } finally {
-      this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
     }
   }
@@ -87,19 +83,8 @@ public  final class ControlState extends
             org.usfirst.frc.team5002.robot.replay.ControlState.class, org.usfirst.frc.team5002.robot.replay.ControlState.Builder.class);
   }
 
-  private int bitField0_;
   public static final int FORWARD_AXIS_FIELD_NUMBER = 1;
   private double forwardAxis_;
-  /**
-   * <pre>
-   * Forward / backward movement axis.
-   * </pre>
-   *
-   * <code>optional double forward_axis = 1;</code>
-   */
-  public boolean hasForwardAxis() {
-    return ((bitField0_ & 0x00000001) == 0x00000001);
-  }
   /**
    * <pre>
    * Forward / backward movement axis.
@@ -120,32 +105,12 @@ public  final class ControlState extends
    *
    * <code>optional double horizontal_axis = 2;</code>
    */
-  public boolean hasHorizontalAxis() {
-    return ((bitField0_ & 0x00000002) == 0x00000002);
-  }
-  /**
-   * <pre>
-   * Left / right strafing axis.
-   * </pre>
-   *
-   * <code>optional double horizontal_axis = 2;</code>
-   */
   public double getHorizontalAxis() {
     return horizontalAxis_;
   }
 
   public static final int TURN_AXIS_FIELD_NUMBER = 3;
   private double turnAxis_;
-  /**
-   * <pre>
-   * CW / CCW rotation axis.
-   * </pre>
-   *
-   * <code>optional double turn_axis = 3;</code>
-   */
-  public boolean hasTurnAxis() {
-    return ((bitField0_ & 0x00000004) == 0x00000004);
-  }
   /**
    * <pre>
    * CW / CCW rotation axis.
@@ -169,16 +134,15 @@ public  final class ControlState extends
 
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (((bitField0_ & 0x00000001) == 0x00000001)) {
+    if (forwardAxis_ != 0D) {
       output.writeDouble(1, forwardAxis_);
     }
-    if (((bitField0_ & 0x00000002) == 0x00000002)) {
+    if (horizontalAxis_ != 0D) {
       output.writeDouble(2, horizontalAxis_);
     }
-    if (((bitField0_ & 0x00000004) == 0x00000004)) {
+    if (turnAxis_ != 0D) {
       output.writeDouble(3, turnAxis_);
     }
-    unknownFields.writeTo(output);
   }
 
   public int getSerializedSize() {
@@ -186,19 +150,18 @@ public  final class ControlState extends
     if (size != -1) return size;
 
     size = 0;
-    if (((bitField0_ & 0x00000001) == 0x00000001)) {
+    if (forwardAxis_ != 0D) {
       size += com.google.protobuf.CodedOutputStream
         .computeDoubleSize(1, forwardAxis_);
     }
-    if (((bitField0_ & 0x00000002) == 0x00000002)) {
+    if (horizontalAxis_ != 0D) {
       size += com.google.protobuf.CodedOutputStream
         .computeDoubleSize(2, horizontalAxis_);
     }
-    if (((bitField0_ & 0x00000004) == 0x00000004)) {
+    if (turnAxis_ != 0D) {
       size += com.google.protobuf.CodedOutputStream
         .computeDoubleSize(3, turnAxis_);
     }
-    size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
   }
@@ -215,28 +178,18 @@ public  final class ControlState extends
     org.usfirst.frc.team5002.robot.replay.ControlState other = (org.usfirst.frc.team5002.robot.replay.ControlState) obj;
 
     boolean result = true;
-    result = result && (hasForwardAxis() == other.hasForwardAxis());
-    if (hasForwardAxis()) {
-      result = result && (
-          java.lang.Double.doubleToLongBits(getForwardAxis())
-          == java.lang.Double.doubleToLongBits(
-              other.getForwardAxis()));
-    }
-    result = result && (hasHorizontalAxis() == other.hasHorizontalAxis());
-    if (hasHorizontalAxis()) {
-      result = result && (
-          java.lang.Double.doubleToLongBits(getHorizontalAxis())
-          == java.lang.Double.doubleToLongBits(
-              other.getHorizontalAxis()));
-    }
-    result = result && (hasTurnAxis() == other.hasTurnAxis());
-    if (hasTurnAxis()) {
-      result = result && (
-          java.lang.Double.doubleToLongBits(getTurnAxis())
-          == java.lang.Double.doubleToLongBits(
-              other.getTurnAxis()));
-    }
-    result = result && unknownFields.equals(other.unknownFields);
+    result = result && (
+        java.lang.Double.doubleToLongBits(getForwardAxis())
+        == java.lang.Double.doubleToLongBits(
+            other.getForwardAxis()));
+    result = result && (
+        java.lang.Double.doubleToLongBits(getHorizontalAxis())
+        == java.lang.Double.doubleToLongBits(
+            other.getHorizontalAxis()));
+    result = result && (
+        java.lang.Double.doubleToLongBits(getTurnAxis())
+        == java.lang.Double.doubleToLongBits(
+            other.getTurnAxis()));
     return result;
   }
 
@@ -247,21 +200,15 @@ public  final class ControlState extends
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptorForType().hashCode();
-    if (hasForwardAxis()) {
-      hash = (37 * hash) + FORWARD_AXIS_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          java.lang.Double.doubleToLongBits(getForwardAxis()));
-    }
-    if (hasHorizontalAxis()) {
-      hash = (37 * hash) + HORIZONTAL_AXIS_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          java.lang.Double.doubleToLongBits(getHorizontalAxis()));
-    }
-    if (hasTurnAxis()) {
-      hash = (37 * hash) + TURN_AXIS_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          java.lang.Double.doubleToLongBits(getTurnAxis()));
-    }
+    hash = (37 * hash) + FORWARD_AXIS_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        java.lang.Double.doubleToLongBits(getForwardAxis()));
+    hash = (37 * hash) + HORIZONTAL_AXIS_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        java.lang.Double.doubleToLongBits(getHorizontalAxis()));
+    hash = (37 * hash) + TURN_AXIS_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        java.lang.Double.doubleToLongBits(getTurnAxis()));
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -381,11 +328,11 @@ public  final class ControlState extends
     public Builder clear() {
       super.clear();
       forwardAxis_ = 0D;
-      bitField0_ = (bitField0_ & ~0x00000001);
+
       horizontalAxis_ = 0D;
-      bitField0_ = (bitField0_ & ~0x00000002);
+
       turnAxis_ = 0D;
-      bitField0_ = (bitField0_ & ~0x00000004);
+
       return this;
     }
 
@@ -408,21 +355,9 @@ public  final class ControlState extends
 
     public org.usfirst.frc.team5002.robot.replay.ControlState buildPartial() {
       org.usfirst.frc.team5002.robot.replay.ControlState result = new org.usfirst.frc.team5002.robot.replay.ControlState(this);
-      int from_bitField0_ = bitField0_;
-      int to_bitField0_ = 0;
-      if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-        to_bitField0_ |= 0x00000001;
-      }
       result.forwardAxis_ = forwardAxis_;
-      if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-        to_bitField0_ |= 0x00000002;
-      }
       result.horizontalAxis_ = horizontalAxis_;
-      if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-        to_bitField0_ |= 0x00000004;
-      }
       result.turnAxis_ = turnAxis_;
-      result.bitField0_ = to_bitField0_;
       onBuilt();
       return result;
     }
@@ -464,16 +399,15 @@ public  final class ControlState extends
 
     public Builder mergeFrom(org.usfirst.frc.team5002.robot.replay.ControlState other) {
       if (other == org.usfirst.frc.team5002.robot.replay.ControlState.getDefaultInstance()) return this;
-      if (other.hasForwardAxis()) {
+      if (other.getForwardAxis() != 0D) {
         setForwardAxis(other.getForwardAxis());
       }
-      if (other.hasHorizontalAxis()) {
+      if (other.getHorizontalAxis() != 0D) {
         setHorizontalAxis(other.getHorizontalAxis());
       }
-      if (other.hasTurnAxis()) {
+      if (other.getTurnAxis() != 0D) {
         setTurnAxis(other.getTurnAxis());
       }
-      this.mergeUnknownFields(other.unknownFields);
       onChanged();
       return this;
     }
@@ -499,19 +433,8 @@ public  final class ControlState extends
       }
       return this;
     }
-    private int bitField0_;
 
     private double forwardAxis_ ;
-    /**
-     * <pre>
-     * Forward / backward movement axis.
-     * </pre>
-     *
-     * <code>optional double forward_axis = 1;</code>
-     */
-    public boolean hasForwardAxis() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
     /**
      * <pre>
      * Forward / backward movement axis.
@@ -530,7 +453,7 @@ public  final class ControlState extends
      * <code>optional double forward_axis = 1;</code>
      */
     public Builder setForwardAxis(double value) {
-      bitField0_ |= 0x00000001;
+      
       forwardAxis_ = value;
       onChanged();
       return this;
@@ -543,23 +466,13 @@ public  final class ControlState extends
      * <code>optional double forward_axis = 1;</code>
      */
     public Builder clearForwardAxis() {
-      bitField0_ = (bitField0_ & ~0x00000001);
+      
       forwardAxis_ = 0D;
       onChanged();
       return this;
     }
 
     private double horizontalAxis_ ;
-    /**
-     * <pre>
-     * Left / right strafing axis.
-     * </pre>
-     *
-     * <code>optional double horizontal_axis = 2;</code>
-     */
-    public boolean hasHorizontalAxis() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
     /**
      * <pre>
      * Left / right strafing axis.
@@ -578,7 +491,7 @@ public  final class ControlState extends
      * <code>optional double horizontal_axis = 2;</code>
      */
     public Builder setHorizontalAxis(double value) {
-      bitField0_ |= 0x00000002;
+      
       horizontalAxis_ = value;
       onChanged();
       return this;
@@ -591,23 +504,13 @@ public  final class ControlState extends
      * <code>optional double horizontal_axis = 2;</code>
      */
     public Builder clearHorizontalAxis() {
-      bitField0_ = (bitField0_ & ~0x00000002);
+      
       horizontalAxis_ = 0D;
       onChanged();
       return this;
     }
 
     private double turnAxis_ ;
-    /**
-     * <pre>
-     * CW / CCW rotation axis.
-     * </pre>
-     *
-     * <code>optional double turn_axis = 3;</code>
-     */
-    public boolean hasTurnAxis() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
-    }
     /**
      * <pre>
      * CW / CCW rotation axis.
@@ -626,7 +529,7 @@ public  final class ControlState extends
      * <code>optional double turn_axis = 3;</code>
      */
     public Builder setTurnAxis(double value) {
-      bitField0_ |= 0x00000004;
+      
       turnAxis_ = value;
       onChanged();
       return this;
@@ -639,19 +542,19 @@ public  final class ControlState extends
      * <code>optional double turn_axis = 3;</code>
      */
     public Builder clearTurnAxis() {
-      bitField0_ = (bitField0_ & ~0x00000004);
+      
       turnAxis_ = 0D;
       onChanged();
       return this;
     }
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return super.setUnknownFields(unknownFields);
+      return this;
     }
 
     public final Builder mergeUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return super.mergeUnknownFields(unknownFields);
+      return this;
     }
 
 
@@ -668,7 +571,7 @@ public  final class ControlState extends
     return DEFAULT_INSTANCE;
   }
 
-  @java.lang.Deprecated public static final com.google.protobuf.Parser<ControlState>
+  private static final com.google.protobuf.Parser<ControlState>
       PARSER = new com.google.protobuf.AbstractParser<ControlState>() {
     public ControlState parsePartialFrom(
         com.google.protobuf.CodedInputStream input,

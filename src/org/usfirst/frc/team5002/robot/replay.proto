@@ -1,18 +1,18 @@
-syntax="proto2";
+syntax = "proto3";
 package team5002;
 option java_package="org.usfirst.frc.team5002.robot.replay";
 option java_multiple_files=true;
 
 message ControlState {
-    optional double forward_axis = 1;        // Forward / backward movement axis.
-    optional double horizontal_axis = 2;     // Left / right strafing axis.
-    optional double turn_axis = 3;           // CW / CCW rotation axis.
+    double forward_axis = 1;            // Forward / backward movement axis.
+    double horizontal_axis = 2;         // Left / right strafing axis.
+    double turn_axis = 3;               // CW / CCW rotation axis.
 
     // TODO: add buttons
 }
 
 message Replay {
-    repeated ControlState state = 1;                        // Actual replay data.
-    optional double replay_frequency = 2 [default=30.0];     // Frequency of state updates, in Hz
-    optional double replay_battery_level = 3 [default=12.0];  // Battery level at the beginning of the recording session, in volts.
+    repeated ControlState state = 1;    // Actual replay data.
+    double replay_frequency = 2;        // Frequency of state updates, in Hz
+    double battery_voltage = 3;         // Battery level at the beginning of the recording session, in volts.
 }

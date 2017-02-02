@@ -9,12 +9,11 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import org.usfirst.frc.team5002.robot.commands.*;
 import org.usfirst.frc.team5002.robot.replay.*;
-import org.usfirst.frc.team5002.robot.commands.Teleop;
-import org.usfirst.frc.team5002.robot.commands.KillDrivetrain;
-import org.usfirst.frc.team5002.robot.commands.PIDSteerCollective;
-import org.usfirst.frc.team5002.robot.commands.PIDSteerTestSingle;
 import org.usfirst.frc.team5002.robot.subsystems.SwerveDrive;
+
+import edu.wpi.first.wpilibj.Timer;
 
 import java.io.FileInputStream;
 
@@ -31,14 +30,13 @@ public class Robot extends IterativeRobot {
 	public static OI oi;
 
 	Command autonomousCommand;
-	SendableChooser<Command> chooser = new SendableChooser<>();
+    SendableChooser<String> slotSelector = new SendableChooser<String>();
+    Timer replayTimer = new Timer();
 
-    public double replayFrequency = 30.0;
+    public double replayFrequency = 30.0;   // Hz
 
     // Paths are in UNIX format (forward slashes)
     public String replayDir = "~/"; // stick it in the homedir by default, I'm pretty sure FRCUserProgram.jar runs as lvuser on the RIO
-    public String replayFile = "robot.replay";
-    public String tempReplayFile = "temp.replay";
 
     Timer replayUpdateTimer;
 
@@ -57,9 +55,17 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("PIDSteerTest-BackLeft", new PIDSteerTestSingle(drivetrain.bl_steer));
 		SmartDashboard.putData("PIDSteerTest-BackRight", new PIDSteerTestSingle(drivetrain.br_steer));
 
-		SmartDashboard.putData("Start New Recording", new NewReplay());
-		SmartDashboard.putData("Save Current Recording", new SaveReplay(replayFile));
-		SmartDashboard.putData("Save As Temp", new SaveReplay(tempReplayFile));
+        /* Recording commands. */
+        SmartDashboard.putData("StartRecording", new StartRecording());
+        SmartDashboard.putData("Save-Slot1", new SaveRecording(replayDir + "slot1.replay"));
+        SmartDashboard.putData("Save-Slot2", new SaveRecording(replayDir + "slot2.replay"));
+        SmartDashboard.putData("Save-Slot3", new SaveRecording(replayDir + "slot3.replay"));
+
+        slotSelector.addObject("Slot 1", "Slot 1");
+        slotSelector.addObject("Slot 2", "Slot 2");
+        slotSelector.addObject("Slot 3", "Slot 3");
+
+        replayUpdateTimer = new Timer();
 	}
 
 	/**
@@ -89,26 +95,38 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void autonomousInit() {
-	       // load a replay file:
-           try {
-               Robot.oi.currentReplay = Replay.parseFrom(new FileInputStream(replayFile));
-               Robot.oi.currentReplayIndex = 0;
+		/*
+		 * String autoSelected = SmartDashboard.getString("Auto Selector",
+		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
+		 * = new MyAutoCommand(); break; case "Default Auto": default:
+		 * autonomousCommand = new ExampleCommand(); break; }
+		 */
 
-               replayFrequency = Robot.oi.currentReplay.getReplayFrequency();
-           } catch(Exception e) {
-               e.printStackTrace();
+        String slotSelect = slotSelector.getSelected();
+        switch(slotSelect) {
+            default:
+            case "Slot 1":
+                oi.loadReplayFromFile(replayDir + "slot1.replay");
+                break;
+            case "Slot 2":
+                oi.loadReplayFromFile(replayDir + "slot2.replay");
+                break;
+            case "Slot 3":
+                oi.loadReplayFromFile(replayDir + "slot3.replay");
+                break;
+        }
 
-               Robot.oi.currentReplay = null;
-               Robot.oi.currentState = ControlState.getDefaultInstance();
-           }
+        if(Robot.oi.currentReplay != null) {
+            replayFrequency = Robot.oi.currentReplay.getReplayFrequency();
+        }
+        
+        Robot.oi.currentReplayIndex = 0;
 
-           // Regardless of what happens, make sure to disable joystick input
-           Robot.oi.currentlyReplaying = true;
-           replayUpdateTimer = new Timer();
-           autonomousCommand = new Teleop();
+        replayTimer.start();
+        oi.currentlyReplaying = true;
 
-           replayUpdateTimer.start();
-           Scheduler.getInstance().add(autonomousCommand);
+        autonomousCommand = new Teleop();
+        Scheduler.getInstance().add(autonomousCommand);
 	}
 
 	/**
@@ -116,8 +134,8 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-        if(replayUpdateTimer.hasPeriodPassed(1/replayFrequency)) {
-            Robot.oi.loadNextState();
+        if(replayUpdateTimer.hasPeriodPassed(1/replay_frequency)) {
+            oi.loadStateFromReplay();
         }
 
 		Scheduler.getInstance().run();
@@ -148,8 +166,8 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-        if(replayUpdateTimer.hasPeriodPassed(1/replayFrequency)) {
-            Robot.oi.saveCurrentState();
+        if(replayUpdateTimer.hasPeriodPassed(1/replay_frequency)) {
+            oi.saveStateToReplay();
         }
 
 		Scheduler.getInstance().run();
