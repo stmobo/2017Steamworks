@@ -8,11 +8,11 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import org.usfirst.frc.team5002.robot.commands.Teleop;
-import org.usfirst.frc.team5002.robot.commands.KillDrivetrain;
-import org.usfirst.frc.team5002.robot.commands.PIDSteerCollective;
-import org.usfirst.frc.team5002.robot.commands.PIDSteerTestSingle;
+import org.usfirst.frc.team5002.robot.commands.*;
 import org.usfirst.frc.team5002.robot.subsystems.SwerveDrive;
+import org.usfirst.frc.team5002.robot.replay.*;
+
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -26,8 +26,11 @@ public class Robot extends IterativeRobot {
 	public static final SwerveDrive drivetrain = new SwerveDrive();
 	public static OI oi;
 
+    double replay_frequency = 30.0; // hz
+
 	Command autonomousCommand;
-	SendableChooser<Command> chooser = new SendableChooser<>();
+    SendableChooser<String> slotSelector = new SendableChooser<String>();
+    Timer replayTimer = new Timer();
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -42,6 +45,16 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("PIDSteerTest-FrontRight", new PIDSteerTestSingle(drivetrain.fr_steer));
 		SmartDashboard.putData("PIDSteerTest-BackLeft", new PIDSteerTestSingle(drivetrain.bl_steer));
 		SmartDashboard.putData("PIDSteerTest-BackRight", new PIDSteerTestSingle(drivetrain.br_steer));
+
+        /* Recording commands. */
+        SmartDashboard.putData("StartRecording", new StartRecording());
+        SmartDashboard.putData("Save-Slot1", new SaveRecording("~/slot1.replay"));
+        SmartDashboard.putData("Save-Slot2", new SaveRecording("~/slot2.replay"));
+        SmartDashboard.putData("Save-Slot3", new SaveRecording("~/slot3.replay"));
+
+        slotSelector.addObject("Slot 1", "Slot 1");
+        slotSelector.addObject("Slot 2", "Slot 2");
+        slotSelector.addObject("Slot 3", "Slot 3");
 	}
 
 	/**
@@ -60,12 +73,12 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("FR-Pos", Robot.drivetrain.fr_steer.getPosition());
 		SmartDashboard.putNumber("BL-Pos", Robot.drivetrain.bl_steer.getPosition());
 		SmartDashboard.putNumber("BR-Pos", Robot.drivetrain.br_steer.getPosition());
-		
+
 		//Robot.drivetrain.UpdateSDSingle(Robot.drivetrain.fr_steer);
 		//Robot.drivetrain.UpdateSDSingle(Robot.drivetrain.fl_steer);
-		
+
 		Robot.drivetrain.UpdateSD();
-		
+
 		Scheduler.getInstance().run();
 	}
 
@@ -82,7 +95,6 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		autonomousCommand = new KillDrivetrain();
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
 		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
@@ -90,9 +102,25 @@ public class Robot extends IterativeRobot {
 		 * autonomousCommand = new ExampleCommand(); break; }
 		 */
 
-		// schedule the autonomous command (example)
-		if (autonomousCommand != null)
-			autonomousCommand.start();
+        String slotSelect = slotSelector.getSelected();
+        switch(slotSelect) {
+            default:
+            case "Slot 1":
+                oi.loadReplayFromFile("~/slot1.replay");
+                break;
+            case "Slot 2":
+                oi.loadReplayFromFile("~/slot2.replay");
+                break;
+            case "Slot 3":
+                oi.loadReplayFromFile("~/slot3.replay");
+                break;
+        }
+
+        replayTimer.start();
+        oi.currentlyReplaying = true;
+
+        autonomousCommand = new Teleop();
+        Scheduler.getInstance().add(autonomousCommand);
 	}
 
 	/**
@@ -100,6 +128,10 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
+        if(replayTimer.hasPeriodPassed(1/replay_frequency)) {
+            oi.loadStateFromReplay();
+        }
+
 		Scheduler.getInstance().run();
 	}
 
@@ -123,6 +155,10 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+        if(replayTimer.hasPeriodPassed(1/replay_frequency)) {
+            oi.saveStateToReplay();
+        }
+
 		Scheduler.getInstance().run();
 	}
 
