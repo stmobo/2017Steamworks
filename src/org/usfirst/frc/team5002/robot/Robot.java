@@ -34,7 +34,11 @@ public class Robot extends IterativeRobot {
 	SendableChooser<Command> chooser = new SendableChooser<>();
 
     public double replayFrequency = 30.0;
-    public String replayFile = "test.replay";
+
+    // Paths are in UNIX format (forward slashes)
+    public String replayDir = "~/"; // stick it in the homedir by default, I'm pretty sure FRCUserProgram.jar runs as lvuser on the RIO
+    public String replayFile = "robot.replay";
+    public String tempReplayFile = "temp.replay";
 
     Timer replayUpdateTimer;
 
@@ -52,6 +56,10 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("PIDSteerTest-FrontRight", new PIDSteerTestSingle(drivetrain.fr_steer));
 		SmartDashboard.putData("PIDSteerTest-BackLeft", new PIDSteerTestSingle(drivetrain.bl_steer));
 		SmartDashboard.putData("PIDSteerTest-BackRight", new PIDSteerTestSingle(drivetrain.br_steer));
+
+		SmartDashboard.putData("Start New Recording", new NewReplay());
+		SmartDashboard.putData("Save Current Recording", new SaveReplay(replayFile));
+		SmartDashboard.putData("Save As Temp", new SaveReplay(tempReplayFile));
 	}
 
 	/**
@@ -124,8 +132,10 @@ public class Robot extends IterativeRobot {
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
 
-        replayUpdateTimer.stop();
         oi.currentlyReplaying = false;
+
+        replayUpdateTimer.reset();
+        replayUpdateTimer.start();
 
 		//PIDSteerCollective PIDTest = new PIDSteerCollective();
 		Teleop teleopTest = new Teleop();
@@ -138,6 +148,10 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+        if(replayUpdateTimer.hasPeriodPassed(1/replayFrequency)) {
+            Robot.oi.saveCurrentState();
+        }
+
 		Scheduler.getInstance().run();
 	}
 

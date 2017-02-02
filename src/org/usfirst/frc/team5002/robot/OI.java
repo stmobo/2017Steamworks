@@ -44,6 +44,9 @@ public class OI {
      * Append the current state of the controls to currentRecording.
      */
     public void saveCurrentState() {
+        if(currentRecording == null)
+            return;
+        
         currentRecording.addState(
             ControlState.newBuilder()
                 .setForwardAxis( stickAxisDirect_fwd() )
