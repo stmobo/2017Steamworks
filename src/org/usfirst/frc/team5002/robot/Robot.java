@@ -119,7 +119,7 @@ public class Robot extends IterativeRobot {
         if(Robot.oi.currentReplay != null) {
             replayFrequency = Robot.oi.currentReplay.getReplayFrequency();
         }
-        
+
         Robot.oi.currentReplayIndex = 0;
 
         replayTimer.start();
@@ -134,7 +134,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-        if(replayUpdateTimer.hasPeriodPassed(1/replay_frequency)) {
+        if(replayUpdateTimer.hasPeriodPassed(1/replayFrequency)) {
             oi.loadStateFromReplay();
         }
 
@@ -166,7 +166,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-        if(replayUpdateTimer.hasPeriodPassed(1/replay_frequency)) {
+        if(replayUpdateTimer.hasPeriodPassed(1/replayFrequency)) {
             oi.saveStateToReplay();
         }
 
