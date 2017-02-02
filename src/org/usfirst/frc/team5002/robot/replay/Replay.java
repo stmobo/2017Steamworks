@@ -150,14 +150,14 @@ public  final class Replay extends
     return state_.get(index);
   }
 
-  public static final int REPLAYFREQUENCY_FIELD_NUMBER = 2;
+  public static final int REPLAY_FREQUENCY_FIELD_NUMBER = 2;
   private double replayFrequency_;
   /**
    * <pre>
    * Frequency of state updates, in Hz
    * </pre>
    *
-   * <code>optional double replayFrequency = 2 [default = 30];</code>
+   * <code>optional double replay_frequency = 2 [default = 30];</code>
    */
   public boolean hasReplayFrequency() {
     return ((bitField0_ & 0x00000001) == 0x00000001);
@@ -167,20 +167,20 @@ public  final class Replay extends
    * Frequency of state updates, in Hz
    * </pre>
    *
-   * <code>optional double replayFrequency = 2 [default = 30];</code>
+   * <code>optional double replay_frequency = 2 [default = 30];</code>
    */
   public double getReplayFrequency() {
     return replayFrequency_;
   }
 
-  public static final int REPLAYBATTERYLEVEL_FIELD_NUMBER = 3;
+  public static final int REPLAY_BATTERY_LEVEL_FIELD_NUMBER = 3;
   private double replayBatteryLevel_;
   /**
    * <pre>
    * Battery level at the beginning of the recording session, in volts.
    * </pre>
    *
-   * <code>optional double replayBatteryLevel = 3 [default = 12];</code>
+   * <code>optional double replay_battery_level = 3 [default = 12];</code>
    */
   public boolean hasReplayBatteryLevel() {
     return ((bitField0_ & 0x00000002) == 0x00000002);
@@ -190,7 +190,7 @@ public  final class Replay extends
    * Battery level at the beginning of the recording session, in volts.
    * </pre>
    *
-   * <code>optional double replayBatteryLevel = 3 [default = 12];</code>
+   * <code>optional double replay_battery_level = 3 [default = 12];</code>
    */
   public double getReplayBatteryLevel() {
     return replayBatteryLevel_;
@@ -286,12 +286,12 @@ public  final class Replay extends
       hash = (53 * hash) + getStateList().hashCode();
     }
     if (hasReplayFrequency()) {
-      hash = (37 * hash) + REPLAYFREQUENCY_FIELD_NUMBER;
+      hash = (37 * hash) + REPLAY_FREQUENCY_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           java.lang.Double.doubleToLongBits(getReplayFrequency()));
     }
     if (hasReplayBatteryLevel()) {
-      hash = (37 * hash) + REPLAYBATTERYLEVEL_FIELD_NUMBER;
+      hash = (37 * hash) + REPLAY_BATTERY_LEVEL_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           java.lang.Double.doubleToLongBits(getReplayBatteryLevel()));
     }
@@ -885,7 +885,7 @@ public  final class Replay extends
      * Frequency of state updates, in Hz
      * </pre>
      *
-     * <code>optional double replayFrequency = 2 [default = 30];</code>
+     * <code>optional double replay_frequency = 2 [default = 30];</code>
      */
     public boolean hasReplayFrequency() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
@@ -895,7 +895,7 @@ public  final class Replay extends
      * Frequency of state updates, in Hz
      * </pre>
      *
-     * <code>optional double replayFrequency = 2 [default = 30];</code>
+     * <code>optional double replay_frequency = 2 [default = 30];</code>
      */
     public double getReplayFrequency() {
       return replayFrequency_;
@@ -905,7 +905,7 @@ public  final class Replay extends
      * Frequency of state updates, in Hz
      * </pre>
      *
-     * <code>optional double replayFrequency = 2 [default = 30];</code>
+     * <code>optional double replay_frequency = 2 [default = 30];</code>
      */
     public Builder setReplayFrequency(double value) {
       bitField0_ |= 0x00000002;
@@ -918,7 +918,7 @@ public  final class Replay extends
      * Frequency of state updates, in Hz
      * </pre>
      *
-     * <code>optional double replayFrequency = 2 [default = 30];</code>
+     * <code>optional double replay_frequency = 2 [default = 30];</code>
      */
     public Builder clearReplayFrequency() {
       bitField0_ = (bitField0_ & ~0x00000002);
@@ -933,7 +933,7 @@ public  final class Replay extends
      * Battery level at the beginning of the recording session, in volts.
      * </pre>
      *
-     * <code>optional double replayBatteryLevel = 3 [default = 12];</code>
+     * <code>optional double replay_battery_level = 3 [default = 12];</code>
      */
     public boolean hasReplayBatteryLevel() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
@@ -943,7 +943,7 @@ public  final class Replay extends
      * Battery level at the beginning of the recording session, in volts.
      * </pre>
      *
-     * <code>optional double replayBatteryLevel = 3 [default = 12];</code>
+     * <code>optional double replay_battery_level = 3 [default = 12];</code>
      */
     public double getReplayBatteryLevel() {
       return replayBatteryLevel_;
@@ -953,7 +953,7 @@ public  final class Replay extends
      * Battery level at the beginning of the recording session, in volts.
      * </pre>
      *
-     * <code>optional double replayBatteryLevel = 3 [default = 12];</code>
+     * <code>optional double replay_battery_level = 3 [default = 12];</code>
      */
     public Builder setReplayBatteryLevel(double value) {
       bitField0_ |= 0x00000004;
@@ -966,7 +966,7 @@ public  final class Replay extends
      * Battery level at the beginning of the recording session, in volts.
      * </pre>
      *
-     * <code>optional double replayBatteryLevel = 3 [default = 12];</code>
+     * <code>optional double replay_battery_level = 3 [default = 12];</code>
      */
     public Builder clearReplayBatteryLevel() {
       bitField0_ = (bitField0_ & ~0x00000004);

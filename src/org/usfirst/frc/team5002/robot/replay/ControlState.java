@@ -88,14 +88,14 @@ public  final class ControlState extends
   }
 
   private int bitField0_;
-  public static final int FORWARDAXIS_FIELD_NUMBER = 1;
+  public static final int FORWARD_AXIS_FIELD_NUMBER = 1;
   private double forwardAxis_;
   /**
    * <pre>
    * Forward / backward movement axis.
    * </pre>
    *
-   * <code>optional double forwardAxis = 1;</code>
+   * <code>optional double forward_axis = 1;</code>
    */
   public boolean hasForwardAxis() {
     return ((bitField0_ & 0x00000001) == 0x00000001);
@@ -105,20 +105,20 @@ public  final class ControlState extends
    * Forward / backward movement axis.
    * </pre>
    *
-   * <code>optional double forwardAxis = 1;</code>
+   * <code>optional double forward_axis = 1;</code>
    */
   public double getForwardAxis() {
     return forwardAxis_;
   }
 
-  public static final int HORIZONTALAXIS_FIELD_NUMBER = 2;
+  public static final int HORIZONTAL_AXIS_FIELD_NUMBER = 2;
   private double horizontalAxis_;
   /**
    * <pre>
    * Left / right strafing axis.
    * </pre>
    *
-   * <code>optional double horizontalAxis = 2;</code>
+   * <code>optional double horizontal_axis = 2;</code>
    */
   public boolean hasHorizontalAxis() {
     return ((bitField0_ & 0x00000002) == 0x00000002);
@@ -128,20 +128,20 @@ public  final class ControlState extends
    * Left / right strafing axis.
    * </pre>
    *
-   * <code>optional double horizontalAxis = 2;</code>
+   * <code>optional double horizontal_axis = 2;</code>
    */
   public double getHorizontalAxis() {
     return horizontalAxis_;
   }
 
-  public static final int TURNAXIS_FIELD_NUMBER = 3;
+  public static final int TURN_AXIS_FIELD_NUMBER = 3;
   private double turnAxis_;
   /**
    * <pre>
    * CW / CCW rotation axis.
    * </pre>
    *
-   * <code>optional double turnAxis = 3;</code>
+   * <code>optional double turn_axis = 3;</code>
    */
   public boolean hasTurnAxis() {
     return ((bitField0_ & 0x00000004) == 0x00000004);
@@ -151,7 +151,7 @@ public  final class ControlState extends
    * CW / CCW rotation axis.
    * </pre>
    *
-   * <code>optional double turnAxis = 3;</code>
+   * <code>optional double turn_axis = 3;</code>
    */
   public double getTurnAxis() {
     return turnAxis_;
@@ -248,17 +248,17 @@ public  final class ControlState extends
     int hash = 41;
     hash = (19 * hash) + getDescriptorForType().hashCode();
     if (hasForwardAxis()) {
-      hash = (37 * hash) + FORWARDAXIS_FIELD_NUMBER;
+      hash = (37 * hash) + FORWARD_AXIS_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           java.lang.Double.doubleToLongBits(getForwardAxis()));
     }
     if (hasHorizontalAxis()) {
-      hash = (37 * hash) + HORIZONTALAXIS_FIELD_NUMBER;
+      hash = (37 * hash) + HORIZONTAL_AXIS_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           java.lang.Double.doubleToLongBits(getHorizontalAxis()));
     }
     if (hasTurnAxis()) {
-      hash = (37 * hash) + TURNAXIS_FIELD_NUMBER;
+      hash = (37 * hash) + TURN_AXIS_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           java.lang.Double.doubleToLongBits(getTurnAxis()));
     }
@@ -507,7 +507,7 @@ public  final class ControlState extends
      * Forward / backward movement axis.
      * </pre>
      *
-     * <code>optional double forwardAxis = 1;</code>
+     * <code>optional double forward_axis = 1;</code>
      */
     public boolean hasForwardAxis() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
@@ -517,7 +517,7 @@ public  final class ControlState extends
      * Forward / backward movement axis.
      * </pre>
      *
-     * <code>optional double forwardAxis = 1;</code>
+     * <code>optional double forward_axis = 1;</code>
      */
     public double getForwardAxis() {
       return forwardAxis_;
@@ -527,7 +527,7 @@ public  final class ControlState extends
      * Forward / backward movement axis.
      * </pre>
      *
-     * <code>optional double forwardAxis = 1;</code>
+     * <code>optional double forward_axis = 1;</code>
      */
     public Builder setForwardAxis(double value) {
       bitField0_ |= 0x00000001;
@@ -540,7 +540,7 @@ public  final class ControlState extends
      * Forward / backward movement axis.
      * </pre>
      *
-     * <code>optional double forwardAxis = 1;</code>
+     * <code>optional double forward_axis = 1;</code>
      */
     public Builder clearForwardAxis() {
       bitField0_ = (bitField0_ & ~0x00000001);
@@ -555,7 +555,7 @@ public  final class ControlState extends
      * Left / right strafing axis.
      * </pre>
      *
-     * <code>optional double horizontalAxis = 2;</code>
+     * <code>optional double horizontal_axis = 2;</code>
      */
     public boolean hasHorizontalAxis() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
@@ -565,7 +565,7 @@ public  final class ControlState extends
      * Left / right strafing axis.
      * </pre>
      *
-     * <code>optional double horizontalAxis = 2;</code>
+     * <code>optional double horizontal_axis = 2;</code>
      */
     public double getHorizontalAxis() {
       return horizontalAxis_;
@@ -575,7 +575,7 @@ public  final class ControlState extends
      * Left / right strafing axis.
      * </pre>
      *
-     * <code>optional double horizontalAxis = 2;</code>
+     * <code>optional double horizontal_axis = 2;</code>
      */
     public Builder setHorizontalAxis(double value) {
       bitField0_ |= 0x00000002;
@@ -588,7 +588,7 @@ public  final class ControlState extends
      * Left / right strafing axis.
      * </pre>
      *
-     * <code>optional double horizontalAxis = 2;</code>
+     * <code>optional double horizontal_axis = 2;</code>
      */
     public Builder clearHorizontalAxis() {
       bitField0_ = (bitField0_ & ~0x00000002);
@@ -603,7 +603,7 @@ public  final class ControlState extends
      * CW / CCW rotation axis.
      * </pre>
      *
-     * <code>optional double turnAxis = 3;</code>
+     * <code>optional double turn_axis = 3;</code>
      */
     public boolean hasTurnAxis() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
@@ -613,7 +613,7 @@ public  final class ControlState extends
      * CW / CCW rotation axis.
      * </pre>
      *
-     * <code>optional double turnAxis = 3;</code>
+     * <code>optional double turn_axis = 3;</code>
      */
     public double getTurnAxis() {
       return turnAxis_;
@@ -623,7 +623,7 @@ public  final class ControlState extends
      * CW / CCW rotation axis.
      * </pre>
      *
-     * <code>optional double turnAxis = 3;</code>
+     * <code>optional double turn_axis = 3;</code>
      */
     public Builder setTurnAxis(double value) {
       bitField0_ |= 0x00000004;
@@ -636,7 +636,7 @@ public  final class ControlState extends
      * CW / CCW rotation axis.
      * </pre>
      *
-     * <code>optional double turnAxis = 3;</code>
+     * <code>optional double turn_axis = 3;</code>
      */
     public Builder clearTurnAxis() {
       bitField0_ = (bitField0_ & ~0x00000004);
