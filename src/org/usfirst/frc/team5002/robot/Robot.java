@@ -2,17 +2,21 @@
 package org.usfirst.frc.team5002.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import org.usfirst.frc.team5002.robot.replay.*;
 import org.usfirst.frc.team5002.robot.commands.Teleop;
 import org.usfirst.frc.team5002.robot.commands.KillDrivetrain;
 import org.usfirst.frc.team5002.robot.commands.PIDSteerCollective;
 import org.usfirst.frc.team5002.robot.commands.PIDSteerTestSingle;
 import org.usfirst.frc.team5002.robot.subsystems.SwerveDrive;
+
+import java.io.FileInputStream;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -28,6 +32,12 @@ public class Robot extends IterativeRobot {
 
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
+
+    public double replayFrequency = 30.0;
+    public String replayFile = "test.replay";
+
+    Timer replayUpdateTimer;
+
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -60,39 +70,37 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("FR-Pos", Robot.drivetrain.fr_steer.getPosition());
 		SmartDashboard.putNumber("BL-Pos", Robot.drivetrain.bl_steer.getPosition());
 		SmartDashboard.putNumber("BR-Pos", Robot.drivetrain.br_steer.getPosition());
-		
+
 		//Robot.drivetrain.UpdateSDSingle(Robot.drivetrain.fr_steer);
 		//Robot.drivetrain.UpdateSDSingle(Robot.drivetrain.fl_steer);
-		
+
 		Robot.drivetrain.UpdateSD();
-		
+
 		Scheduler.getInstance().run();
 	}
 
-	/**
-	 * This autonomous (along with the chooser code above) shows how to select
-	 * between different autonomous modes using the dashboard. The sendable
-	 * chooser code works with the Java SmartDashboard. If you prefer the
-	 * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-	 * getString code to get the auto name from the text box below the Gyro
-	 *
-	 * You can add additional auto modes by adding additional commands to the
-	 * chooser code above (like the commented example) or additional comparisons
-	 * to the switch structure below with additional strings & commands.
-	 */
 	@Override
 	public void autonomousInit() {
-		autonomousCommand = new KillDrivetrain();
-		/*
-		 * String autoSelected = SmartDashboard.getString("Auto Selector",
-		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-		 * = new MyAutoCommand(); break; case "Default Auto": default:
-		 * autonomousCommand = new ExampleCommand(); break; }
-		 */
+	       // load a replay file:
+           try {
+               Robot.oi.currentReplay = Replay.parseFrom(new FileInputStream(replayFile));
+               Robot.oi.currentReplayIndex = 0;
 
-		// schedule the autonomous command (example)
-		if (autonomousCommand != null)
-			autonomousCommand.start();
+               replayFrequency = Robot.oi.currentReplay.getReplayFrequency();
+           } catch(Exception e) {
+               e.printStackTrace();
+
+               Robot.oi.currentReplay = null;
+               Robot.oi.currentState = ControlState.getDefaultInstance();
+           }
+
+           // Regardless of what happens, make sure to disable joystick input
+           Robot.oi.currentlyReplaying = true;
+           replayUpdateTimer = new Timer();
+           autonomousCommand = new Teleop();
+
+           replayUpdateTimer.start();
+           Scheduler.getInstance().add(autonomousCommand);
 	}
 
 	/**
@@ -100,6 +108,10 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
+        if(replayUpdateTimer.hasPeriodPassed(1/replayFrequency)) {
+            Robot.oi.loadNextState();
+        }
+
 		Scheduler.getInstance().run();
 	}
 
@@ -111,6 +123,9 @@ public class Robot extends IterativeRobot {
 		// this line or comment it out.
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
+
+        replayUpdateTimer.stop();
+        oi.currentlyReplaying = false;
 
 		//PIDSteerCollective PIDTest = new PIDSteerCollective();
 		Teleop teleopTest = new Teleop();
