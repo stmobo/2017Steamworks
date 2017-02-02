@@ -34,12 +34,13 @@ public final class ReplayOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n+org/usfirst/frc/team5002/robot/replay." +
-      "proto\022\010team5002\"C\n\014ControlState\022\017\n\007fwdAx" +
-      "is\030\001 \001(\001\022\020\n\010sideAxis\030\002 \001(\001\022\020\n\010turnAxis\030\003" +
-      " \001(\001\"m\n\006Replay\022&\n\006states\030\001 \003(\0132\026.team500" +
-      "2.ControlState\022\033\n\017replayFrequency\030\002 \001(\001:" +
-      "\00230\022\036\n\022replayBatteryLevel\030\003 \001(\001:\00212B)\n%o" +
-      "rg.usfirst.frc.team5002.robot.replayP\001"
+      "proto\022\010team5002\"M\n\014ControlState\022\023\n\013forwa" +
+      "rdAxis\030\001 \001(\001\022\026\n\016horizontalAxis\030\002 \001(\001\022\020\n\010" +
+      "turnAxis\030\003 \001(\001\"l\n\006Replay\022%\n\005state\030\001 \003(\0132" +
+      "\026.team5002.ControlState\022\033\n\017replayFrequen" +
+      "cy\030\002 \001(\001:\00230\022\036\n\022replayBatteryLevel\030\003 \001(\001" +
+      ":\00212B)\n%org.usfirst.frc.team5002.robot.r" +
+      "eplayP\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -58,13 +59,13 @@ public final class ReplayOuterClass {
     internal_static_team5002_ControlState_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_team5002_ControlState_descriptor,
-        new java.lang.String[] { "FwdAxis", "SideAxis", "TurnAxis", });
+        new java.lang.String[] { "ForwardAxis", "HorizontalAxis", "TurnAxis", });
     internal_static_team5002_Replay_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_team5002_Replay_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_team5002_Replay_descriptor,
-        new java.lang.String[] { "States", "ReplayFrequency", "ReplayBatteryLevel", });
+        new java.lang.String[] { "State", "ReplayFrequency", "ReplayBatteryLevel", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

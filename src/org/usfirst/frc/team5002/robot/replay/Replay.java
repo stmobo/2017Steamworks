@@ -15,7 +15,7 @@ public  final class Replay extends
     super(builder);
   }
   private Replay() {
-    states_ = java.util.Collections.emptyList();
+    state_ = java.util.Collections.emptyList();
     replayFrequency_ = 30D;
     replayBatteryLevel_ = 12D;
   }
@@ -50,10 +50,10 @@ public  final class Replay extends
           }
           case 10: {
             if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-              states_ = new java.util.ArrayList<org.usfirst.frc.team5002.robot.replay.ControlState>();
+              state_ = new java.util.ArrayList<org.usfirst.frc.team5002.robot.replay.ControlState>();
               mutable_bitField0_ |= 0x00000001;
             }
-            states_.add(
+            state_.add(
                 input.readMessage(org.usfirst.frc.team5002.robot.replay.ControlState.PARSER, extensionRegistry));
             break;
           }
@@ -76,7 +76,7 @@ public  final class Replay extends
           e).setUnfinishedMessage(this);
     } finally {
       if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-        states_ = java.util.Collections.unmodifiableList(states_);
+        state_ = java.util.Collections.unmodifiableList(state_);
       }
       this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
@@ -95,59 +95,59 @@ public  final class Replay extends
   }
 
   private int bitField0_;
-  public static final int STATES_FIELD_NUMBER = 1;
-  private java.util.List<org.usfirst.frc.team5002.robot.replay.ControlState> states_;
+  public static final int STATE_FIELD_NUMBER = 1;
+  private java.util.List<org.usfirst.frc.team5002.robot.replay.ControlState> state_;
   /**
    * <pre>
    * Actual replay data.
    * </pre>
    *
-   * <code>repeated .team5002.ControlState states = 1;</code>
+   * <code>repeated .team5002.ControlState state = 1;</code>
    */
-  public java.util.List<org.usfirst.frc.team5002.robot.replay.ControlState> getStatesList() {
-    return states_;
+  public java.util.List<org.usfirst.frc.team5002.robot.replay.ControlState> getStateList() {
+    return state_;
   }
   /**
    * <pre>
    * Actual replay data.
    * </pre>
    *
-   * <code>repeated .team5002.ControlState states = 1;</code>
+   * <code>repeated .team5002.ControlState state = 1;</code>
    */
   public java.util.List<? extends org.usfirst.frc.team5002.robot.replay.ControlStateOrBuilder> 
-      getStatesOrBuilderList() {
-    return states_;
+      getStateOrBuilderList() {
+    return state_;
   }
   /**
    * <pre>
    * Actual replay data.
    * </pre>
    *
-   * <code>repeated .team5002.ControlState states = 1;</code>
+   * <code>repeated .team5002.ControlState state = 1;</code>
    */
-  public int getStatesCount() {
-    return states_.size();
+  public int getStateCount() {
+    return state_.size();
   }
   /**
    * <pre>
    * Actual replay data.
    * </pre>
    *
-   * <code>repeated .team5002.ControlState states = 1;</code>
+   * <code>repeated .team5002.ControlState state = 1;</code>
    */
-  public org.usfirst.frc.team5002.robot.replay.ControlState getStates(int index) {
-    return states_.get(index);
+  public org.usfirst.frc.team5002.robot.replay.ControlState getState(int index) {
+    return state_.get(index);
   }
   /**
    * <pre>
    * Actual replay data.
    * </pre>
    *
-   * <code>repeated .team5002.ControlState states = 1;</code>
+   * <code>repeated .team5002.ControlState state = 1;</code>
    */
-  public org.usfirst.frc.team5002.robot.replay.ControlStateOrBuilder getStatesOrBuilder(
+  public org.usfirst.frc.team5002.robot.replay.ControlStateOrBuilder getStateOrBuilder(
       int index) {
-    return states_.get(index);
+    return state_.get(index);
   }
 
   public static final int REPLAYFREQUENCY_FIELD_NUMBER = 2;
@@ -208,8 +208,8 @@ public  final class Replay extends
 
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    for (int i = 0; i < states_.size(); i++) {
-      output.writeMessage(1, states_.get(i));
+    for (int i = 0; i < state_.size(); i++) {
+      output.writeMessage(1, state_.get(i));
     }
     if (((bitField0_ & 0x00000001) == 0x00000001)) {
       output.writeDouble(2, replayFrequency_);
@@ -225,9 +225,9 @@ public  final class Replay extends
     if (size != -1) return size;
 
     size = 0;
-    for (int i = 0; i < states_.size(); i++) {
+    for (int i = 0; i < state_.size(); i++) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(1, states_.get(i));
+        .computeMessageSize(1, state_.get(i));
     }
     if (((bitField0_ & 0x00000001) == 0x00000001)) {
       size += com.google.protobuf.CodedOutputStream
@@ -254,8 +254,8 @@ public  final class Replay extends
     org.usfirst.frc.team5002.robot.replay.Replay other = (org.usfirst.frc.team5002.robot.replay.Replay) obj;
 
     boolean result = true;
-    result = result && getStatesList()
-        .equals(other.getStatesList());
+    result = result && getStateList()
+        .equals(other.getStateList());
     result = result && (hasReplayFrequency() == other.hasReplayFrequency());
     if (hasReplayFrequency()) {
       result = result && (
@@ -281,9 +281,9 @@ public  final class Replay extends
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptorForType().hashCode();
-    if (getStatesCount() > 0) {
-      hash = (37 * hash) + STATES_FIELD_NUMBER;
-      hash = (53 * hash) + getStatesList().hashCode();
+    if (getStateCount() > 0) {
+      hash = (37 * hash) + STATE_FIELD_NUMBER;
+      hash = (53 * hash) + getStateList().hashCode();
     }
     if (hasReplayFrequency()) {
       hash = (37 * hash) + REPLAYFREQUENCY_FIELD_NUMBER;
@@ -409,16 +409,16 @@ public  final class Replay extends
     private void maybeForceBuilderInitialization() {
       if (com.google.protobuf.GeneratedMessageV3
               .alwaysUseFieldBuilders) {
-        getStatesFieldBuilder();
+        getStateFieldBuilder();
       }
     }
     public Builder clear() {
       super.clear();
-      if (statesBuilder_ == null) {
-        states_ = java.util.Collections.emptyList();
+      if (stateBuilder_ == null) {
+        state_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00000001);
       } else {
-        statesBuilder_.clear();
+        stateBuilder_.clear();
       }
       replayFrequency_ = 30D;
       bitField0_ = (bitField0_ & ~0x00000002);
@@ -448,14 +448,14 @@ public  final class Replay extends
       org.usfirst.frc.team5002.robot.replay.Replay result = new org.usfirst.frc.team5002.robot.replay.Replay(this);
       int from_bitField0_ = bitField0_;
       int to_bitField0_ = 0;
-      if (statesBuilder_ == null) {
+      if (stateBuilder_ == null) {
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
-          states_ = java.util.Collections.unmodifiableList(states_);
+          state_ = java.util.Collections.unmodifiableList(state_);
           bitField0_ = (bitField0_ & ~0x00000001);
         }
-        result.states_ = states_;
+        result.state_ = state_;
       } else {
-        result.states_ = statesBuilder_.build();
+        result.state_ = stateBuilder_.build();
       }
       if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
         to_bitField0_ |= 0x00000001;
@@ -507,29 +507,29 @@ public  final class Replay extends
 
     public Builder mergeFrom(org.usfirst.frc.team5002.robot.replay.Replay other) {
       if (other == org.usfirst.frc.team5002.robot.replay.Replay.getDefaultInstance()) return this;
-      if (statesBuilder_ == null) {
-        if (!other.states_.isEmpty()) {
-          if (states_.isEmpty()) {
-            states_ = other.states_;
+      if (stateBuilder_ == null) {
+        if (!other.state_.isEmpty()) {
+          if (state_.isEmpty()) {
+            state_ = other.state_;
             bitField0_ = (bitField0_ & ~0x00000001);
           } else {
-            ensureStatesIsMutable();
-            states_.addAll(other.states_);
+            ensureStateIsMutable();
+            state_.addAll(other.state_);
           }
           onChanged();
         }
       } else {
-        if (!other.states_.isEmpty()) {
-          if (statesBuilder_.isEmpty()) {
-            statesBuilder_.dispose();
-            statesBuilder_ = null;
-            states_ = other.states_;
+        if (!other.state_.isEmpty()) {
+          if (stateBuilder_.isEmpty()) {
+            stateBuilder_.dispose();
+            stateBuilder_ = null;
+            state_ = other.state_;
             bitField0_ = (bitField0_ & ~0x00000001);
-            statesBuilder_ = 
+            stateBuilder_ = 
               com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                 getStatesFieldBuilder() : null;
+                 getStateFieldBuilder() : null;
           } else {
-            statesBuilder_.addAllMessages(other.states_);
+            stateBuilder_.addAllMessages(other.state_);
           }
         }
       }
@@ -567,30 +567,30 @@ public  final class Replay extends
     }
     private int bitField0_;
 
-    private java.util.List<org.usfirst.frc.team5002.robot.replay.ControlState> states_ =
+    private java.util.List<org.usfirst.frc.team5002.robot.replay.ControlState> state_ =
       java.util.Collections.emptyList();
-    private void ensureStatesIsMutable() {
+    private void ensureStateIsMutable() {
       if (!((bitField0_ & 0x00000001) == 0x00000001)) {
-        states_ = new java.util.ArrayList<org.usfirst.frc.team5002.robot.replay.ControlState>(states_);
+        state_ = new java.util.ArrayList<org.usfirst.frc.team5002.robot.replay.ControlState>(state_);
         bitField0_ |= 0x00000001;
        }
     }
 
     private com.google.protobuf.RepeatedFieldBuilderV3<
-        org.usfirst.frc.team5002.robot.replay.ControlState, org.usfirst.frc.team5002.robot.replay.ControlState.Builder, org.usfirst.frc.team5002.robot.replay.ControlStateOrBuilder> statesBuilder_;
+        org.usfirst.frc.team5002.robot.replay.ControlState, org.usfirst.frc.team5002.robot.replay.ControlState.Builder, org.usfirst.frc.team5002.robot.replay.ControlStateOrBuilder> stateBuilder_;
 
     /**
      * <pre>
      * Actual replay data.
      * </pre>
      *
-     * <code>repeated .team5002.ControlState states = 1;</code>
+     * <code>repeated .team5002.ControlState state = 1;</code>
      */
-    public java.util.List<org.usfirst.frc.team5002.robot.replay.ControlState> getStatesList() {
-      if (statesBuilder_ == null) {
-        return java.util.Collections.unmodifiableList(states_);
+    public java.util.List<org.usfirst.frc.team5002.robot.replay.ControlState> getStateList() {
+      if (stateBuilder_ == null) {
+        return java.util.Collections.unmodifiableList(state_);
       } else {
-        return statesBuilder_.getMessageList();
+        return stateBuilder_.getMessageList();
       }
     }
     /**
@@ -598,13 +598,13 @@ public  final class Replay extends
      * Actual replay data.
      * </pre>
      *
-     * <code>repeated .team5002.ControlState states = 1;</code>
+     * <code>repeated .team5002.ControlState state = 1;</code>
      */
-    public int getStatesCount() {
-      if (statesBuilder_ == null) {
-        return states_.size();
+    public int getStateCount() {
+      if (stateBuilder_ == null) {
+        return state_.size();
       } else {
-        return statesBuilder_.getCount();
+        return stateBuilder_.getCount();
       }
     }
     /**
@@ -612,13 +612,13 @@ public  final class Replay extends
      * Actual replay data.
      * </pre>
      *
-     * <code>repeated .team5002.ControlState states = 1;</code>
+     * <code>repeated .team5002.ControlState state = 1;</code>
      */
-    public org.usfirst.frc.team5002.robot.replay.ControlState getStates(int index) {
-      if (statesBuilder_ == null) {
-        return states_.get(index);
+    public org.usfirst.frc.team5002.robot.replay.ControlState getState(int index) {
+      if (stateBuilder_ == null) {
+        return state_.get(index);
       } else {
-        return statesBuilder_.getMessage(index);
+        return stateBuilder_.getMessage(index);
       }
     }
     /**
@@ -626,19 +626,19 @@ public  final class Replay extends
      * Actual replay data.
      * </pre>
      *
-     * <code>repeated .team5002.ControlState states = 1;</code>
+     * <code>repeated .team5002.ControlState state = 1;</code>
      */
-    public Builder setStates(
+    public Builder setState(
         int index, org.usfirst.frc.team5002.robot.replay.ControlState value) {
-      if (statesBuilder_ == null) {
+      if (stateBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
-        ensureStatesIsMutable();
-        states_.set(index, value);
+        ensureStateIsMutable();
+        state_.set(index, value);
         onChanged();
       } else {
-        statesBuilder_.setMessage(index, value);
+        stateBuilder_.setMessage(index, value);
       }
       return this;
     }
@@ -647,16 +647,16 @@ public  final class Replay extends
      * Actual replay data.
      * </pre>
      *
-     * <code>repeated .team5002.ControlState states = 1;</code>
+     * <code>repeated .team5002.ControlState state = 1;</code>
      */
-    public Builder setStates(
+    public Builder setState(
         int index, org.usfirst.frc.team5002.robot.replay.ControlState.Builder builderForValue) {
-      if (statesBuilder_ == null) {
-        ensureStatesIsMutable();
-        states_.set(index, builderForValue.build());
+      if (stateBuilder_ == null) {
+        ensureStateIsMutable();
+        state_.set(index, builderForValue.build());
         onChanged();
       } else {
-        statesBuilder_.setMessage(index, builderForValue.build());
+        stateBuilder_.setMessage(index, builderForValue.build());
       }
       return this;
     }
@@ -665,18 +665,18 @@ public  final class Replay extends
      * Actual replay data.
      * </pre>
      *
-     * <code>repeated .team5002.ControlState states = 1;</code>
+     * <code>repeated .team5002.ControlState state = 1;</code>
      */
-    public Builder addStates(org.usfirst.frc.team5002.robot.replay.ControlState value) {
-      if (statesBuilder_ == null) {
+    public Builder addState(org.usfirst.frc.team5002.robot.replay.ControlState value) {
+      if (stateBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
-        ensureStatesIsMutable();
-        states_.add(value);
+        ensureStateIsMutable();
+        state_.add(value);
         onChanged();
       } else {
-        statesBuilder_.addMessage(value);
+        stateBuilder_.addMessage(value);
       }
       return this;
     }
@@ -685,19 +685,19 @@ public  final class Replay extends
      * Actual replay data.
      * </pre>
      *
-     * <code>repeated .team5002.ControlState states = 1;</code>
+     * <code>repeated .team5002.ControlState state = 1;</code>
      */
-    public Builder addStates(
+    public Builder addState(
         int index, org.usfirst.frc.team5002.robot.replay.ControlState value) {
-      if (statesBuilder_ == null) {
+      if (stateBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
-        ensureStatesIsMutable();
-        states_.add(index, value);
+        ensureStateIsMutable();
+        state_.add(index, value);
         onChanged();
       } else {
-        statesBuilder_.addMessage(index, value);
+        stateBuilder_.addMessage(index, value);
       }
       return this;
     }
@@ -706,16 +706,16 @@ public  final class Replay extends
      * Actual replay data.
      * </pre>
      *
-     * <code>repeated .team5002.ControlState states = 1;</code>
+     * <code>repeated .team5002.ControlState state = 1;</code>
      */
-    public Builder addStates(
+    public Builder addState(
         org.usfirst.frc.team5002.robot.replay.ControlState.Builder builderForValue) {
-      if (statesBuilder_ == null) {
-        ensureStatesIsMutable();
-        states_.add(builderForValue.build());
+      if (stateBuilder_ == null) {
+        ensureStateIsMutable();
+        state_.add(builderForValue.build());
         onChanged();
       } else {
-        statesBuilder_.addMessage(builderForValue.build());
+        stateBuilder_.addMessage(builderForValue.build());
       }
       return this;
     }
@@ -724,16 +724,16 @@ public  final class Replay extends
      * Actual replay data.
      * </pre>
      *
-     * <code>repeated .team5002.ControlState states = 1;</code>
+     * <code>repeated .team5002.ControlState state = 1;</code>
      */
-    public Builder addStates(
+    public Builder addState(
         int index, org.usfirst.frc.team5002.robot.replay.ControlState.Builder builderForValue) {
-      if (statesBuilder_ == null) {
-        ensureStatesIsMutable();
-        states_.add(index, builderForValue.build());
+      if (stateBuilder_ == null) {
+        ensureStateIsMutable();
+        state_.add(index, builderForValue.build());
         onChanged();
       } else {
-        statesBuilder_.addMessage(index, builderForValue.build());
+        stateBuilder_.addMessage(index, builderForValue.build());
       }
       return this;
     }
@@ -742,17 +742,17 @@ public  final class Replay extends
      * Actual replay data.
      * </pre>
      *
-     * <code>repeated .team5002.ControlState states = 1;</code>
+     * <code>repeated .team5002.ControlState state = 1;</code>
      */
-    public Builder addAllStates(
+    public Builder addAllState(
         java.lang.Iterable<? extends org.usfirst.frc.team5002.robot.replay.ControlState> values) {
-      if (statesBuilder_ == null) {
-        ensureStatesIsMutable();
+      if (stateBuilder_ == null) {
+        ensureStateIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
-            values, states_);
+            values, state_);
         onChanged();
       } else {
-        statesBuilder_.addAllMessages(values);
+        stateBuilder_.addAllMessages(values);
       }
       return this;
     }
@@ -761,15 +761,15 @@ public  final class Replay extends
      * Actual replay data.
      * </pre>
      *
-     * <code>repeated .team5002.ControlState states = 1;</code>
+     * <code>repeated .team5002.ControlState state = 1;</code>
      */
-    public Builder clearStates() {
-      if (statesBuilder_ == null) {
-        states_ = java.util.Collections.emptyList();
+    public Builder clearState() {
+      if (stateBuilder_ == null) {
+        state_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00000001);
         onChanged();
       } else {
-        statesBuilder_.clear();
+        stateBuilder_.clear();
       }
       return this;
     }
@@ -778,15 +778,15 @@ public  final class Replay extends
      * Actual replay data.
      * </pre>
      *
-     * <code>repeated .team5002.ControlState states = 1;</code>
+     * <code>repeated .team5002.ControlState state = 1;</code>
      */
-    public Builder removeStates(int index) {
-      if (statesBuilder_ == null) {
-        ensureStatesIsMutable();
-        states_.remove(index);
+    public Builder removeState(int index) {
+      if (stateBuilder_ == null) {
+        ensureStateIsMutable();
+        state_.remove(index);
         onChanged();
       } else {
-        statesBuilder_.remove(index);
+        stateBuilder_.remove(index);
       }
       return this;
     }
@@ -795,24 +795,24 @@ public  final class Replay extends
      * Actual replay data.
      * </pre>
      *
-     * <code>repeated .team5002.ControlState states = 1;</code>
+     * <code>repeated .team5002.ControlState state = 1;</code>
      */
-    public org.usfirst.frc.team5002.robot.replay.ControlState.Builder getStatesBuilder(
+    public org.usfirst.frc.team5002.robot.replay.ControlState.Builder getStateBuilder(
         int index) {
-      return getStatesFieldBuilder().getBuilder(index);
+      return getStateFieldBuilder().getBuilder(index);
     }
     /**
      * <pre>
      * Actual replay data.
      * </pre>
      *
-     * <code>repeated .team5002.ControlState states = 1;</code>
+     * <code>repeated .team5002.ControlState state = 1;</code>
      */
-    public org.usfirst.frc.team5002.robot.replay.ControlStateOrBuilder getStatesOrBuilder(
+    public org.usfirst.frc.team5002.robot.replay.ControlStateOrBuilder getStateOrBuilder(
         int index) {
-      if (statesBuilder_ == null) {
-        return states_.get(index);  } else {
-        return statesBuilder_.getMessageOrBuilder(index);
+      if (stateBuilder_ == null) {
+        return state_.get(index);  } else {
+        return stateBuilder_.getMessageOrBuilder(index);
       }
     }
     /**
@@ -820,14 +820,14 @@ public  final class Replay extends
      * Actual replay data.
      * </pre>
      *
-     * <code>repeated .team5002.ControlState states = 1;</code>
+     * <code>repeated .team5002.ControlState state = 1;</code>
      */
     public java.util.List<? extends org.usfirst.frc.team5002.robot.replay.ControlStateOrBuilder> 
-         getStatesOrBuilderList() {
-      if (statesBuilder_ != null) {
-        return statesBuilder_.getMessageOrBuilderList();
+         getStateOrBuilderList() {
+      if (stateBuilder_ != null) {
+        return stateBuilder_.getMessageOrBuilderList();
       } else {
-        return java.util.Collections.unmodifiableList(states_);
+        return java.util.Collections.unmodifiableList(state_);
       }
     }
     /**
@@ -835,10 +835,10 @@ public  final class Replay extends
      * Actual replay data.
      * </pre>
      *
-     * <code>repeated .team5002.ControlState states = 1;</code>
+     * <code>repeated .team5002.ControlState state = 1;</code>
      */
-    public org.usfirst.frc.team5002.robot.replay.ControlState.Builder addStatesBuilder() {
-      return getStatesFieldBuilder().addBuilder(
+    public org.usfirst.frc.team5002.robot.replay.ControlState.Builder addStateBuilder() {
+      return getStateFieldBuilder().addBuilder(
           org.usfirst.frc.team5002.robot.replay.ControlState.getDefaultInstance());
     }
     /**
@@ -846,11 +846,11 @@ public  final class Replay extends
      * Actual replay data.
      * </pre>
      *
-     * <code>repeated .team5002.ControlState states = 1;</code>
+     * <code>repeated .team5002.ControlState state = 1;</code>
      */
-    public org.usfirst.frc.team5002.robot.replay.ControlState.Builder addStatesBuilder(
+    public org.usfirst.frc.team5002.robot.replay.ControlState.Builder addStateBuilder(
         int index) {
-      return getStatesFieldBuilder().addBuilder(
+      return getStateFieldBuilder().addBuilder(
           index, org.usfirst.frc.team5002.robot.replay.ControlState.getDefaultInstance());
     }
     /**
@@ -858,25 +858,25 @@ public  final class Replay extends
      * Actual replay data.
      * </pre>
      *
-     * <code>repeated .team5002.ControlState states = 1;</code>
+     * <code>repeated .team5002.ControlState state = 1;</code>
      */
     public java.util.List<org.usfirst.frc.team5002.robot.replay.ControlState.Builder> 
-         getStatesBuilderList() {
-      return getStatesFieldBuilder().getBuilderList();
+         getStateBuilderList() {
+      return getStateFieldBuilder().getBuilderList();
     }
     private com.google.protobuf.RepeatedFieldBuilderV3<
         org.usfirst.frc.team5002.robot.replay.ControlState, org.usfirst.frc.team5002.robot.replay.ControlState.Builder, org.usfirst.frc.team5002.robot.replay.ControlStateOrBuilder> 
-        getStatesFieldBuilder() {
-      if (statesBuilder_ == null) {
-        statesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+        getStateFieldBuilder() {
+      if (stateBuilder_ == null) {
+        stateBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
             org.usfirst.frc.team5002.robot.replay.ControlState, org.usfirst.frc.team5002.robot.replay.ControlState.Builder, org.usfirst.frc.team5002.robot.replay.ControlStateOrBuilder>(
-                states_,
+                state_,
                 ((bitField0_ & 0x00000001) == 0x00000001),
                 getParentForChildren(),
                 isClean());
-        states_ = null;
+        state_ = null;
       }
-      return statesBuilder_;
+      return stateBuilder_;
     }
 
     private double replayFrequency_ = 30D;

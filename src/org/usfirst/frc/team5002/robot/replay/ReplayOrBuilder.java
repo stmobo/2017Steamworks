@@ -12,43 +12,43 @@ public interface ReplayOrBuilder extends
    * Actual replay data.
    * </pre>
    *
-   * <code>repeated .team5002.ControlState states = 1;</code>
+   * <code>repeated .team5002.ControlState state = 1;</code>
    */
   java.util.List<org.usfirst.frc.team5002.robot.replay.ControlState> 
-      getStatesList();
+      getStateList();
   /**
    * <pre>
    * Actual replay data.
    * </pre>
    *
-   * <code>repeated .team5002.ControlState states = 1;</code>
+   * <code>repeated .team5002.ControlState state = 1;</code>
    */
-  org.usfirst.frc.team5002.robot.replay.ControlState getStates(int index);
+  org.usfirst.frc.team5002.robot.replay.ControlState getState(int index);
   /**
    * <pre>
    * Actual replay data.
    * </pre>
    *
-   * <code>repeated .team5002.ControlState states = 1;</code>
+   * <code>repeated .team5002.ControlState state = 1;</code>
    */
-  int getStatesCount();
+  int getStateCount();
   /**
    * <pre>
    * Actual replay data.
    * </pre>
    *
-   * <code>repeated .team5002.ControlState states = 1;</code>
+   * <code>repeated .team5002.ControlState state = 1;</code>
    */
   java.util.List<? extends org.usfirst.frc.team5002.robot.replay.ControlStateOrBuilder> 
-      getStatesOrBuilderList();
+      getStateOrBuilderList();
   /**
    * <pre>
    * Actual replay data.
    * </pre>
    *
-   * <code>repeated .team5002.ControlState states = 1;</code>
+   * <code>repeated .team5002.ControlState state = 1;</code>
    */
-  org.usfirst.frc.team5002.robot.replay.ControlStateOrBuilder getStatesOrBuilder(
+  org.usfirst.frc.team5002.robot.replay.ControlStateOrBuilder getStateOrBuilder(
       int index);
 
   /**

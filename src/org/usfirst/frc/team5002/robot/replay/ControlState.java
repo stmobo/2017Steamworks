@@ -15,8 +15,8 @@ public  final class ControlState extends
     super(builder);
   }
   private ControlState() {
-    fwdAxis_ = 0D;
-    sideAxis_ = 0D;
+    forwardAxis_ = 0D;
+    horizontalAxis_ = 0D;
     turnAxis_ = 0D;
   }
 
@@ -50,12 +50,12 @@ public  final class ControlState extends
           }
           case 9: {
             bitField0_ |= 0x00000001;
-            fwdAxis_ = input.readDouble();
+            forwardAxis_ = input.readDouble();
             break;
           }
           case 17: {
             bitField0_ |= 0x00000002;
-            sideAxis_ = input.readDouble();
+            horizontalAxis_ = input.readDouble();
             break;
           }
           case 25: {
@@ -88,16 +88,16 @@ public  final class ControlState extends
   }
 
   private int bitField0_;
-  public static final int FWDAXIS_FIELD_NUMBER = 1;
-  private double fwdAxis_;
+  public static final int FORWARDAXIS_FIELD_NUMBER = 1;
+  private double forwardAxis_;
   /**
    * <pre>
    * Forward / backward movement axis.
    * </pre>
    *
-   * <code>optional double fwdAxis = 1;</code>
+   * <code>optional double forwardAxis = 1;</code>
    */
-  public boolean hasFwdAxis() {
+  public boolean hasForwardAxis() {
     return ((bitField0_ & 0x00000001) == 0x00000001);
   }
   /**
@@ -105,22 +105,22 @@ public  final class ControlState extends
    * Forward / backward movement axis.
    * </pre>
    *
-   * <code>optional double fwdAxis = 1;</code>
+   * <code>optional double forwardAxis = 1;</code>
    */
-  public double getFwdAxis() {
-    return fwdAxis_;
+  public double getForwardAxis() {
+    return forwardAxis_;
   }
 
-  public static final int SIDEAXIS_FIELD_NUMBER = 2;
-  private double sideAxis_;
+  public static final int HORIZONTALAXIS_FIELD_NUMBER = 2;
+  private double horizontalAxis_;
   /**
    * <pre>
    * Left / right strafing axis.
    * </pre>
    *
-   * <code>optional double sideAxis = 2;</code>
+   * <code>optional double horizontalAxis = 2;</code>
    */
-  public boolean hasSideAxis() {
+  public boolean hasHorizontalAxis() {
     return ((bitField0_ & 0x00000002) == 0x00000002);
   }
   /**
@@ -128,10 +128,10 @@ public  final class ControlState extends
    * Left / right strafing axis.
    * </pre>
    *
-   * <code>optional double sideAxis = 2;</code>
+   * <code>optional double horizontalAxis = 2;</code>
    */
-  public double getSideAxis() {
-    return sideAxis_;
+  public double getHorizontalAxis() {
+    return horizontalAxis_;
   }
 
   public static final int TURNAXIS_FIELD_NUMBER = 3;
@@ -170,10 +170,10 @@ public  final class ControlState extends
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
     if (((bitField0_ & 0x00000001) == 0x00000001)) {
-      output.writeDouble(1, fwdAxis_);
+      output.writeDouble(1, forwardAxis_);
     }
     if (((bitField0_ & 0x00000002) == 0x00000002)) {
-      output.writeDouble(2, sideAxis_);
+      output.writeDouble(2, horizontalAxis_);
     }
     if (((bitField0_ & 0x00000004) == 0x00000004)) {
       output.writeDouble(3, turnAxis_);
@@ -188,11 +188,11 @@ public  final class ControlState extends
     size = 0;
     if (((bitField0_ & 0x00000001) == 0x00000001)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeDoubleSize(1, fwdAxis_);
+        .computeDoubleSize(1, forwardAxis_);
     }
     if (((bitField0_ & 0x00000002) == 0x00000002)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeDoubleSize(2, sideAxis_);
+        .computeDoubleSize(2, horizontalAxis_);
     }
     if (((bitField0_ & 0x00000004) == 0x00000004)) {
       size += com.google.protobuf.CodedOutputStream
@@ -215,19 +215,19 @@ public  final class ControlState extends
     org.usfirst.frc.team5002.robot.replay.ControlState other = (org.usfirst.frc.team5002.robot.replay.ControlState) obj;
 
     boolean result = true;
-    result = result && (hasFwdAxis() == other.hasFwdAxis());
-    if (hasFwdAxis()) {
+    result = result && (hasForwardAxis() == other.hasForwardAxis());
+    if (hasForwardAxis()) {
       result = result && (
-          java.lang.Double.doubleToLongBits(getFwdAxis())
+          java.lang.Double.doubleToLongBits(getForwardAxis())
           == java.lang.Double.doubleToLongBits(
-              other.getFwdAxis()));
+              other.getForwardAxis()));
     }
-    result = result && (hasSideAxis() == other.hasSideAxis());
-    if (hasSideAxis()) {
+    result = result && (hasHorizontalAxis() == other.hasHorizontalAxis());
+    if (hasHorizontalAxis()) {
       result = result && (
-          java.lang.Double.doubleToLongBits(getSideAxis())
+          java.lang.Double.doubleToLongBits(getHorizontalAxis())
           == java.lang.Double.doubleToLongBits(
-              other.getSideAxis()));
+              other.getHorizontalAxis()));
     }
     result = result && (hasTurnAxis() == other.hasTurnAxis());
     if (hasTurnAxis()) {
@@ -247,15 +247,15 @@ public  final class ControlState extends
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptorForType().hashCode();
-    if (hasFwdAxis()) {
-      hash = (37 * hash) + FWDAXIS_FIELD_NUMBER;
+    if (hasForwardAxis()) {
+      hash = (37 * hash) + FORWARDAXIS_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          java.lang.Double.doubleToLongBits(getFwdAxis()));
+          java.lang.Double.doubleToLongBits(getForwardAxis()));
     }
-    if (hasSideAxis()) {
-      hash = (37 * hash) + SIDEAXIS_FIELD_NUMBER;
+    if (hasHorizontalAxis()) {
+      hash = (37 * hash) + HORIZONTALAXIS_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          java.lang.Double.doubleToLongBits(getSideAxis()));
+          java.lang.Double.doubleToLongBits(getHorizontalAxis()));
     }
     if (hasTurnAxis()) {
       hash = (37 * hash) + TURNAXIS_FIELD_NUMBER;
@@ -380,9 +380,9 @@ public  final class ControlState extends
     }
     public Builder clear() {
       super.clear();
-      fwdAxis_ = 0D;
+      forwardAxis_ = 0D;
       bitField0_ = (bitField0_ & ~0x00000001);
-      sideAxis_ = 0D;
+      horizontalAxis_ = 0D;
       bitField0_ = (bitField0_ & ~0x00000002);
       turnAxis_ = 0D;
       bitField0_ = (bitField0_ & ~0x00000004);
@@ -413,11 +413,11 @@ public  final class ControlState extends
       if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
         to_bitField0_ |= 0x00000001;
       }
-      result.fwdAxis_ = fwdAxis_;
+      result.forwardAxis_ = forwardAxis_;
       if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
         to_bitField0_ |= 0x00000002;
       }
-      result.sideAxis_ = sideAxis_;
+      result.horizontalAxis_ = horizontalAxis_;
       if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
         to_bitField0_ |= 0x00000004;
       }
@@ -464,11 +464,11 @@ public  final class ControlState extends
 
     public Builder mergeFrom(org.usfirst.frc.team5002.robot.replay.ControlState other) {
       if (other == org.usfirst.frc.team5002.robot.replay.ControlState.getDefaultInstance()) return this;
-      if (other.hasFwdAxis()) {
-        setFwdAxis(other.getFwdAxis());
+      if (other.hasForwardAxis()) {
+        setForwardAxis(other.getForwardAxis());
       }
-      if (other.hasSideAxis()) {
-        setSideAxis(other.getSideAxis());
+      if (other.hasHorizontalAxis()) {
+        setHorizontalAxis(other.getHorizontalAxis());
       }
       if (other.hasTurnAxis()) {
         setTurnAxis(other.getTurnAxis());
@@ -501,15 +501,15 @@ public  final class ControlState extends
     }
     private int bitField0_;
 
-    private double fwdAxis_ ;
+    private double forwardAxis_ ;
     /**
      * <pre>
      * Forward / backward movement axis.
      * </pre>
      *
-     * <code>optional double fwdAxis = 1;</code>
+     * <code>optional double forwardAxis = 1;</code>
      */
-    public boolean hasFwdAxis() {
+    public boolean hasForwardAxis() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
@@ -517,21 +517,21 @@ public  final class ControlState extends
      * Forward / backward movement axis.
      * </pre>
      *
-     * <code>optional double fwdAxis = 1;</code>
+     * <code>optional double forwardAxis = 1;</code>
      */
-    public double getFwdAxis() {
-      return fwdAxis_;
+    public double getForwardAxis() {
+      return forwardAxis_;
     }
     /**
      * <pre>
      * Forward / backward movement axis.
      * </pre>
      *
-     * <code>optional double fwdAxis = 1;</code>
+     * <code>optional double forwardAxis = 1;</code>
      */
-    public Builder setFwdAxis(double value) {
+    public Builder setForwardAxis(double value) {
       bitField0_ |= 0x00000001;
-      fwdAxis_ = value;
+      forwardAxis_ = value;
       onChanged();
       return this;
     }
@@ -540,24 +540,24 @@ public  final class ControlState extends
      * Forward / backward movement axis.
      * </pre>
      *
-     * <code>optional double fwdAxis = 1;</code>
+     * <code>optional double forwardAxis = 1;</code>
      */
-    public Builder clearFwdAxis() {
+    public Builder clearForwardAxis() {
       bitField0_ = (bitField0_ & ~0x00000001);
-      fwdAxis_ = 0D;
+      forwardAxis_ = 0D;
       onChanged();
       return this;
     }
 
-    private double sideAxis_ ;
+    private double horizontalAxis_ ;
     /**
      * <pre>
      * Left / right strafing axis.
      * </pre>
      *
-     * <code>optional double sideAxis = 2;</code>
+     * <code>optional double horizontalAxis = 2;</code>
      */
-    public boolean hasSideAxis() {
+    public boolean hasHorizontalAxis() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
@@ -565,21 +565,21 @@ public  final class ControlState extends
      * Left / right strafing axis.
      * </pre>
      *
-     * <code>optional double sideAxis = 2;</code>
+     * <code>optional double horizontalAxis = 2;</code>
      */
-    public double getSideAxis() {
-      return sideAxis_;
+    public double getHorizontalAxis() {
+      return horizontalAxis_;
     }
     /**
      * <pre>
      * Left / right strafing axis.
      * </pre>
      *
-     * <code>optional double sideAxis = 2;</code>
+     * <code>optional double horizontalAxis = 2;</code>
      */
-    public Builder setSideAxis(double value) {
+    public Builder setHorizontalAxis(double value) {
       bitField0_ |= 0x00000002;
-      sideAxis_ = value;
+      horizontalAxis_ = value;
       onChanged();
       return this;
     }
@@ -588,11 +588,11 @@ public  final class ControlState extends
      * Left / right strafing axis.
      * </pre>
      *
-     * <code>optional double sideAxis = 2;</code>
+     * <code>optional double horizontalAxis = 2;</code>
      */
-    public Builder clearSideAxis() {
+    public Builder clearHorizontalAxis() {
       bitField0_ = (bitField0_ & ~0x00000002);
-      sideAxis_ = 0D;
+      horizontalAxis_ = 0D;
       onChanged();
       return this;
     }

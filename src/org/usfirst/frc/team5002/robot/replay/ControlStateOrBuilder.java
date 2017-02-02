@@ -12,34 +12,34 @@ public interface ControlStateOrBuilder extends
    * Forward / backward movement axis.
    * </pre>
    *
-   * <code>optional double fwdAxis = 1;</code>
+   * <code>optional double forwardAxis = 1;</code>
    */
-  boolean hasFwdAxis();
+  boolean hasForwardAxis();
   /**
    * <pre>
    * Forward / backward movement axis.
    * </pre>
    *
-   * <code>optional double fwdAxis = 1;</code>
+   * <code>optional double forwardAxis = 1;</code>
    */
-  double getFwdAxis();
+  double getForwardAxis();
 
   /**
    * <pre>
    * Left / right strafing axis.
    * </pre>
    *
-   * <code>optional double sideAxis = 2;</code>
+   * <code>optional double horizontalAxis = 2;</code>
    */
-  boolean hasSideAxis();
+  boolean hasHorizontalAxis();
   /**
    * <pre>
    * Left / right strafing axis.
    * </pre>
    *
-   * <code>optional double sideAxis = 2;</code>
+   * <code>optional double horizontalAxis = 2;</code>
    */
-  double getSideAxis();
+  double getHorizontalAxis();
 
   /**
    * <pre>
