@@ -39,7 +39,7 @@ public class OI {
     }
 
     public void loadStateFromReplay() {
-        if(currentReplayIndex < currentReplay.getStateCount()) {
+        if( currentReplay != null && currentReplayIndex < currentReplay.getStateCount()) {
             currentState = currentReplay.getState(currentReplayIndex);
             currentReplayIndex += 1;
         } else {
