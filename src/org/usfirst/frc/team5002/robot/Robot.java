@@ -36,7 +36,7 @@ public class Robot extends IterativeRobot {
     public double replayFrequency = 30.0;   // Hz
 
     // Paths are in UNIX format (forward slashes)
-    public String replayDir = "~/"; // stick it in the homedir by default, I'm pretty sure FRCUserProgram.jar runs as lvuser on the RIO
+    public String replayDir = "/home/lvuser/"; // stick it in the homedir by default, I'm pretty sure FRCUserProgram.jar runs as lvuser on the RIO
 
     Timer replayUpdateTimer;
 
@@ -102,6 +102,7 @@ public class Robot extends IterativeRobot {
 		 * autonomousCommand = new ExampleCommand(); break; }
 		 */
 
+         /*
         String slotSelect = slotSelector.getSelected();
         switch(slotSelect) {
             default:
@@ -115,6 +116,9 @@ public class Robot extends IterativeRobot {
                 oi.loadReplayFromFile(replayDir + "slot3.replay");
                 break;
         }
+        */
+
+        oi.loadReplayFromFile(replayDir + "slot1.replay");
 
         if(Robot.oi.currentReplay != null) {
             replayFrequency = Robot.oi.currentReplay.getReplayFrequency();
@@ -122,7 +126,9 @@ public class Robot extends IterativeRobot {
 
         Robot.oi.currentReplayIndex = 0;
 
+        replayTimer.reset();
         replayTimer.start();
+        
         oi.currentlyReplaying = true;
 
         autonomousCommand = new Teleop();
@@ -151,6 +157,7 @@ public class Robot extends IterativeRobot {
 			autonomousCommand.cancel();
 
         oi.currentlyReplaying = false;
+        oi.currentRecording = Replay.newBuilder().setBatteryVoltage(12.0).setReplayFrequency(30.0);
 
         replayUpdateTimer.reset();
         replayUpdateTimer.start();
@@ -168,6 +175,11 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
         if(replayUpdateTimer.hasPeriodPassed(1/replayFrequency)) {
             oi.saveStateToReplay();
+        }
+
+        // button 3 = X button
+        if(oi.arcadeStick.getRawButton(3)) {
+            oi.saveReplayToFile(replayDir + "slot1.replay");
         }
 
 		Scheduler.getInstance().run();

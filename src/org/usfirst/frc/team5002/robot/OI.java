@@ -65,7 +65,10 @@ public class OI {
     public void saveReplayToFile(String filename) {
         try {
             FileOutputStream ofstream = new FileOutputStream(filename);
-            currentRecording.build().writeTo(ofstream);
+            Replay builtReplay = currentRecording.build();
+            builtReplay.writeTo(ofstream);
+
+            System.out.println("Wrote " + builtReplay.getStateCount() + " replay frames to " + filename);
 
             ofstream.flush();
             ofstream.close();
@@ -78,6 +81,8 @@ public class OI {
         try {
             FileInputStream ifstream = new FileInputStream(filename);
             currentReplay = Replay.parseFrom(ifstream);
+
+            System.out.println("Read " + currentReplay.getStateCount() + " replay frames from " + filename);
         } catch(Exception e) {
             e.printStackTrace();
 
