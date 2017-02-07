@@ -12,6 +12,8 @@ import org.usfirst.frc.team5002.robot.commands.Teleop;
 import org.usfirst.frc.team5002.robot.commands.KillDrivetrain;
 import org.usfirst.frc.team5002.robot.commands.PIDSteerCollective;
 import org.usfirst.frc.team5002.robot.commands.PIDSteerTestSingle;
+import org.usfirst.frc.team5002.robot.subsystems.Intake;
+import org.usfirst.frc.team5002.robot.subsystems.Launcherer;
 import org.usfirst.frc.team5002.robot.subsystems.SwerveDrive;
 
 /**
@@ -24,6 +26,8 @@ import org.usfirst.frc.team5002.robot.subsystems.SwerveDrive;
 public class Robot extends IterativeRobot {
 
 	public static final SwerveDrive drivetrain = new SwerveDrive();
+	public static final Intake intake = new Intake();
+	public static final Launcherer launcherer = new Launcherer();
 	public static OI oi;
 
 	Command autonomousCommand;
