@@ -5,8 +5,8 @@ import org.usfirst.frc.team5002.robot.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- *@author (Jo)Nathan
- *@version Last Updated 1/19/17
+ *@author (Jo)Nathan, Bri
+ *@version Last Updated 2/7/17
  */
 public class OUTtaker extends Command {
 

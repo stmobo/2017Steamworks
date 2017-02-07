@@ -15,9 +15,7 @@ public class INtaker extends Command {
         requires(Robot.intake);
     }
 
-    protected void initialize() {
-        Robot.intake.run();			//Makes motor start at 0
-
+    protected void initialize() {		//Makes motor start at 0
     }
 
     protected void execute() {
@@ -38,5 +36,6 @@ public class INtaker extends Command {
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
+    	end();
     }
 }
