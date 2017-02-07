@@ -6,8 +6,8 @@ import com.ctre.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
- *@author (Jo)Nathan
- *@version Last Updated 1/19/17
+ *@author (Jo)Nathan, Bri
+ *@version Last Updated 2/7/17
  */
 public class Intake extends Subsystem {
 	private CANTalon intake;
@@ -17,8 +17,7 @@ public class Intake extends Subsystem {
 	    	intake.changeControlMode(TalonControlMode.Speed);
 	    }
 	
-	public void initDefaultCommand() {
-	    	
+	public void initDefaultCommand() {	
 	    }
 	 
 	public void run(){ 	//Call to change the motor speed

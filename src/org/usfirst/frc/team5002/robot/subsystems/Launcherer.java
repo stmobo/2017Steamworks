@@ -23,19 +23,15 @@ public class Launcherer extends Subsystem {
     //setting our motor name
     public Launcherer(){
     	
-    	launcherer = new CANTalon(784);
-    	//TODO: Input actual port number
+    	launcherer = new CANTalon(784); //TODO: Input actual port number
     	//setting our motor to a port number
-    	//784 is just a placeholder
     	launcherer.changeControlMode(TalonControlMode.Speed);
     	//making sure our motor control is in speed (easier)
     	
     }
 
     public void initDefaultCommand() {
-    	
     }
-    
     
     public void run(){
     	//making a method to define and be able to change the speed in the LaunchererC command

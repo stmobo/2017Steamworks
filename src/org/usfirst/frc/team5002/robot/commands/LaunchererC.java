@@ -21,15 +21,10 @@ public class LaunchererC extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.launcherer.run();
-    	//sets the motors to 0 speed so that it doesn't move
-    	
-    	
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	
     	Robot.launcherer.run();
     	//sets the motors to 1 speed so that it moves
     	
