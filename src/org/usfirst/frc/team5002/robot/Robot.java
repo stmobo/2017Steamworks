@@ -2,21 +2,20 @@
 package org.usfirst.frc.team5002.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import org.usfirst.frc.team5002.robot.commands.Teleop;
-import org.usfirst.frc.team5002.robot.commands.KillDrivetrain;
-import org.usfirst.frc.team5002.robot.commands.PIDSteerCollective;
-import org.usfirst.frc.team5002.robot.commands.PIDSteerTestSingle;
-import org.usfirst.frc.team5002.robot.subsystems.Intake;
-import org.usfirst.frc.team5002.robot.subsystems.Launcherer;
-import org.usfirst.frc.team5002.robot.subsystems.Outtake;
-import org.usfirst.frc.team5002.robot.subsystems.RopeClimber;
-import org.usfirst.frc.team5002.robot.subsystems.SwerveDrive;
+import org.usfirst.frc.team5002.robot.commands.*;
+import org.usfirst.frc.team5002.robot.replay.*;
+import org.usfirst.frc.team5002.robot.subsystems.*;
+
+import edu.wpi.first.wpilibj.Timer;
+
+import java.io.FileInputStream;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -35,7 +34,16 @@ public class Robot extends IterativeRobot {
 	public static OI oi;
 
 	Command autonomousCommand;
-	SendableChooser<Command> chooser = new SendableChooser<>();
+    SendableChooser<String> slotSelector = new SendableChooser<String>();
+    Timer replayTimer = new Timer();
+
+    public double replayFrequency = 30.0;   // Hz
+
+    // Paths are in UNIX format (forward slashes)
+    public String replayDir = "/home/lvuser/"; // stick it in the homedir by default, I'm pretty sure FRCUserProgram.jar runs as lvuser on the RIO
+
+    Timer replayUpdateTimer;
+
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -50,6 +58,18 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("PIDSteerTest-FrontRight", new PIDSteerTestSingle(drivetrain.fr_steer));
 		SmartDashboard.putData("PIDSteerTest-BackLeft", new PIDSteerTestSingle(drivetrain.bl_steer));
 		SmartDashboard.putData("PIDSteerTest-BackRight", new PIDSteerTestSingle(drivetrain.br_steer));
+
+        /* Recording commands. */
+        SmartDashboard.putData("StartRecording", new StartRecording());
+        SmartDashboard.putData("Save-Slot1", new SaveRecording(replayDir + "slot1.replay"));
+        SmartDashboard.putData("Save-Slot2", new SaveRecording(replayDir + "slot2.replay"));
+        SmartDashboard.putData("Save-Slot3", new SaveRecording(replayDir + "slot3.replay"));
+
+        slotSelector.addObject("Slot 1", "Slot 1");
+        slotSelector.addObject("Slot 2", "Slot 2");
+        slotSelector.addObject("Slot 3", "Slot 3");
+
+        replayUpdateTimer = new Timer();
 	}
 
 	/**
@@ -68,29 +88,16 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("FR-Pos", Robot.drivetrain.fr_steer.getPosition());
 		SmartDashboard.putNumber("BL-Pos", Robot.drivetrain.bl_steer.getPosition());
 		SmartDashboard.putNumber("BR-Pos", Robot.drivetrain.br_steer.getPosition());
-		
+
 		//Robot.drivetrain.UpdateSDSingle(Robot.drivetrain.fr_steer);
 		//Robot.drivetrain.UpdateSDSingle(Robot.drivetrain.fl_steer);
-		
+
 		Robot.drivetrain.updateSD();
-		
 		Scheduler.getInstance().run();
 	}
 
-	/**
-	 * This autonomous (along with the chooser code above) shows how to select
-	 * between different autonomous modes using the dashboard. The sendable
-	 * chooser code works with the Java SmartDashboard. If you prefer the
-	 * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-	 * getString code to get the auto name from the text box below the Gyro
-	 *
-	 * You can add additional auto modes by adding additional commands to the
-	 * chooser code above (like the commented example) or additional comparisons
-	 * to the switch structure below with additional strings & commands.
-	 */
 	@Override
 	public void autonomousInit() {
-		autonomousCommand = new KillDrivetrain();
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
 		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
@@ -98,9 +105,37 @@ public class Robot extends IterativeRobot {
 		 * autonomousCommand = new ExampleCommand(); break; }
 		 */
 
-		// schedule the autonomous command (example)
-		if (autonomousCommand != null)
-			autonomousCommand.start();
+         /*
+        String slotSelect = slotSelector.getSelected();
+        switch(slotSelect) {
+            default:
+            case "Slot 1":
+                oi.loadReplayFromFile(replayDir + "slot1.replay");
+                break;
+            case "Slot 2":
+                oi.loadReplayFromFile(replayDir + "slot2.replay");
+                break;
+            case "Slot 3":
+                oi.loadReplayFromFile(replayDir + "slot3.replay");
+                break;
+        }
+        */
+
+        oi.loadReplayFromFile(replayDir + "slot1.replay");
+
+        if(Robot.oi.currentReplay != null) {
+            replayFrequency = Robot.oi.currentReplay.getReplayFrequency();
+        }
+
+        Robot.oi.currentReplayIndex = 0;
+
+        replayTimer.reset();
+        replayTimer.start();
+
+        oi.currentlyReplaying = true;
+
+        autonomousCommand = new Teleop();
+        Scheduler.getInstance().add(autonomousCommand);
 	}
 
 	/**
@@ -108,6 +143,10 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
+        if(replayUpdateTimer.hasPeriodPassed(1/replayFrequency)) {
+            oi.loadStateFromReplay();
+        }
+
 		Scheduler.getInstance().run();
 	}
 
@@ -120,6 +159,12 @@ public class Robot extends IterativeRobot {
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
 
+        oi.currentlyReplaying = false;
+        oi.currentRecording = Replay.newBuilder().setBatteryVoltage(12.0).setReplayFrequency(30.0);
+
+        replayUpdateTimer.reset();
+        replayUpdateTimer.start();
+
 		//PIDSteerCollective PIDTest = new PIDSteerCollective();
 		Teleop teleopTest = new Teleop();
 		Scheduler.getInstance().add(teleopTest);
@@ -131,6 +176,15 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+        if(replayUpdateTimer.hasPeriodPassed(1/replayFrequency)) {
+            oi.saveStateToReplay();
+        }
+
+        // button 3 = X button
+        if(oi.arcadeStick.getRawButton(3)) {
+            oi.saveReplayToFile(replayDir + "slot1.replay");
+        }
+
 		Scheduler.getInstance().run();
 	}
 
