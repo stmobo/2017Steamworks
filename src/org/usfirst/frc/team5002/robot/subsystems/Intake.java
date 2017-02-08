@@ -6,8 +6,9 @@ import com.ctre.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
- *@author (Jo)Nathan, Bri
- *@version Last Updated 2/7/17
+ *@author (Jo)Nathan, Bri, elweb
+ *@version Last Updated 2/8/17
+ *motor that picks balls up off the ground
  */
 public class Intake extends Subsystem {
 	private CANTalon intake;
@@ -26,9 +27,7 @@ public class Intake extends Subsystem {
 	public void runBackwards(){
 		intake.set(-1.0);
 	}
-	public void stop() {
+	public void stop() {  // stops the motor
 		intake.set(0);
-	}
-		
-   
+	}   
 }

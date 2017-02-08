@@ -7,5 +7,7 @@
 	<classpathentry kind="var" path="cscore" sourcepath="cscore.sources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="lib" path="C:/Users/brian/wpilib/user/java/lib/TalonSRXLibJava.jar"/>
+	<classpathentry kind="lib" path="C:/Users/elweb/Downloads/CTRE Toolsuite v4.4.1.9/CTRE Toolsuite v4.4.1.9.exe"/>
+	<classpathentry kind="var" path="USERLIBS_DIR/CTRLib.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
