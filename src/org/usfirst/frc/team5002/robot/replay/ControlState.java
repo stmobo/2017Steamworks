@@ -18,6 +18,14 @@ public  final class ControlState extends
     forwardAxis_ = 0D;
     horizontalAxis_ = 0D;
     turnAxis_ = 0D;
+    buttonA_ = false;
+    buttonB_ = false;
+    buttonX_ = false;
+    buttonY_ = false;
+    buttonLB_ = false;
+    buttonRB_ = false;
+    buttonHome_ = false;
+    buttonMenu_ = false;
   }
 
   @java.lang.Override
@@ -58,6 +66,46 @@ public  final class ControlState extends
           case 25: {
 
             turnAxis_ = input.readDouble();
+            break;
+          }
+          case 32: {
+
+            buttonA_ = input.readBool();
+            break;
+          }
+          case 40: {
+
+            buttonB_ = input.readBool();
+            break;
+          }
+          case 48: {
+
+            buttonX_ = input.readBool();
+            break;
+          }
+          case 56: {
+
+            buttonY_ = input.readBool();
+            break;
+          }
+          case 64: {
+
+            buttonLB_ = input.readBool();
+            break;
+          }
+          case 72: {
+
+            buttonRB_ = input.readBool();
+            break;
+          }
+          case 80: {
+
+            buttonHome_ = input.readBool();
+            break;
+          }
+          case 88: {
+
+            buttonMenu_ = input.readBool();
             break;
           }
         }
@@ -122,6 +170,110 @@ public  final class ControlState extends
     return turnAxis_;
   }
 
+  public static final int BUTTON_A_FIELD_NUMBER = 4;
+  private boolean buttonA_;
+  /**
+   * <pre>
+   * Button ID = 1
+   * </pre>
+   *
+   * <code>optional bool button_A = 4;</code>
+   */
+  public boolean getButtonA() {
+    return buttonA_;
+  }
+
+  public static final int BUTTON_B_FIELD_NUMBER = 5;
+  private boolean buttonB_;
+  /**
+   * <pre>
+   * Button ID = 2
+   * </pre>
+   *
+   * <code>optional bool button_B = 5;</code>
+   */
+  public boolean getButtonB() {
+    return buttonB_;
+  }
+
+  public static final int BUTTON_X_FIELD_NUMBER = 6;
+  private boolean buttonX_;
+  /**
+   * <pre>
+   * Button ID = 3
+   * </pre>
+   *
+   * <code>optional bool button_X = 6;</code>
+   */
+  public boolean getButtonX() {
+    return buttonX_;
+  }
+
+  public static final int BUTTON_Y_FIELD_NUMBER = 7;
+  private boolean buttonY_;
+  /**
+   * <pre>
+   * Button ID = 4
+   * </pre>
+   *
+   * <code>optional bool button_Y = 7;</code>
+   */
+  public boolean getButtonY() {
+    return buttonY_;
+  }
+
+  public static final int BUTTON_LB_FIELD_NUMBER = 8;
+  private boolean buttonLB_;
+  /**
+   * <pre>
+   * Button ID = 5
+   * </pre>
+   *
+   * <code>optional bool button_LB = 8;</code>
+   */
+  public boolean getButtonLB() {
+    return buttonLB_;
+  }
+
+  public static final int BUTTON_RB_FIELD_NUMBER = 9;
+  private boolean buttonRB_;
+  /**
+   * <pre>
+   * Button ID = 6
+   * </pre>
+   *
+   * <code>optional bool button_RB = 9;</code>
+   */
+  public boolean getButtonRB() {
+    return buttonRB_;
+  }
+
+  public static final int BUTTON_HOME_FIELD_NUMBER = 10;
+  private boolean buttonHome_;
+  /**
+   * <pre>
+   * Button ID = 7
+   * </pre>
+   *
+   * <code>optional bool button_home = 10;</code>
+   */
+  public boolean getButtonHome() {
+    return buttonHome_;
+  }
+
+  public static final int BUTTON_MENU_FIELD_NUMBER = 11;
+  private boolean buttonMenu_;
+  /**
+   * <pre>
+   * Button ID = 8
+   * </pre>
+   *
+   * <code>optional bool button_menu = 11;</code>
+   */
+  public boolean getButtonMenu() {
+    return buttonMenu_;
+  }
+
   private byte memoizedIsInitialized = -1;
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
@@ -143,6 +295,30 @@ public  final class ControlState extends
     if (turnAxis_ != 0D) {
       output.writeDouble(3, turnAxis_);
     }
+    if (buttonA_ != false) {
+      output.writeBool(4, buttonA_);
+    }
+    if (buttonB_ != false) {
+      output.writeBool(5, buttonB_);
+    }
+    if (buttonX_ != false) {
+      output.writeBool(6, buttonX_);
+    }
+    if (buttonY_ != false) {
+      output.writeBool(7, buttonY_);
+    }
+    if (buttonLB_ != false) {
+      output.writeBool(8, buttonLB_);
+    }
+    if (buttonRB_ != false) {
+      output.writeBool(9, buttonRB_);
+    }
+    if (buttonHome_ != false) {
+      output.writeBool(10, buttonHome_);
+    }
+    if (buttonMenu_ != false) {
+      output.writeBool(11, buttonMenu_);
+    }
   }
 
   public int getSerializedSize() {
@@ -161,6 +337,38 @@ public  final class ControlState extends
     if (turnAxis_ != 0D) {
       size += com.google.protobuf.CodedOutputStream
         .computeDoubleSize(3, turnAxis_);
+    }
+    if (buttonA_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(4, buttonA_);
+    }
+    if (buttonB_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(5, buttonB_);
+    }
+    if (buttonX_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(6, buttonX_);
+    }
+    if (buttonY_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(7, buttonY_);
+    }
+    if (buttonLB_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(8, buttonLB_);
+    }
+    if (buttonRB_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(9, buttonRB_);
+    }
+    if (buttonHome_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(10, buttonHome_);
+    }
+    if (buttonMenu_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(11, buttonMenu_);
     }
     memoizedSize = size;
     return size;
@@ -190,6 +398,22 @@ public  final class ControlState extends
         java.lang.Double.doubleToLongBits(getTurnAxis())
         == java.lang.Double.doubleToLongBits(
             other.getTurnAxis()));
+    result = result && (getButtonA()
+        == other.getButtonA());
+    result = result && (getButtonB()
+        == other.getButtonB());
+    result = result && (getButtonX()
+        == other.getButtonX());
+    result = result && (getButtonY()
+        == other.getButtonY());
+    result = result && (getButtonLB()
+        == other.getButtonLB());
+    result = result && (getButtonRB()
+        == other.getButtonRB());
+    result = result && (getButtonHome()
+        == other.getButtonHome());
+    result = result && (getButtonMenu()
+        == other.getButtonMenu());
     return result;
   }
 
@@ -209,6 +433,30 @@ public  final class ControlState extends
     hash = (37 * hash) + TURN_AXIS_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         java.lang.Double.doubleToLongBits(getTurnAxis()));
+    hash = (37 * hash) + BUTTON_A_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getButtonA());
+    hash = (37 * hash) + BUTTON_B_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getButtonB());
+    hash = (37 * hash) + BUTTON_X_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getButtonX());
+    hash = (37 * hash) + BUTTON_Y_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getButtonY());
+    hash = (37 * hash) + BUTTON_LB_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getButtonLB());
+    hash = (37 * hash) + BUTTON_RB_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getButtonRB());
+    hash = (37 * hash) + BUTTON_HOME_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getButtonHome());
+    hash = (37 * hash) + BUTTON_MENU_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getButtonMenu());
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -333,6 +581,22 @@ public  final class ControlState extends
 
       turnAxis_ = 0D;
 
+      buttonA_ = false;
+
+      buttonB_ = false;
+
+      buttonX_ = false;
+
+      buttonY_ = false;
+
+      buttonLB_ = false;
+
+      buttonRB_ = false;
+
+      buttonHome_ = false;
+
+      buttonMenu_ = false;
+
       return this;
     }
 
@@ -358,6 +622,14 @@ public  final class ControlState extends
       result.forwardAxis_ = forwardAxis_;
       result.horizontalAxis_ = horizontalAxis_;
       result.turnAxis_ = turnAxis_;
+      result.buttonA_ = buttonA_;
+      result.buttonB_ = buttonB_;
+      result.buttonX_ = buttonX_;
+      result.buttonY_ = buttonY_;
+      result.buttonLB_ = buttonLB_;
+      result.buttonRB_ = buttonRB_;
+      result.buttonHome_ = buttonHome_;
+      result.buttonMenu_ = buttonMenu_;
       onBuilt();
       return result;
     }
@@ -407,6 +679,30 @@ public  final class ControlState extends
       }
       if (other.getTurnAxis() != 0D) {
         setTurnAxis(other.getTurnAxis());
+      }
+      if (other.getButtonA() != false) {
+        setButtonA(other.getButtonA());
+      }
+      if (other.getButtonB() != false) {
+        setButtonB(other.getButtonB());
+      }
+      if (other.getButtonX() != false) {
+        setButtonX(other.getButtonX());
+      }
+      if (other.getButtonY() != false) {
+        setButtonY(other.getButtonY());
+      }
+      if (other.getButtonLB() != false) {
+        setButtonLB(other.getButtonLB());
+      }
+      if (other.getButtonRB() != false) {
+        setButtonRB(other.getButtonRB());
+      }
+      if (other.getButtonHome() != false) {
+        setButtonHome(other.getButtonHome());
+      }
+      if (other.getButtonMenu() != false) {
+        setButtonMenu(other.getButtonMenu());
       }
       onChanged();
       return this;
@@ -544,6 +840,310 @@ public  final class ControlState extends
     public Builder clearTurnAxis() {
       
       turnAxis_ = 0D;
+      onChanged();
+      return this;
+    }
+
+    private boolean buttonA_ ;
+    /**
+     * <pre>
+     * Button ID = 1
+     * </pre>
+     *
+     * <code>optional bool button_A = 4;</code>
+     */
+    public boolean getButtonA() {
+      return buttonA_;
+    }
+    /**
+     * <pre>
+     * Button ID = 1
+     * </pre>
+     *
+     * <code>optional bool button_A = 4;</code>
+     */
+    public Builder setButtonA(boolean value) {
+      
+      buttonA_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Button ID = 1
+     * </pre>
+     *
+     * <code>optional bool button_A = 4;</code>
+     */
+    public Builder clearButtonA() {
+      
+      buttonA_ = false;
+      onChanged();
+      return this;
+    }
+
+    private boolean buttonB_ ;
+    /**
+     * <pre>
+     * Button ID = 2
+     * </pre>
+     *
+     * <code>optional bool button_B = 5;</code>
+     */
+    public boolean getButtonB() {
+      return buttonB_;
+    }
+    /**
+     * <pre>
+     * Button ID = 2
+     * </pre>
+     *
+     * <code>optional bool button_B = 5;</code>
+     */
+    public Builder setButtonB(boolean value) {
+      
+      buttonB_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Button ID = 2
+     * </pre>
+     *
+     * <code>optional bool button_B = 5;</code>
+     */
+    public Builder clearButtonB() {
+      
+      buttonB_ = false;
+      onChanged();
+      return this;
+    }
+
+    private boolean buttonX_ ;
+    /**
+     * <pre>
+     * Button ID = 3
+     * </pre>
+     *
+     * <code>optional bool button_X = 6;</code>
+     */
+    public boolean getButtonX() {
+      return buttonX_;
+    }
+    /**
+     * <pre>
+     * Button ID = 3
+     * </pre>
+     *
+     * <code>optional bool button_X = 6;</code>
+     */
+    public Builder setButtonX(boolean value) {
+      
+      buttonX_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Button ID = 3
+     * </pre>
+     *
+     * <code>optional bool button_X = 6;</code>
+     */
+    public Builder clearButtonX() {
+      
+      buttonX_ = false;
+      onChanged();
+      return this;
+    }
+
+    private boolean buttonY_ ;
+    /**
+     * <pre>
+     * Button ID = 4
+     * </pre>
+     *
+     * <code>optional bool button_Y = 7;</code>
+     */
+    public boolean getButtonY() {
+      return buttonY_;
+    }
+    /**
+     * <pre>
+     * Button ID = 4
+     * </pre>
+     *
+     * <code>optional bool button_Y = 7;</code>
+     */
+    public Builder setButtonY(boolean value) {
+      
+      buttonY_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Button ID = 4
+     * </pre>
+     *
+     * <code>optional bool button_Y = 7;</code>
+     */
+    public Builder clearButtonY() {
+      
+      buttonY_ = false;
+      onChanged();
+      return this;
+    }
+
+    private boolean buttonLB_ ;
+    /**
+     * <pre>
+     * Button ID = 5
+     * </pre>
+     *
+     * <code>optional bool button_LB = 8;</code>
+     */
+    public boolean getButtonLB() {
+      return buttonLB_;
+    }
+    /**
+     * <pre>
+     * Button ID = 5
+     * </pre>
+     *
+     * <code>optional bool button_LB = 8;</code>
+     */
+    public Builder setButtonLB(boolean value) {
+      
+      buttonLB_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Button ID = 5
+     * </pre>
+     *
+     * <code>optional bool button_LB = 8;</code>
+     */
+    public Builder clearButtonLB() {
+      
+      buttonLB_ = false;
+      onChanged();
+      return this;
+    }
+
+    private boolean buttonRB_ ;
+    /**
+     * <pre>
+     * Button ID = 6
+     * </pre>
+     *
+     * <code>optional bool button_RB = 9;</code>
+     */
+    public boolean getButtonRB() {
+      return buttonRB_;
+    }
+    /**
+     * <pre>
+     * Button ID = 6
+     * </pre>
+     *
+     * <code>optional bool button_RB = 9;</code>
+     */
+    public Builder setButtonRB(boolean value) {
+      
+      buttonRB_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Button ID = 6
+     * </pre>
+     *
+     * <code>optional bool button_RB = 9;</code>
+     */
+    public Builder clearButtonRB() {
+      
+      buttonRB_ = false;
+      onChanged();
+      return this;
+    }
+
+    private boolean buttonHome_ ;
+    /**
+     * <pre>
+     * Button ID = 7
+     * </pre>
+     *
+     * <code>optional bool button_home = 10;</code>
+     */
+    public boolean getButtonHome() {
+      return buttonHome_;
+    }
+    /**
+     * <pre>
+     * Button ID = 7
+     * </pre>
+     *
+     * <code>optional bool button_home = 10;</code>
+     */
+    public Builder setButtonHome(boolean value) {
+      
+      buttonHome_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Button ID = 7
+     * </pre>
+     *
+     * <code>optional bool button_home = 10;</code>
+     */
+    public Builder clearButtonHome() {
+      
+      buttonHome_ = false;
+      onChanged();
+      return this;
+    }
+
+    private boolean buttonMenu_ ;
+    /**
+     * <pre>
+     * Button ID = 8
+     * </pre>
+     *
+     * <code>optional bool button_menu = 11;</code>
+     */
+    public boolean getButtonMenu() {
+      return buttonMenu_;
+    }
+    /**
+     * <pre>
+     * Button ID = 8
+     * </pre>
+     *
+     * <code>optional bool button_menu = 11;</code>
+     */
+    public Builder setButtonMenu(boolean value) {
+      
+      buttonMenu_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Button ID = 8
+     * </pre>
+     *
+     * <code>optional bool button_menu = 11;</code>
+     */
+    public Builder clearButtonMenu() {
+      
+      buttonMenu_ = false;
       onChanged();
       return this;
     }

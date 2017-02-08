@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='replay.proto',
   package='team5002',
   syntax='proto3',
-  serialized_pb=_b('\n\x0creplay.proto\x12\x08team5002\"P\n\x0c\x43ontrolState\x12\x14\n\x0c\x66orward_axis\x18\x01 \x01(\x01\x12\x17\n\x0fhorizontal_axis\x18\x02 \x01(\x01\x12\x11\n\tturn_axis\x18\x03 \x01(\x01\"b\n\x06Replay\x12%\n\x05state\x18\x01 \x03(\x0b\x32\x16.team5002.ControlState\x12\x18\n\x10replay_frequency\x18\x02 \x01(\x01\x12\x17\n\x0f\x62\x61ttery_voltage\x18\x03 \x01(\x01\x42)\n%org.usfirst.frc.team5002.robot.replayP\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x0creplay.proto\x12\x08team5002\"\xe8\x01\n\x0c\x43ontrolState\x12\x14\n\x0c\x66orward_axis\x18\x01 \x01(\x01\x12\x17\n\x0fhorizontal_axis\x18\x02 \x01(\x01\x12\x11\n\tturn_axis\x18\x03 \x01(\x01\x12\x10\n\x08\x62utton_A\x18\x04 \x01(\x08\x12\x10\n\x08\x62utton_B\x18\x05 \x01(\x08\x12\x10\n\x08\x62utton_X\x18\x06 \x01(\x08\x12\x10\n\x08\x62utton_Y\x18\x07 \x01(\x08\x12\x11\n\tbutton_LB\x18\x08 \x01(\x08\x12\x11\n\tbutton_RB\x18\t \x01(\x08\x12\x13\n\x0b\x62utton_home\x18\n \x01(\x08\x12\x13\n\x0b\x62utton_menu\x18\x0b \x01(\x08\"b\n\x06Replay\x12%\n\x05state\x18\x01 \x03(\x0b\x32\x16.team5002.ControlState\x12\x18\n\x10replay_frequency\x18\x02 \x01(\x01\x12\x17\n\x0f\x62\x61ttery_voltage\x18\x03 \x01(\x01\x42)\n%org.usfirst.frc.team5002.robot.replayP\x01\x62\x06proto3')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -54,6 +54,62 @@ _CONTROLSTATE = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='button_A', full_name='team5002.ControlState.button_A', index=3,
+      number=4, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='button_B', full_name='team5002.ControlState.button_B', index=4,
+      number=5, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='button_X', full_name='team5002.ControlState.button_X', index=5,
+      number=6, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='button_Y', full_name='team5002.ControlState.button_Y', index=6,
+      number=7, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='button_LB', full_name='team5002.ControlState.button_LB', index=7,
+      number=8, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='button_RB', full_name='team5002.ControlState.button_RB', index=8,
+      number=9, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='button_home', full_name='team5002.ControlState.button_home', index=9,
+      number=10, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='button_menu', full_name='team5002.ControlState.button_menu', index=10,
+      number=11, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -66,8 +122,8 @@ _CONTROLSTATE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=26,
-  serialized_end=106,
+  serialized_start=27,
+  serialized_end=259,
 )
 
 
@@ -111,8 +167,8 @@ _REPLAY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=108,
-  serialized_end=206,
+  serialized_start=261,
+  serialized_end=359,
 )
 
 _REPLAY.fields_by_name['state'].message_type = _CONTROLSTATE

@@ -8,7 +8,14 @@ message ControlState {
     double horizontal_axis = 2;         // Left / right strafing axis.
     double turn_axis = 3;               // CW / CCW rotation axis.
 
-    // TODO: add buttons
+    bool button_A = 4;               // Button ID = 1
+    bool button_B = 5;               // Button ID = 2
+    bool button_X = 6;               // Button ID = 3
+    bool button_Y = 7;               // Button ID = 4
+    bool button_LB = 8;              // Button ID = 5
+    bool button_RB = 9;              // Button ID = 6
+    bool button_home = 10;           // Button ID = 7
+    bool button_menu = 11;           // Button ID = 8
 }
 
 message Replay {
