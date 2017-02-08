@@ -33,7 +33,7 @@ public class Robot extends IterativeRobot {
     SendableChooser<String> slotSelector = new SendableChooser<String>();
     Timer replayTimer = new Timer();
 
-    public double replayFrequency = 30.0;   // Hz
+    public double replayFrequency = 1/0.0020;   // Hz
 
     // Paths are in UNIX format (forward slashes)
     public String replayDir = "/home/lvuser/"; // stick it in the homedir by default, I'm pretty sure FRCUserProgram.jar runs as lvuser on the RIO
@@ -102,7 +102,7 @@ public class Robot extends IterativeRobot {
 		 * autonomousCommand = new ExampleCommand(); break; }
 		 */
 
-         /*
+        /*
         String slotSelect = slotSelector.getSelected();
         switch(slotSelect) {
             default:
@@ -117,6 +117,7 @@ public class Robot extends IterativeRobot {
                 break;
         }
         */
+        
 
         oi.loadReplayFromFile(replayDir + "slot1.replay");
 
@@ -143,6 +144,8 @@ public class Robot extends IterativeRobot {
         if(replayUpdateTimer.hasPeriodPassed(1/replayFrequency)) {
             oi.loadStateFromReplay();
         }
+        
+        Robot.drivetrain.UpdateSD();
 
 		Scheduler.getInstance().run();
 	}
@@ -157,7 +160,7 @@ public class Robot extends IterativeRobot {
 			autonomousCommand.cancel();
 
         oi.currentlyReplaying = false;
-        oi.currentRecording = Replay.newBuilder().setBatteryVoltage(12.0).setReplayFrequency(30.0);
+        oi.currentRecording = Replay.newBuilder().setBatteryVoltage(12.0).setReplayFrequency(replayFrequency);
 
         replayUpdateTimer.reset();
         replayUpdateTimer.start();
@@ -181,6 +184,8 @@ public class Robot extends IterativeRobot {
         if(oi.arcadeStick.getRawButton(3)) {
             oi.saveReplayToFile(replayDir + "slot1.replay");
         }
+        
+        Robot.drivetrain.UpdateSD();
 
 		Scheduler.getInstance().run();
 	}

@@ -31,11 +31,21 @@ public class Teleop extends Command {
 	 * @param rcw	-1.0 to 1.0, clockwise rotational velocity
 	 * @return		Array of Doubles matching ws1-ws4 and wa1-wa4
 	 */
+	
+	double lastSteer[] = { 0, 0, 0, 0};
+	
 	protected void execute(){
 		double fwd = (Math.abs(Robot.oi.getForwardAxis()) > joystickDeadband) ? Robot.oi.getForwardAxis() : 0.0;
 		double str = (Math.abs(Robot.oi.getHorizontalAxis()) > joystickDeadband) ? Robot.oi.getHorizontalAxis() : 0.0;
 		//double rcw = 0.0;
 		double rcw = (Math.abs(Robot.oi.getTurnAxis()) > joystickDeadband) ? Robot.oi.getTurnAxis() : 0.0; 
+		
+		/*
+		if(fwd == 0 && str == 0 && rcw == 0) {
+			double zeros[] = {0, 0, 0, 0};
+			setDrivetrain(lastSteer, zeros);
+			return;
+		}*/
 		
 		if(Math.abs(fwd)>1.0 || Math.abs(str)>1.0 || Math.abs(rcw)>1.0){
 			return;
@@ -76,6 +86,11 @@ public class Teleop extends Command {
 		angles[1] = (d==0 && b==0) ? 0.0 : (Math.atan2(b, d) * 180 / Math.PI); // front left
 		angles[2] = (d==0 && a==0) ? 0.0 : (Math.atan2(a, d) * 180 / Math.PI); // back left
 		angles[3] = (c==0 && a==0) ? 0.0 : (Math.atan2(a, c) * 180 / Math.PI); // back right
+		
+		lastSteer[0] = angles[0];
+		lastSteer[1] = angles[1];
+		lastSteer[2] = angles[2];
+		lastSteer[3] = angles[3];
 
 		setDrivetrain(angles, speeds);
 	}
