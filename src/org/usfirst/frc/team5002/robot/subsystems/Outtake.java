@@ -14,7 +14,7 @@ public class Outtake extends Subsystem {
     private CANTalon outtake;
     public Outtake(){
     	outtake = new CANTalon(5002); //TODO replace with real controller ID
-    	outtake.changeControlMode(TalonControlMode.Speed);
+    	outtake.changeControlMode(TalonControlMode.PercentVbus);
     }
 
     public void initDefaultCommand() {

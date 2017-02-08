@@ -1,5 +1,6 @@
 package org.usfirst.frc.team5002.robot;
 
+import org.usfirst.frc.team5002.robot.commands.ClimbDown;
 import org.usfirst.frc.team5002.robot.commands.ClimbUp;
 import org.usfirst.frc.team5002.robot.commands.INtaker;
 import org.usfirst.frc.team5002.robot.commands.LaunchererC;
@@ -32,12 +33,13 @@ public class OI {
 		Button home = new JoystickButton(arcadeStick, 7);
 		Button menu = new JoystickButton(arcadeStick, 8);
 		
-		Y.toggleWhenActive(new ClimbUp());//turns the climb motor on while Y is being held, but reverses the motor while the button is held down the second time (for emergencies)
+		Y.whileHeld(new ClimbUp());//turns the climb motor on while Y is being held
 		B.toggleWhenPressed(new LaunchererC());//turns launcher motor on when B is pressed once, and off when B is pressed again
 		A.toggleWhenPressed(new INtaker()); //turns the intake motor on when A is pressed once, and off when A is pressed again
 		A.toggleWhenPressed(new OUTtaker()); //turns the outake motor on at the same time as the intake motor
-		LB.whileHeld(new TakeOuter()); // reverses outtake motor
-		LB.whileHeld(new ReverseInTaker());// reverse intake motor
+		LB.whileHeld(new TakeOuter()); // emergency reverse for outtake motor
+		LB.whileHeld(new ReverseInTaker());// emergency reverse for intake motor
+		LB.whileHeld(new ClimbDown());//emergency reverse for climb motor
 	}
 	
 	public double getForwardAxis() {
