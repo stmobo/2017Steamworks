@@ -5,31 +5,32 @@ import org.usfirst.frc.team5002.robot.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- *@author (Jo)Nathan, Bri, elweb
- *@version Last Updated 2/8/17
- *motor that spits balls into hopper
+ *@author elweb
+ *@version Last Modified 2/8/17
  */
-public class OUTtaker extends Command {
+public class ReverseInTaker extends Command {
 
-    public OUTtaker() {
-        requires(Robot.outtake);
+    public ReverseInTaker() {
+        requires(Robot.intake);
     }
 
+    // Called just before this Command runs the first time
     protected void initialize() {
     }
 
-    protected void execute() {		//Makes motor go backward when activated
-        Robot.outtake.run();
-
+    // Called repeatedly when this Command is scheduled to run
+    protected void execute() {
+    	Robot.intake.runBackwards();
     }
 
+    // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
         return false;
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.outtake.stop();
+    	Robot.intake.stop();
     }
 
     // Called when another command which requires one or more of the same
