@@ -98,7 +98,7 @@ public class SwerveDrive extends Subsystem {
     /*
      * sends data to the SmartDashboard
      */
-    public void UpdateSD(){
+    public void updateSD(){
     	SmartDashboard.putNumber("ADC-FR", fr_steer.getAnalogInRaw());
     	SmartDashboard.putNumber("ADC-FL", fl_steer.getAnalogInRaw());
     	SmartDashboard.putNumber("ADC-BL", bl_steer.getAnalogInRaw());
