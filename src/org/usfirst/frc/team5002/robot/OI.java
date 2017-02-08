@@ -46,6 +46,7 @@ public class OI {
 	
 	public double getHorizontalAxis(){
 		return arcadeStick.getRawAxis(0) * -1.0;//allows the Joystick to command the Robot's side to side movement
+
 	}
 	
 	public double getTurnAxis(){
