@@ -6,8 +6,8 @@ import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team5002.robot.Robot;
 
 /**
- *@author (Jo)Nathan
- *@version Last Updated 1/19/17
+ *@author (Jo)Nathan, elweb
+ *@version Last Updated 2/8/17
  */
 public class INtaker extends Command {
 
