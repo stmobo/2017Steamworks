@@ -12,15 +12,15 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class Intake extends Subsystem {
 	private CANTalon intake;
-	
+
 	public Intake(){ 							//Creation of intake motor
-	    	intake = new CANTalon(712); //TODO: put actual motor id
+	    	intake = new CANTalon(42); // yes, the motor id actually is 42
 	    	intake.changeControlMode(TalonControlMode.PercentVbus);
 	    }
-	
-	public void initDefaultCommand() {	
+
+	public void initDefaultCommand() {
 	    }
-	 
+
 	public void run(){ 	//Call to change the motor speed
 		intake.set(1.0);
 	}
@@ -29,5 +29,5 @@ public class Intake extends Subsystem {
 	}
 	public void stop() {  // stops the motor
 		intake.set(0);
-	}   
+	}
 }

@@ -1,17 +1,12 @@
 package org.usfirst.frc.team5002.robot;
 
-import org.usfirst.frc.team5002.robot.commands.ClimbDown;
-import org.usfirst.frc.team5002.robot.commands.ClimbUp;
-import org.usfirst.frc.team5002.robot.commands.INtaker;
-import org.usfirst.frc.team5002.robot.commands.LaunchererC;
-import org.usfirst.frc.team5002.robot.commands.OUTtaker;
-import org.usfirst.frc.team5002.robot.commands.ReverseInTaker;
-import org.usfirst.frc.team5002.robot.commands.TakeOuter;
+import org.usfirst.frc.team5002.robot.commands.*;
+import org.usfirst.frc.team5002.robot.replay.*;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import org.usfirst.frc.team5002.robot.replay.*;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.io.FileOutputStream;
 import java.io.FileInputStream;
@@ -57,10 +52,14 @@ public class OI {
 
 	public OI(){
 		arcadeStick = new Joystick(0); //gave Joystick a job
+
 		Y.whileHeld(climbup);//turns the climb motor on while Y is being held
+
 		B.toggleWhenPressed(launchererC);//turns launcher motor on when B is pressed once, and off when B is pressed again
+
 		A.toggleWhenPressed(intaker); //turns the intake motor on when A is pressed once, and off when A is pressed again
 		A.toggleWhenPressed(outtaker); //turns the outake motor on at the same time as the intake motor
+
 		LB.whileHeld(takeouter); // emergency reverse for outtake motor
 		LB.whileHeld(reverseInTaker);// emergency reverse for intake motor
 		LB.whileHeld(climbdown);//emergency reverse for climb motor
