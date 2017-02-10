@@ -11,24 +11,31 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
+ * @author sebastian and bri
  * PIDSteerCollective -- Steer all swerve modules collectively.
  */
 public class PIDSteerCollective extends Command {
+	
 	private static final double joystickDeadband = 0.10;
 	private static final double maxDriveOutput = 1.0;
+	//setting limits and max output
+	
 	
 	private double strRevs = 0;
 	
 	protected void execute(){
 		if(Robot.oi.arcadeStick.getRawButton(1)) {
 			strRevs = Robot.oi.getHorizontalAxis() * 1024.0;
+			//settin the oi and making math
 		}
 		double fwd = (Math.abs(Robot.oi.getForwardAxis()) > joystickDeadband) ? Robot.oi.getForwardAxis() : 0.0;
+		//math that does something
 
 		Robot.drivetrain.fl_steer.set(strRevs+Robot.drivetrain.steer_offsets[0]);
 		Robot.drivetrain.fr_steer.set(strRevs+Robot.drivetrain.steer_offsets[1]);
 		Robot.drivetrain.bl_steer.set(strRevs+Robot.drivetrain.steer_offsets[2]);
 		Robot.drivetrain.br_steer.set(strRevs+Robot.drivetrain.steer_offsets[3]);
+		//setting steer offsets
 
 		/*
 		Robot.drivetrain.fr_drive.set(fwd);
@@ -41,6 +48,7 @@ public class PIDSteerCollective extends Command {
 		SmartDashboard.putNumber("FR-Pos", Robot.drivetrain.fr_steer.getPosition());
 		SmartDashboard.putNumber("BL-Pos", Robot.drivetrain.bl_steer.getPosition());
 		SmartDashboard.putNumber("BR-Pos", Robot.drivetrain.br_steer.getPosition());
+		//getting position, puts to smartdashboard
 		
 		
 		//SmartDashboard.putNumber("Steer Cmd", strRevs);

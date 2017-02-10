@@ -71,12 +71,19 @@ public class SwerveDrive extends Subsystem {
 
     public void configureSteerMotor(CANTalon srx, boolean reverse) {
     	srx.changeControlMode(TalonControlMode.Position);
-    	srx.setFeedbackDevice(FeedbackDevice.AnalogEncoder);
+    	//control mode is in position
+    	srx.reverseSensor(true);
+    	//making the sensor read positively
+    	srx.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+    	//making it a quad encoder
+    	srx.configEncoderCodesPerRev(40);
+    	//setting the CPR to 360, good easy number
     	//srx.configPotentiometerTurns(1);
 		srx.setProfile(0);
         //srx.setPosition(0);
 		srx.reverseOutput(reverse);
 		srx.set(0.5); // reset to midpoint
+		
     }
 
     public void configureDriveMotor(CANTalon srx, boolean reverse) {
