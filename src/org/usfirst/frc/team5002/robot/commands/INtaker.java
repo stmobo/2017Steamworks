@@ -18,7 +18,7 @@ public class INtaker extends Command {
     }
 
     protected void initialize() {		//Makes motor start at 0
-    	SmartDashboard.putBoolean("Intaker", true);
+    
     }
 
     protected void execute() {
@@ -35,7 +35,7 @@ public class INtaker extends Command {
     protected void end() {
     	Robot.intake.stop();
     	//stops when it ends
-    	SmartDashboard.putBoolean("Intaker", false);
+    	
     }
 
     // Called when another command which requires one or more of the same
