@@ -81,15 +81,24 @@ public class Teleop extends Command {
 	}
 
 	public void setDrivetrain(double[] ang, double[] spd) {
+		double coeff[] = { 1.0, -1.0, -1.0, 1.0 };
+		
+		for(int i=0;i<4;i++) {
+			if(ang[i] >= 180.0) {
+				coeff[i] *= -1.0;
+				ang[i] -= 180.0;
+			}
+		}
+		
 		Robot.drivetrain.fr_steer.set(ang[3] * (1024.0 / 360.0) + Robot.drivetrain.steer_offsets[1]);
 		Robot.drivetrain.fl_steer.set(ang[2] * (1024.0 / 360.0) + Robot.drivetrain.steer_offsets[0]);
 		Robot.drivetrain.bl_steer.set(ang[1] * (1024.0 / 360.0) + Robot.drivetrain.steer_offsets[2]);
 		Robot.drivetrain.br_steer.set(ang[0] * (1024.0 / 360.0) + Robot.drivetrain.steer_offsets[3]);
 
-		Robot.drivetrain.fr_drive.set(spd[0]);
-		Robot.drivetrain.fl_drive.set(spd[1] * -1.0);
-		Robot.drivetrain.bl_drive.set(spd[2] * -1.0);
-		Robot.drivetrain.br_drive.set(spd[3]);
+		Robot.drivetrain.fr_drive.set(spd[0] * coeff[0]);
+		Robot.drivetrain.fl_drive.set(spd[1] * coeff[1]);
+		Robot.drivetrain.bl_drive.set(spd[2] * coeff[2]);
+		Robot.drivetrain.br_drive.set(spd[3] * coeff[3]);
 	}
 
     public Teleop() {
