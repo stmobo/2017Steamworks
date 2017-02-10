@@ -19,10 +19,10 @@ public class RopeClimber extends Subsystem {
     	ropeClimb.changeControlMode(TalonControlMode.PercentVbus);
     	}
     public void run(){
-    	ropeClimb.set(0.5);
+    	ropeClimb.set(1.0);
     }
     public void runBackwards(){
-    	ropeClimb.set(0.5);
+    	ropeClimb.set(1.0);
     }
     public void stop(){
     	ropeClimb.set(0);
