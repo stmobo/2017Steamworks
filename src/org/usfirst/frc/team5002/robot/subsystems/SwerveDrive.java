@@ -62,14 +62,26 @@ public class SwerveDrive extends Subsystem {
         bl_drive = new CANTalon(RobotMap.bl_drive);
         br_drive = new CANTalon(RobotMap.br_drive);
 
-        /* Set main controls for driving... */
-        this.configureDriveMotor(fl_drive, false);
-        this.configureDriveMotor(fr_drive, false);
-        this.configureDriveMotor(bl_drive, false);
-        this.configureDriveMotor(br_drive, false);
+        /* Drive motor config is left to teleop/auto commands */
     }
 
     public void configureSteerMotor(CANTalon srx, boolean reverse) {
+    	srx.changeControlMode(TalonControlMode.Position);
+    	srx.setFeedbackDevice(FeedbackDevice.AnalogEncoder);
+    	//srx.configPotentiometerTurns(1);
+		srx.setProfile(0);
+        //srx.setPosition(0);
+		srx.reverseOutput(reverse);
+		//srx.set(0.5); // reset to midpoint
+    }
+    
+    public void configureDriveMotorTeleop(CANTalon srx, boolean reverse) {
+    	srx.changeControlMode(TalonControlMode.PercentVbus);
+    	srx.set(0); // Reset to stopped
+		srx.reverseOutput(reverse);
+    }
+
+    public void configureDriveMotorAutonomous(CANTalon srx, boolean reverse) {
     	srx.changeControlMode(TalonControlMode.Position);
     	//control mode is in position
     	srx.reverseSensor(true);
@@ -77,19 +89,6 @@ public class SwerveDrive extends Subsystem {
     	srx.setFeedbackDevice(FeedbackDevice.QuadEncoder);
     	//making it a quad encoder
     	srx.configEncoderCodesPerRev(40);
-    	//setting the CPR to 360, good easy number
-    	//srx.configPotentiometerTurns(1);
-		srx.setProfile(0);
-        //srx.setPosition(0);
-		srx.reverseOutput(reverse);
-		srx.set(0.5); // reset to midpoint
-		
-    }
-
-    public void configureDriveMotor(CANTalon srx, boolean reverse) {
-    	srx.changeControlMode(TalonControlMode.PercentVbus);
-    	srx.set(0); // Reset to stopped
-		srx.reverseOutput(reverse);
     }
 
     public void initDefaultCommand() {
@@ -110,5 +109,10 @@ public class SwerveDrive extends Subsystem {
     	SmartDashboard.putNumber("ADC-FL", fl_steer.getAnalogInRaw());
     	SmartDashboard.putNumber("ADC-BL", bl_steer.getAnalogInRaw());
     	SmartDashboard.putNumber("ADC-BR", br_steer.getAnalogInRaw());
+    	
+    	SmartDashboard.putNumber("Pos-DriveFR", fr_drive.getPosition());
+    	SmartDashboard.putNumber("Pos-DriveFL", fl_drive.getPosition());
+    	SmartDashboard.putNumber("Pos-DriveBL", bl_drive.getPosition());
+    	SmartDashboard.putNumber("Pos-DriveBR", br_drive.getPosition());
     }
 }

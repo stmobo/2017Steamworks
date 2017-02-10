@@ -98,6 +98,11 @@ public class Teleop extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	/* Set main controls for driving... */
+        Robot.drivetrain.configureDriveMotorTeleop(Robot.drivetrain.fl_drive, false);
+        Robot.drivetrain.configureDriveMotorTeleop(Robot.drivetrain.fr_drive, false);
+        Robot.drivetrain.configureDriveMotorTeleop(Robot.drivetrain.bl_drive, false);
+        Robot.drivetrain.configureDriveMotorTeleop(Robot.drivetrain.br_drive, false);
     }
 
     // Make this return true when this Command no longer needs to run execute()
