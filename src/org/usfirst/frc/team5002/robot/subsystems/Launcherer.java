@@ -14,7 +14,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 //imported ourselves
 
 /**
- *
+ *@author elweb
+ *@version Last Modified 2/8/17
  */
 public class Launcherer extends Subsystem {
 	//extending subsystem, just organization
@@ -25,7 +26,7 @@ public class Launcherer extends Subsystem {
     	
     	launcherer = new CANTalon(784); //TODO: Input actual port number
     	//setting our motor to a port number
-    	launcherer.changeControlMode(TalonControlMode.Speed);
+    	launcherer.changeControlMode(TalonControlMode.PercentVbus);
     	//making sure our motor control is in speed (easier)
     	
     }
