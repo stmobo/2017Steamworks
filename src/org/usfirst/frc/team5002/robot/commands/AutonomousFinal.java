@@ -21,12 +21,16 @@ public class AutonomousFinal extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	
+    	/* Set main controls for driving... */
+    	Robot.drivetrain.configureDriveMotorAutonomous(Robot.drivetrain.fl_drive, false);
+    	Robot.drivetrain.configureDriveMotorAutonomous(Robot.drivetrain.fr_drive, false);
+    	Robot.drivetrain.configureDriveMotorAutonomous(Robot.drivetrain.bl_drive, false);
+    	Robot.drivetrain.configureDriveMotorAutonomous(Robot.drivetrain.br_drive, false);
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	//variable x is equal to the distance in feet(x12) divded by 4
+    	//variable x is equal to the distance in feet(x12) divded by 12.56
     	//change the first number to the feet you want
     	double x = (6.4*12)/12.56;
     	
