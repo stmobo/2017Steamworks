@@ -12,25 +12,16 @@ import edu.wpi.first.wpilibj.command.Command;
 public class OUTtaker extends Command {
 
     public OUTtaker() {
-<<<<<<< HEAD
-        requires(Robot.intake);
-        //getting right infor from right places
-=======
         requires(Robot.outtake);
->>>>>>> refs/remotes/origin/master
+        //getting right infor from right places
     }
 
     protected void initialize() {
     }
 
-<<<<<<< HEAD
-    protected void execute() {							//Makes motor go backward when activated
-        Robot.intake.runBackwards();
-        //the other part to intaker, reverse
-=======
     protected void execute() {		//Makes motor go backward when activated
         Robot.outtake.run();
->>>>>>> refs/remotes/origin/master
+        //the other part to intaker, reverse
 
     }
 
@@ -40,12 +31,8 @@ public class OUTtaker extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-<<<<<<< HEAD
-    	Robot.intake.stop();
-    	//stops once it's done
-=======
     	Robot.outtake.stop();
->>>>>>> refs/remotes/origin/master
+    	//stops once it's done
     }
 
     // Called when another command which requires one or more of the same

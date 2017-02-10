@@ -7,7 +7,7 @@ import org.usfirst.frc.team5002.robot.*;
 
 
 /**
- *
+ * @author Grace
  */
 public class AutonomousFinal extends Command {
 
@@ -28,7 +28,8 @@ public class AutonomousFinal extends Command {
     protected void execute() {
     	//variable x is equal to the distance in feet(x12) divded by 4
     	//change the first number to the feet you want
-    	double x = (8*12)/12.56;
+    	double x = (6.4*12)/12.56;
+    	
     	
     	//set all the motors in the drivetrain to the variable x, and itll run forward
     	Robot.drivetrain.fl_drive.set(x);

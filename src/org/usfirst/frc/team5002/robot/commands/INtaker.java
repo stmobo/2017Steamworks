@@ -34,11 +34,8 @@ public class INtaker extends Command {
     // Called once after isFinished returns true
     protected void end() {
     	Robot.intake.stop();
-<<<<<<< HEAD
     	//stops when it ends
-=======
     	SmartDashboard.putBoolean("Intaker", false);
->>>>>>> refs/remotes/origin/master
     }
 
     // Called when another command which requires one or more of the same
