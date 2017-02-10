@@ -14,7 +14,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 //imported ourselves
 
 /**
- *
+ *@author elweb
+ *@version Last Modified 2/8/17
  */
 public class Launcherer extends Subsystem {
 	//extending subsystem, just organization

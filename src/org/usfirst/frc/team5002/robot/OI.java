@@ -1,5 +1,6 @@
 package org.usfirst.frc.team5002.robot;
 
+import org.usfirst.frc.team5002.robot.commands.ClimbDown;
 import org.usfirst.frc.team5002.robot.commands.ClimbUp;
 import org.usfirst.frc.team5002.robot.commands.INtaker;
 import org.usfirst.frc.team5002.robot.commands.LaunchererC;
@@ -39,7 +40,7 @@ public class OI {
 
 		A.toggleWhenPressed(new INtaker()); //turns the intake motor on when A is pressed once, and off when A is pressed again
 		A.toggleWhenPressed(new OUTtaker()); //turns the outake motor on at the same time as the intake motor
-		
+
 		LB.whileHeld(new TakeOuter()); // emergency reverse for outtake motor
 		LB.whileHeld(new ReverseInTaker());// emergency reverse for intake motor
 		LB.whileHeld(new ClimbDown());//emergency reverse for climb motor

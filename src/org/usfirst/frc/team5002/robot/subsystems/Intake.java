@@ -14,6 +14,7 @@ public class Intake extends Subsystem {
 	private CANTalon intake;
 	
 	public Intake(){ 							//Creation of intake motor
+    
 	    	intake = new CANTalon(42); //TODO: put actual motor id
 	    	intake.changeControlMode(TalonControlMode.PercentVbus);
 	    }

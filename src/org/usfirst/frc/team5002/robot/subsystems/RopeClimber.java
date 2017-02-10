@@ -15,6 +15,7 @@ public class RopeClimber extends Subsystem {
     public void initDefaultCommand() {
     }
     public RopeClimber(){
+
     	ropeClimb = new CANTalon(3);//TODO input actual port number
     	ropeClimb.changeControlMode(TalonControlMode.PercentVbus);
     	}
