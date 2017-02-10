@@ -13,6 +13,7 @@ public class INtaker extends Command {
 
     public INtaker() {
         requires(Robot.intake);
+        //requires pulls from the correct info
     }
 
     protected void initialize() {		//Makes motor start at 0
@@ -31,6 +32,7 @@ public class INtaker extends Command {
     // Called once after isFinished returns true
     protected void end() {
     	Robot.intake.stop();
+    	//stops when it ends
     }
 
     // Called when another command which requires one or more of the same
