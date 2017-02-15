@@ -31,6 +31,9 @@ public class Teleop extends Command {
 	 * @param rcw	-1.0 to 1.0, clockwise rotational velocity
 	 * @return		Array of Doubles matching ws1-ws4 and wa1-wa4
 	 */
+	
+	double[] angles = new double[4];
+	double[] speeds = new double[4];
 	protected void execute(){
 		double fwd = (Math.abs(Robot.oi.getForwardAxis()) > joystickDeadband) ? Robot.oi.getForwardAxis() : 0.0;
 		double str = (Math.abs(Robot.oi.getHorizontalAxis()) > joystickDeadband) ? Robot.oi.getHorizontalAxis() : 0.0;
@@ -64,18 +67,17 @@ public class Teleop extends Command {
 		double spd_br = Math.sqrt(Math.pow(a, 2) + Math.pow(c, 2));
 		maxWs = spd_br > maxWs ? spd_br : maxWs;
 
-		double[] angles = new double[4];
-		double[] speeds = new double[4];
-
 		speeds[0] = maxWs > 1 ? spd_fr / maxWs : spd_fr;
 		speeds[1] = maxWs > 1 ? spd_fl / maxWs : spd_fl;
 		speeds[2] = maxWs > 1 ? spd_bl / maxWs : spd_bl;
 		speeds[3] = maxWs > 1 ? spd_br / maxWs : spd_br;
 
-		angles[0] = (c==0 && b==0) ? 0.0 : (Math.atan2(b, c) * 180 / Math.PI); // front right
-		angles[1] = (d==0 && b==0) ? 0.0 : (Math.atan2(b, d) * 180 / Math.PI); // front left
-		angles[2] = (d==0 && a==0) ? 0.0 : (Math.atan2(a, d) * 180 / Math.PI); // back left
-		angles[3] = (c==0 && a==0) ? 0.0 : (Math.atan2(a, c) * 180 / Math.PI); // back right
+		if(Robot.oi.arcadeStick.getMagnitude() <= 0.25) {
+			angles[0] = (c==0 && b==0) ? 0.0 : (Math.atan2(b, c) * 180 / Math.PI); // front right
+			angles[1] = (d==0 && b==0) ? 0.0 : (Math.atan2(b, d) * 180 / Math.PI); // front left
+			angles[2] = (d==0 && a==0) ? 0.0 : (Math.atan2(a, d) * 180 / Math.PI); // back left
+			angles[3] = (c==0 && a==0) ? 0.0 : (Math.atan2(a, c) * 180 / Math.PI); // back right
+		}
 
 		setDrivetrain(angles, speeds);
 	}
@@ -88,7 +90,7 @@ public class Teleop extends Command {
 				coeff[i] *= -1.0;
 				ang[i] -= 180.0;
 			}
-		}
+		} 
 		
 		Robot.drivetrain.fr_steer.set(ang[3] * (1024.0 / 360.0) + Robot.drivetrain.steer_offsets[1]);
 		Robot.drivetrain.fl_steer.set(ang[2] * (1024.0 / 360.0) + Robot.drivetrain.steer_offsets[0]);

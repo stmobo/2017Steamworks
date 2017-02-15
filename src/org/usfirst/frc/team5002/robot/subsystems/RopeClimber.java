@@ -23,7 +23,7 @@ public class RopeClimber extends Subsystem {
     	ropeClimb.set(1.0);
     }
     public void runBackwards(){
-    	ropeClimb.set(1.0);
+    	ropeClimb.set(-1.0);
     }
     public void stop(){
     	ropeClimb.set(0);

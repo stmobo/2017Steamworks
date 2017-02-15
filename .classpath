@@ -9,5 +9,10 @@
 	<classpathentry kind="lib" path="C:/Users/brian/wpilib/user/java/lib/TalonSRXLibJava.jar"/>
 	<classpathentry kind="lib" path="C:/Users/elweb/Downloads/CTRE Toolsuite v4.4.1.9/CTRE Toolsuite v4.4.1.9.exe"/>
 	<classpathentry kind="var" path="USERLIBS_DIR/CTRLib.jar"/>
+	<classpathentry kind="lib" path="C:/Users/brian/wpilib/user/java/lib/navx_frc.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/C:/Users/brian/wpilib/user/java/lib/navx_frc.jar!/docs"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

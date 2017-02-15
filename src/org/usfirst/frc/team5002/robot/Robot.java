@@ -1,7 +1,11 @@
 
 package org.usfirst.frc.team5002.robot;
 
+import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -34,6 +38,8 @@ public class Robot extends IterativeRobot {
 	public static final Outtake outtake = new Outtake();
 	public static OI oi;
 
+	public static AHRS navx;
+	
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
 
@@ -44,6 +50,16 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		oi = new OI();
+		
+		try {
+			/* NOTE: With respect to the NavX, the robot's front is in the -X direction.
+			 * The robot's right side is in the +Y direction, 
+			 * and the robot's top side is in the +Z direction as usual. */
+			navx = new AHRS(Port.kMXP);
+		} catch (RuntimeException ex) {
+			DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
+			navx = null;
+		}
 
 		/* Add PID Test commands. */
 		SmartDashboard.putData("PIDSteerTest-FrontLeft", new PIDSteerTestSingle(drivetrain.fl_steer));
