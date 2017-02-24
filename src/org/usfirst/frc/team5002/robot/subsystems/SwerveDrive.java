@@ -17,7 +17,7 @@ public class SwerveDrive extends Subsystem {
     // The actual steer motors...
 	private CANTalon fl_steer;
 	private CANTalon fr_steer;
-	private CANTalon bl_steer;
+	public CANTalon bl_steer;
 	private CANTalon br_steer;
 
     // The main drive motors...
@@ -43,7 +43,8 @@ public class SwerveDrive extends Subsystem {
      */
     
     /* FrontLeft, FrontRight, BackLeft, BackRight */
-    private double[] steer_offsets = { 143.0, 628.0, -210.0/*814.0*/, 678.0 };
+    private double[] steer_offsets = { 133.0, 536.0, 802.0/*814.0*/, 582.0 };
+    private double[] maxEncoderOutput = {881.0, 880.0, 871.0, 882.0};
     boolean driveReversalStatus[] = {true, false, true, false};
     
     public enum ModulePosition {
@@ -52,6 +53,21 @@ public class SwerveDrive extends Subsystem {
     	BL,
     	BR
     };
+    
+    private double getSteerHack(ModulePosition pos) {
+    	switch(pos) {
+    	case FL:
+    		return maxEncoderOutput[0];
+    	case FR:
+    		return maxEncoderOutput[1];
+    	case BL:
+    		return maxEncoderOutput[2];
+    	case BR:
+    		return maxEncoderOutput[3];
+    	}
+    	
+    	return 1024;
+    }
     
     private double getSteerOffset(ModulePosition pos) {
     	switch(pos) {
@@ -172,14 +188,16 @@ public class SwerveDrive extends Subsystem {
     	CANTalon steer = getSteerController(pos);
     	CANTalon drive = getDriveController(pos);
     	
+    	/*
     	if(degrees >= 180.0) {
     		degrees -= 180.0;
     		drive.reverseOutput(!getDriveReverse(pos));
     	} else {
     		drive.reverseOutput(getDriveReverse(pos));
     	}
+    	*/
     	
-    	double nativePos = degrees * (1024.0 / 360.0);
+    	double nativePos = degrees * (getSteerHack(pos) / 360.0);
     	nativePos += getSteerOffset(pos);
     	
     	steer.set(nativePos);
@@ -227,6 +245,8 @@ public class SwerveDrive extends Subsystem {
     	SmartDashboard.putNumber("Err-FL", fl_steer.getClosedLoopError());
     	SmartDashboard.putNumber("Err-BL", bl_steer.getClosedLoopError());
     	SmartDashboard.putNumber("Err-BR", br_steer.getClosedLoopError());
+    	
+    	SmartDashboard.putNumber("AccErr-BL", bl_steer.GetIaccum());
     	
     	SmartDashboard.putNumber("Pos-DriveFR", fr_drive.getPosition());
     	SmartDashboard.putNumber("Pos-DriveFL", fl_drive.getPosition());

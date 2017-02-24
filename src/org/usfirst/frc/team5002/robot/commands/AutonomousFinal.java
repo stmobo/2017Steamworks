@@ -33,10 +33,12 @@ public class AutonomousFinal extends Command {
     	
     	
     	//set all the motors in the drivetrain to the variable x, and itll run forward
+    	/*
     	Robot.drivetrain.fl_drive.set(x);
     	Robot.drivetrain.fr_drive.set(x);
     	Robot.drivetrain.bl_drive.set(x);
     	Robot.drivetrain.br_drive.set(x);
+    	*/
     	
     }
 
