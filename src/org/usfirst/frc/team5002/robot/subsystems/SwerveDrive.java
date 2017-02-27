@@ -42,19 +42,27 @@ public class SwerveDrive extends Subsystem {
      * BR: 24 / 0.0015  / 350 / 0 / 0    / 15
      */
 
-    /* FrontLeft, FrontRight, BackLeft, BackRight */
+    /* value ordering: FrontLeft, FrontRight, BackLeft, BackRight
+     * Yes, for all 4 arrays (or however many there are.)
+     */
     private double[] steer_offsets = { 133.0, 536.0, 802.0/*814.0*/, 582.0 };
     private double[] maxEncoderOutput = {881.0, 880.0, 871.0, 882.0};
     private double[] minEncoderOutput = {0.0, 0.0, 0.0, 0.0};
     boolean driveReversalStatus[] = {true, false, true, false};
 
     public enum ModulePosition {
-    	FL,
-    	FR,
-    	BL,
-    	BR
+    	FL,    ///< Front-left
+    	FR,    ///< Front-right
+    	BL,    ///< Back-left
+    	BR     ///< Back-right
     };
 
+    /**
+     * Gets the maximum possible value returned by the encoder hardware.
+     * For use in software compensation.
+     *
+     * @param pos position of the steer module to inspect.
+     */
     private double getSteerHack(ModulePosition pos) {
     	switch(pos) {
     	case FL:
@@ -70,6 +78,12 @@ public class SwerveDrive extends Subsystem {
     	return 1024;
     }
 
+    /**
+     * Gets the minimum possible value returned by the encoder hardware.
+     * For use in software compensation.
+     *
+     * @param pos position of the steer module to inspect.
+     */
     private double getMinSteerHack(ModulePosition pos) {
         switch(pos) {
         case FL:
@@ -85,6 +99,13 @@ public class SwerveDrive extends Subsystem {
         return 0;
     }
 
+    /**
+     * Gets the relative value of "forward" with respect to a steer encoder.
+     * Driving a steer motor to this position will induce forward motion when
+     * driven with positive voltage.
+     *
+     * @param pos position of the steer module to inspect.
+     */
     private double getSteerOffset(ModulePosition pos) {
     	switch(pos) {
     	case FL:
@@ -100,6 +121,11 @@ public class SwerveDrive extends Subsystem {
     	return 0;
     }
 
+    /**
+     * Gets whether a given steer module's drive motor should be reversed by default.
+     *
+     * @param pos position of the steer module to inspect.
+     */
     private boolean getDriveReverse(ModulePosition pos) {
     	switch(pos) {
     	case FL:
@@ -115,6 +141,11 @@ public class SwerveDrive extends Subsystem {
     	return false;
     }
 
+    /**
+     * Maps ModulePositions to their corresponding steer motor controllers.
+     *
+     * @param pos position of the steer module to inspect.
+     */
     private CANTalon getSteerController(ModulePosition pos) {
     	switch(pos) {
     	case FL:
@@ -130,6 +161,11 @@ public class SwerveDrive extends Subsystem {
     	return null;
     }
 
+    /**
+     * Maps ModulePositions to their corresponding drive motor controllers.
+     *
+     * @param pos position of the steer module to inspect.
+     */
     private CANTalon getDriveController(ModulePosition pos) {
     	switch(pos) {
     	case FL:
@@ -166,16 +202,27 @@ public class SwerveDrive extends Subsystem {
         /* Drive motor config is left to teleop/auto commands */
     }
 
+    /**
+     * Performs steer motor intialization.
+     *
+     * @param srx reference to a steer motor controller
+     * @param reverse reversal status of given motor controller (true = reversed motor outputs)
+     */
     private void configureSteerMotor(CANTalon srx, boolean reverse) {
     	srx.changeControlMode(TalonControlMode.Position);
     	srx.setFeedbackDevice(FeedbackDevice.AnalogEncoder);
     	//srx.configPotentiometerTurns(1);
 		srx.setProfile(0);
-        //srx.setPosition(0);
+        srx.setPosition(0); // clear top bits of encoder position
 		srx.reverseOutput(reverse);
 		//srx.set(0.5); // reset to midpoint
     }
 
+    /**
+     * Configures a swerve module for direct control (Vbus mode on drive)
+     *
+     * @param pos Steer module to reconfigure
+     */
     private void configureDriveMotorTeleop(ModulePosition pos) {
     	CANTalon srx = getDriveController(pos);
     	srx.reverseOutput(getDriveReverse(pos));
@@ -183,6 +230,11 @@ public class SwerveDrive extends Subsystem {
     	srx.set(0); // Reset to stopped
     }
 
+    /**
+     * Configures a swerve module for autonomous control (Closed-loop on drive)
+     *
+     * @param pos Steer module to reconfigure
+     */
     private void configureDriveMotorAutonomous(ModulePosition pos) {
     	CANTalon srx = getDriveController(pos);
 
@@ -195,23 +247,40 @@ public class SwerveDrive extends Subsystem {
     	srx.configEncoderCodesPerRev(40);
     }
 
-    public void setDriveOutput(ModulePosition pos, double vout) {
+    /**
+     * Sets the given swerve module's drive target.
+     *
+     * As this effectively acts as a wrapper around CANTalon.set(), the
+     * semantics of this call vary on the configured drive mode, which can
+     * be either PercentVBus (teleop) or ClosedLoopPosition.
+     *
+     * @param pos Steer module to drive
+     * @param out Output target to set to
+     */
+    public void setDriveOutput(ModulePosition pos, double out) {
     	CANTalon drive = getDriveController(pos);
-    	drive.set(vout);
+    	drive.set(out);
     }
 
+    /**
+     * Sets the given swerve module's steering position.
+     *
+     * This call will command the appropriate steer motor to move to a given
+     * target in degrees (where 0 degrees equates to "straight forward").
+     *
+     * Unlike setDriveOutput(), the semantics of this call are the same between
+     * teleop and auto.
+     */
     public void setSteerDegrees(ModulePosition pos, double degrees) {
     	CANTalon steer = getSteerController(pos);
     	CANTalon drive = getDriveController(pos);
 
-    	/*
     	if(degrees >= 180.0) {
     		degrees -= 180.0;
     		drive.reverseOutput(!getDriveReverse(pos));
     	} else {
     		drive.reverseOutput(getDriveReverse(pos));
     	}
-    	*/
 
     	double nativePos = degrees * ((getSteerHack(pos) - getMinSteerHack(pos)) / 360.0);
     	nativePos += getSteerOffset(pos);
@@ -220,6 +289,9 @@ public class SwerveDrive extends Subsystem {
     	steer.set(nativePos);
     }
 
+    /**
+     * Reconfigure all drive motors for direct (teleop) control.
+     */
     public void setDriveTeleop() {
     	configureDriveMotorTeleop(ModulePosition.FL);
     	configureDriveMotorTeleop(ModulePosition.FR);
@@ -227,6 +299,9 @@ public class SwerveDrive extends Subsystem {
     	configureDriveMotorTeleop(ModulePosition.BR);
     }
 
+    /**
+     * Reconfigure all drive motors for autonomous (closed-loop) control.
+     */
     public void setDriveAuto() {
     	configureDriveMotorAutonomous(ModulePosition.FL);
     	configureDriveMotorAutonomous(ModulePosition.FR);
@@ -238,42 +313,33 @@ public class SwerveDrive extends Subsystem {
     	this.setDefaultCommand(new KillDrivetrain());
     }
 
-    public void UpdateSDSingle(CANTalon srx) {
-    	SmartDashboard.putNumber("Error", srx.getClosedLoopError());
-    	SmartDashboard.putNumber("Pos", srx.getPosition());
-    	SmartDashboard.putNumber("ADC", srx.getAnalogInRaw());
+    /**
+     * Outputs debugging data to the SmartDashboard for one swerve module.
+     *
+     * Each output key is suffixed with a given string for identification. 
+     * @param pos swerve module to inspect
+     * @param suffix string identifier suffix
+     */
+    public void UpdateSDSingle(ModulePosition pos, String suffix) {
+        CANTalon steer = getSteerController(pos);
+    	CANTalon drive = getDriveController(pos);
+
+    	SmartDashboard.putNumber("SteerErr-"+suffix, steer.getClosedLoopError());
+    	SmartDashboard.putNumber("SteerPos-"+suffix, steer.getPosition());
+    	SmartDashboard.putNumber("SteerADC-"+suffix, steer.getAnalogInRaw());
+
+        SmartDashboard.putNumber("DriveSpeed-"+suffix, drive.getSpeed());
+        SmartDashboard.putNumber("DrivePos-"+suffix, drive.getPosition());
+        SmartDashboard.putNumber("DriveErr-"+suffix, drive.getClosedLoopError());
     }
 
     /*
      * sends data to the SmartDashboard
      */
     public void updateSD(){
-    	SmartDashboard.putNumber("ADC-FR", fr_steer.getAnalogInRaw());
-    	SmartDashboard.putNumber("ADC-FL", fl_steer.getAnalogInRaw());
-    	SmartDashboard.putNumber("ADC-BL", bl_steer.getAnalogInRaw());
-    	SmartDashboard.putNumber("ADC-BR", br_steer.getAnalogInRaw());
-
-    	SmartDashboard.putNumber("Pos-FR", fr_steer.getPosition());
-    	SmartDashboard.putNumber("Pos-FL", fl_steer.getPosition());
-    	SmartDashboard.putNumber("Pos-BL", bl_steer.getPosition());
-    	SmartDashboard.putNumber("Pos-BR", br_steer.getPosition());
-
-    	SmartDashboard.putNumber("Err-FR", fr_steer.getClosedLoopError());
-    	SmartDashboard.putNumber("Err-FL", fl_steer.getClosedLoopError());
-    	SmartDashboard.putNumber("Err-BL", bl_steer.getClosedLoopError());
-    	SmartDashboard.putNumber("Err-BR", br_steer.getClosedLoopError());
-
-    	SmartDashboard.putNumber("AccErr-BL", bl_steer.GetIaccum());
-
-    	SmartDashboard.putNumber("Pos-DriveFR", fr_drive.getPosition());
-    	SmartDashboard.putNumber("Pos-DriveFL", fl_drive.getPosition());
-    	SmartDashboard.putNumber("Pos-DriveBL", bl_drive.getPosition());
-    	SmartDashboard.putNumber("Pos-DriveBR", br_drive.getPosition());
-
-    	SmartDashboard.putNumber("DriveFR Speed", fr_drive.getSpeed());
-    	SmartDashboard.putNumber("DriveFL Speed", fl_drive.getSpeed());
-    	SmartDashboard.putNumber("DriveBL Speed", bl_drive.getSpeed());
-    	SmartDashboard.putNumber("DriveBR Speed", br_drive.getSpeed());
-
+    	UpdateSDSingle(fl_steer, fl_drive, "FL");
+    	UpdateSDSingle(fr_steer, fr_drive, "FR");
+    	UpdateSDSingle(bl_steer, bl_drive, "BL");
+    	UpdateSDSingle(br_steer, br_drive, "BR");
     }
 }
