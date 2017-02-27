@@ -316,7 +316,7 @@ public class SwerveDrive extends Subsystem {
     /**
      * Outputs debugging data to the SmartDashboard for one swerve module.
      *
-     * Each output key is suffixed with a given string for identification. 
+     * Each output key is suffixed with a given string for identification.
      * @param pos swerve module to inspect
      * @param suffix string identifier suffix
      */
@@ -337,9 +337,9 @@ public class SwerveDrive extends Subsystem {
      * sends data to the SmartDashboard
      */
     public void updateSD(){
-    	UpdateSDSingle(fl_steer, fl_drive, "FL");
-    	UpdateSDSingle(fr_steer, fr_drive, "FR");
-    	UpdateSDSingle(bl_steer, bl_drive, "BL");
-    	UpdateSDSingle(br_steer, br_drive, "BR");
+    	UpdateSDSingle(ModulePosition.FL, "FL");
+    	UpdateSDSingle(ModulePosition.FR, "FR");
+    	UpdateSDSingle(ModulePosition.BL, "BL");
+    	UpdateSDSingle(ModulePosition.BR, "BR");
     }
 }
