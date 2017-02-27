@@ -17,7 +17,7 @@ public class SwerveDrive extends Subsystem {
     // The actual steer motors...
 	private CANTalon fl_steer;
 	private CANTalon fr_steer;
-	public CANTalon bl_steer;
+	private CANTalon bl_steer;
 	private CANTalon br_steer;
 
     // The main drive motors...
