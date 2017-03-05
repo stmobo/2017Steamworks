@@ -22,8 +22,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class OI {
 	public Joystick arcadeStick; //named Joystick
-	
-	
+
+    private Button activateLowSpeed;
+    private Button activateHighSpeed;
+
 	public OI(){
 		arcadeStick = new Joystick(0); //gave Joystick a job
 		Button A = new JoystickButton(arcadeStick, 1);
@@ -34,30 +36,48 @@ public class OI {
 		Button RB = new JoystickButton(arcadeStick, 6);
 		Button home = new JoystickButton(arcadeStick, 7);
 		Button menu = new JoystickButton(arcadeStick, 8);
-		
-		
+
+        activateLowSpeed = new JoystickButton(arcadeStick, 10); // Bumper 1 (left)
+        activateHighSpeed = new JoystickButton(arcadeStick, 11); // Bumper 2 (right)
+
 		Y.whileHeld(new ClimbUp());//turns the climb motor on while Y is being held
 		RB.whileHeld(new ClimbDown());//turns launcher motor on when B is pressed once, and off when B is pressed again
 
 		//A.toggleWhenPressed(new INtaker()); //turns the intake motor on when A is pressed once, and off when A is pressed again
 		B.toggleWhenPressed(new OUTtaker()); //turns the outake motor on at the same time as the intake motor
-		
+
 		LB.whileHeld(new TakeOuter()); // emergency reverse for outtake motor
 		LB.whileHeld(new ReverseInTaker());// emergency reverse for intake motor
-		
-	}
-	
-	public double getForwardAxis() {
-		return arcadeStick.getRawAxis(1) * -1.0;//allows the Joystick to command the Robot's forwards and backwards movement
-	}
-	
-	public double getHorizontalAxis(){
-		return arcadeStick.getRawAxis(0) * -1.0;//allows the Joystick to command the Robot's side to side movement
 
 	}
-	
+
+    /* set multipliers for teleop drive speed outputs */
+    public double getDriveSpeedCoefficient() {
+        if(activateLowSpeed.get()) {
+            return 0.5;
+        } else if(activateHighSpeed.get()) {
+            return 1.0;
+        } else {
+            return 0.75;
+        }
+    }
+
+    /* Return magnitude of main driving control stick / inputs.
+     * Should be equivalent to Math.hypot(getForwardAxis(), getHorizontalAxis()). */
+    public double getDriveMagnitude() {
+        return arcadeStick.getMagnitude();
+    }
+
+	public double getForwardAxis() {
+		return arcadeStick.getRawAxis(1) * -1.0;  // (axis 1 = left-hand Y axis) allows the Joystick to command the Robot's forwards and backwards movement
+	}
+
+	public double getHorizontalAxis(){
+		return arcadeStick.getRawAxis(0) * -1.0; // (axis 0 = left-hand X axis) allows the Joystick to command the Robot's side to side movement
+	}
+
 	public double getTurnAxis(){
-		return arcadeStick.getRawAxis(4);//allows the Joystick to command the rotation of the Robot
+		return arcadeStick.getRawAxis(4); // (axis 4 = right-hand X axis) allows the Joystick to command the rotation of the Robot
 	}
 	public void UpdateSD(){
 		Robot.drivetrain.updateSD();//sends all the data from SwerveDrive subsystem to the SmartDashboard
