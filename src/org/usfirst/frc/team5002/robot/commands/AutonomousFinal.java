@@ -12,20 +12,17 @@ import org.usfirst.frc.team5002.robot.*;
 public class AutonomousFinal extends Command {
 
     public AutonomousFinal() {
-    	
+
     	requires(Robot.drivetrain);
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	
+
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
     	/* Set main controls for driving... */
-    	Robot.drivetrain.configureDriveMotorAutonomous(Robot.drivetrain.fl_drive, false);
-    	Robot.drivetrain.configureDriveMotorAutonomous(Robot.drivetrain.fr_drive, false);
-    	Robot.drivetrain.configureDriveMotorAutonomous(Robot.drivetrain.bl_drive, false);
-    	Robot.drivetrain.configureDriveMotorAutonomous(Robot.drivetrain.br_drive, false);
+    	Robot.drivetrain.setDriveAuto();
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -33,14 +30,12 @@ public class AutonomousFinal extends Command {
     	//variable x is equal to the distance in feet(x12) divded by 12.56
     	//change the first number to the feet you want
     	double x = (6.4*12)/12.56;
-    	
-    	
+
     	//set all the motors in the drivetrain to the variable x, and itll run forward
-    	Robot.drivetrain.fl_drive.set(x);
-    	Robot.drivetrain.fr_drive.set(x);
-    	Robot.drivetrain.bl_drive.set(x);
-    	Robot.drivetrain.br_drive.set(x);
-    	
+        Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.FL, x);
+        Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.FR, x);
+        Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.BL, x);
+        Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.BR, x);
     }
 
     // Make this return true when this Command no longer needs to run execute()
