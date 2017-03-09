@@ -116,5 +116,17 @@ public class OI {
 
 	public void UpdateSD(){
 		Robot.drivetrain.updateSD();//sends all the data from SwerveDrive subsystem to the SmartDashboard
+		if(Robot.navx != null) {
+			SmartDashboard.putBoolean("NavX Present", true);
+			SmartDashboard.putNumber("Heading", Robot.navx.getAngle());	
+			if(focEnabled) {
+				SmartDashboard.putString("Control Mode", "Field-Oriented");
+			} else {
+				SmartDashboard.putString("Control Mode", "Robot-Oriented (FOC available)");
+			}
+		} else {
+			SmartDashboard.putBoolean("NavX Present", false);
+			SmartDashboard.putString("Control Mode", "Robot-Oriented (FOC unavailable)");
+		}
 	}
 }

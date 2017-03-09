@@ -45,7 +45,7 @@ public class SwerveDrive extends Subsystem {
     /* value ordering: FrontLeft, FrontRight, BackLeft, BackRight
      * Yes, for all 4 arrays (or however many there are.)
      */
-    private double[] steer_offsets = { 135.0, 617.0, 940.0, 1013.0 };
+    private double[] steer_offsets = { 135.0, 617.0, 940.0, 667.0 };
     private double[] maxEncoderOutput = {1024.0, 1024.0, 1024.0, 1024.0};
     private double[] minEncoderOutput = {0.0, 0.0, 0.0, 0.0};
     boolean driveReversalStatus[] = {false, false, false, false};

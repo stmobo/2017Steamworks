@@ -107,8 +107,7 @@ public class Robot extends IterativeRobot {
 		//Robot.drivetrain.UpdateSDSingle(Robot.drivetrain.fr_steer);
 		//Robot.drivetrain.UpdateSDSingle(Robot.drivetrain.fl_steer);
 
-		Robot.drivetrain.updateSD();
-
+		oi.UpdateSD();
 		Scheduler.getInstance().run();
 	}
 
@@ -143,7 +142,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-		Robot.drivetrain.updateSD();
+		oi.UpdateSD();
 		Scheduler.getInstance().run();
 	}
 
@@ -162,7 +161,7 @@ public class Robot extends IterativeRobot {
 		Teleop teleopTest = new Teleop();
 		Scheduler.getInstance().add(teleopTest);
 
-    oi.updateOIState();
+		oi.updateOIState();
 
 		//Command test = new SteerTestVbus();
 		//Scheduler.getInstance().add(test);
@@ -174,7 +173,8 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		//Robot.oi.testing();
-		Robot.drivetrain.updateSD();
+		oi.UpdateSD();
+		oi.updateOIState();
 		Scheduler.getInstance().run();
 	}
 
