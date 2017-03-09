@@ -56,7 +56,10 @@ public class Robot extends IterativeRobot {
 		try {
 			/* NOTE: With respect to the NavX, the robot's front is in the -X direction.
 			 * The robot's right side is in the +Y direction,
-			 * and the robot's top side is in the +Z direction as usual. */
+			 * and the robot's top side is in the +Z direction as usual.
+       * Clockwise rotation = increasing yaw.
+       */
+
 			navx = new AHRS(Port.kMXP);
 		} catch (RuntimeException ex) {
 			DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
@@ -65,6 +68,9 @@ public class Robot extends IterativeRobot {
 
         // start camera stream lol
         CameraServer.getInstance().startAutomaticCapture();
+        if(navx != null) {
+            navx.zeroYaw();
+        }
 
 		/* Add PID Test commands. */
 		/*
@@ -146,12 +152,13 @@ public class Robot extends IterativeRobot {
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
 
-		PIDSteerCollective PIDTest = new PIDSteerCollective();
-		Scheduler.getInstance().add(PIDTest);
+		//PIDSteerCollective PIDTest = new PIDSteerCollective();
+		//Scheduler.getInstance().add(PIDTest);
 
-		//Teleop teleopTest = new Teleop();
-		//Scheduler.getInstance().add(teleopTest);
-		//
+		Teleop teleopTest = new Teleop();
+		Scheduler.getInstance().add(teleopTest);
+
+    oi.updateOIState();
 
 		//Command test = new SteerTestVbus();
 		//Scheduler.getInstance().add(test);
