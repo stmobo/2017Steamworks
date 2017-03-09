@@ -25,6 +25,9 @@ public class OI {
 
     private Button activateLowSpeed;
     private Button activateHighSpeed;
+    private Button toggleFOC;
+
+    boolean focEnabled = false;
 
 	public OI(){
 		arcadeStick = new Joystick(0); //gave Joystick a job
@@ -37,19 +40,30 @@ public class OI {
 		Button home = new JoystickButton(arcadeStick, 7);
 		Button menu = new JoystickButton(arcadeStick, 8);
 
-        activateLowSpeed = new JoystickButton(arcadeStick, 10); // Bumper 1 (left)
-        activateHighSpeed = new JoystickButton(arcadeStick, 11); // Bumper 2 (right)
+        activateLowSpeed = new JoystickButton(arcadeStick, 9); // Bumper 1 (left)
+        activateHighSpeed = new JoystickButton(arcadeStick, 10); // Bumper 2 (right)
+        toggleFOC = home;
 
 		Y.whileHeld(new ClimbUp());//turns the climb motor on while Y is being held
 		RB.whileHeld(new ClimbDown());//turns launcher motor on when B is pressed once, and off when B is pressed again
 
-		//A.toggleWhenPressed(new INtaker()); //turns the intake motor on when A is pressed once, and off when A is pressed again
+		A.toggleWhenPressed(new INtaker()); //turns the intake motor on when A is pressed once, and off when A is pressed again
 		B.toggleWhenPressed(new OUTtaker()); //turns the outake motor on at the same time as the intake motor
 
 		LB.whileHeld(new TakeOuter()); // emergency reverse for outtake motor
 		LB.whileHeld(new ReverseInTaker());// emergency reverse for intake motor
-
 	}
+
+    // For toggle buttons that don't warrant their own commands.
+    boolean focDebounce = false;
+    public void updateOIState() {
+        if(toggleFOC.get() && !focDebounce) {
+            focEnabled = !focEnabled;
+            focDebounce = true;
+        } else {
+            focDebounce = false;
+        }
+    }
 
     /* set multipliers for teleop drive speed outputs */
     public double getDriveSpeedCoefficient() {
@@ -69,16 +83,37 @@ public class OI {
     }
 
 	public double getForwardAxis() {
-		return arcadeStick.getRawAxis(1) * -1.0;  // (axis 1 = left-hand Y axis) allows the Joystick to command the Robot's forwards and backwards movement
+        if(focEnabled && Robot.navx != null) {
+            // Zero degrees = towards opposing side
+            double x = arcadeStick.getRawAxis(1) * -1.0;
+            double y = arcadeStick.getRawAxis(0) * -1.0;
+            double hdg = Robot.navx.getAngle();
+
+            // X-coordinate -> CW alias rotation (left-handed)
+            return (x * Math.cos(hdg*Math.PI/180.0)) + (y * -Math.sin(hdg*Math.PI/180.0));
+        } else {
+            return arcadeStick.getRawAxis(1) * -1.0;  // (axis 1 = left-hand Y axis) allows the Joystick to command the Robot's forwards and backwards movement
+        }
 	}
 
 	public double getHorizontalAxis(){
-		return arcadeStick.getRawAxis(0) * -1.0; // (axis 0 = left-hand X axis) allows the Joystick to command the Robot's side to side movement
+        if(focEnabled && Robot.navx != null) {
+            // Right = +Y
+            double x = arcadeStick.getRawAxis(1) * -1.0;
+            double y = arcadeStick.getRawAxis(0) * -1.0;
+            double hdg = Robot.navx.getAngle();
+
+            // Y-coordinate, CW alias rotation w/ left-handed coordinate system
+            return (x * Math.sin(hdg*Math.PI/180.0)) + (y * Math.cos(hdg*Math.PI/180.0));
+        } else {
+            return arcadeStick.getRawAxis(0) * -1.0; // (axis 0 = left-hand X axis) allows the Joystick to command the Robot's side to side movement
+        }
 	}
 
 	public double getTurnAxis(){
 		return arcadeStick.getRawAxis(4); // (axis 4 = right-hand X axis) allows the Joystick to command the rotation of the Robot
 	}
+
 	public void UpdateSD(){
 		Robot.drivetrain.updateSD();//sends all the data from SwerveDrive subsystem to the SmartDashboard
 	}
