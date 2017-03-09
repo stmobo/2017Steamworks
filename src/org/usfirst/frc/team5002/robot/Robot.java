@@ -3,6 +3,7 @@ package org.usfirst.frc.team5002.robot;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.SPI.Port;
@@ -40,7 +41,7 @@ public class Robot extends IterativeRobot {
 	public static OI oi;
 
 	public static AHRS navx;
-	
+
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
 
@@ -51,16 +52,19 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		oi = new OI();
-		
+
 		try {
 			/* NOTE: With respect to the NavX, the robot's front is in the -X direction.
-			 * The robot's right side is in the +Y direction, 
+			 * The robot's right side is in the +Y direction,
 			 * and the robot's top side is in the +Z direction as usual. */
 			navx = new AHRS(Port.kMXP);
 		} catch (RuntimeException ex) {
 			DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
 			navx = null;
 		}
+
+        // start camera stream lol
+        CameraServer.getInstance().startAutomaticCapture();
 
 		/* Add PID Test commands. */
 		/*
@@ -89,12 +93,12 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("BL-Pos", Robot.drivetrain.bl_steer.getPosition());
 		SmartDashboard.putNumber("BR-Pos", Robot.drivetrain.br_steer.getPosition());
 		*/
-		
+
 		//Robot.drivetrain.UpdateSDSingle(Robot.drivetrain.fr_steer);
 		//Robot.drivetrain.UpdateSDSingle(Robot.drivetrain.fl_steer);
-		
+
 		Robot.drivetrain.updateSD();
-		
+
 		Scheduler.getInstance().run();
 	}
 
@@ -144,11 +148,11 @@ public class Robot extends IterativeRobot {
 
 		PIDSteerCollective PIDTest = new PIDSteerCollective();
 		Scheduler.getInstance().add(PIDTest);
-		
+
 		//Teleop teleopTest = new Teleop();
 		//Scheduler.getInstance().add(teleopTest);
 		//
-		
+
 		//Command test = new SteerTestVbus();
 		//Scheduler.getInstance().add(test);
 	}
