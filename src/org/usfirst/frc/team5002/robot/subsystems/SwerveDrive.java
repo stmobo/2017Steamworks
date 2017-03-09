@@ -45,10 +45,11 @@ public class SwerveDrive extends Subsystem {
     /* value ordering: FrontLeft, FrontRight, BackLeft, BackRight
      * Yes, for all 4 arrays (or however many there are.)
      */
-    private double[] steer_offsets = { 710.0, 208.0, 736.0, 820.0 };
+    private double[] steer_offsets = { 135.0, 617.0, 940.0, 1013.0 };
     private double[] maxEncoderOutput = {1024.0, 1024.0, 1024.0, 1024.0};
     private double[] minEncoderOutput = {0.0, 0.0, 0.0, 0.0};
-    boolean driveReversalStatus[] = {true, false, true, false};
+    boolean driveReversalStatus[] = {false, false, false, false};
+    boolean driveReversalConst[] = {true, false, true, false};
 
     public enum ModulePosition {
     	FL,    ///< Front-left
@@ -140,6 +141,44 @@ public class SwerveDrive extends Subsystem {
 
     	return false;
     }
+    
+    /**
+     * Gets whether a given steer module's drive motor should be reversed by default.
+     *
+     * @param pos position of the steer module to inspect.
+     */
+    private boolean getDriveReverseConst(ModulePosition pos) {
+    	switch(pos) {
+    	case FL:
+    		return driveReversalConst[0];
+    	case FR:
+    		return driveReversalConst[1];
+    	case BL:
+    		return driveReversalConst[2];
+    	case BR:
+    		return driveReversalConst[3];
+    	}
+
+    	return false;
+    }
+    
+    /**
+     * Gets whether a given steer module's drive motor should be reversed by default.
+     *
+     * @param pos position of the steer module to inspect.
+     */
+    private void setDriveReverse(ModulePosition pos, boolean stat) {
+    	switch(pos) {
+    	case FL:
+    		driveReversalStatus[0] = stat;
+    	case FR:
+    		driveReversalStatus[1] = stat;
+    	case BL:
+    		driveReversalStatus[2] = stat;
+    	case BR:
+    		driveReversalStatus[3] = stat;
+    	}
+    }
 
     /**
      * Maps ModulePositions to their corresponding steer motor controllers.
@@ -200,6 +239,7 @@ public class SwerveDrive extends Subsystem {
         br_drive = new CANTalon(RobotMap.br_drive);
 
         /* Drive motor config is left to teleop/auto commands */
+
     }
 
     /**
@@ -213,8 +253,7 @@ public class SwerveDrive extends Subsystem {
     	srx.setFeedbackDevice(FeedbackDevice.AnalogEncoder);
     	//srx.configPotentiometerTurns(1);
 		srx.setProfile(0);
-        srx.setPosition(0); // clear top bits of encoder position
-		srx.reverseOutput(reverse);
+        //srx.setPosition(0); // clear top bits of encoder position
 		//srx.set(0.5); // reset to midpoint
     }
 
@@ -225,7 +264,7 @@ public class SwerveDrive extends Subsystem {
      */
     private void configureDriveMotorTeleop(ModulePosition pos) {
     	CANTalon srx = getDriveController(pos);
-    	srx.reverseOutput(getDriveReverse(pos));
+    	srx.reverseOutput(getDriveReverseConst(pos));
     	srx.changeControlMode(TalonControlMode.PercentVbus);
     	srx.set(0); // Reset to stopped
     }
@@ -240,7 +279,7 @@ public class SwerveDrive extends Subsystem {
 
     	srx.changeControlMode(TalonControlMode.Position);
     	//control mode is in position
-    	srx.reverseOutput(getDriveReverse(pos));
+    	srx.reverseOutput(getDriveReverseConst(pos));
     	//making the sensor read positively
     	srx.setFeedbackDevice(FeedbackDevice.QuadEncoder);
     	//making it a quad encoder
@@ -259,7 +298,7 @@ public class SwerveDrive extends Subsystem {
      */
     public void setDriveOutput(ModulePosition pos, double out) {
     	CANTalon drive = getDriveController(pos);
-    	drive.set(out);
+    	drive.set(out * (getDriveReverseConst(pos) ? -1 : 1) * (getDriveReverse(pos) ? -1 : 1));
     }
 
     /**
@@ -277,9 +316,9 @@ public class SwerveDrive extends Subsystem {
 
     	if(degrees >= 180.0) {
     		degrees -= 180.0;
-    		drive.reverseOutput(!getDriveReverse(pos));
+    		setDriveReverse(pos, true);
     	} else {
-    		drive.reverseOutput(getDriveReverse(pos));
+    		setDriveReverse(pos, false);
     	}
 
     	double nativePos = degrees * ((getSteerHack(pos) - getMinSteerHack(pos)) / 360.0);

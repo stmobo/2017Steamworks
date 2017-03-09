@@ -3,6 +3,7 @@ package org.usfirst.frc.team5002.robot;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -67,7 +68,10 @@ public class Robot extends IterativeRobot {
 		}
 
         // start camera stream lol
-        CameraServer.getInstance().startAutomaticCapture();
+        UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
+        cam.setFPS(15);
+        cam.setResolution(640, 480);
+        
         if(navx != null) {
             navx.zeroYaw();
         }
