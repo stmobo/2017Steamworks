@@ -26,6 +26,8 @@ public class OI {
     private Button activateLowSpeed;
     private Button activateHighSpeed;
 
+    boolean focEnabled = false;
+
 	public OI(){
 		arcadeStick = new Joystick(0); //gave Joystick a job
 		Button A = new JoystickButton(arcadeStick, 1);
@@ -69,16 +71,37 @@ public class OI {
     }
 
 	public double getForwardAxis() {
-		return arcadeStick.getRawAxis(1) * -1.0;  // (axis 1 = left-hand Y axis) allows the Joystick to command the Robot's forwards and backwards movement
+        if(focEnabled && Robot.navx != null) {
+            // Zero degrees = towards opposing side
+            double x = arcadeStick.getRawAxis(1) * -1.0;
+            double y = arcadeStick.getRawAxis(0) * -1.0;
+            double hdg = Robot.navx.getAngle();
+
+            // X-coordinate -> CW alias rotation (left-handed)
+            return (x * Math.cos(hdg*Math.PI/180.0)) + (y * -Math.sin(hdg*Math.PI/180.0));
+        } else {
+            return arcadeStick.getRawAxis(1) * -1.0;  // (axis 1 = left-hand Y axis) allows the Joystick to command the Robot's forwards and backwards movement
+        }
 	}
 
 	public double getHorizontalAxis(){
-		return arcadeStick.getRawAxis(0) * -1.0; // (axis 0 = left-hand X axis) allows the Joystick to command the Robot's side to side movement
+        if(focEnabled && Robot.navx != null) {
+            // Right = +Y
+            double x = arcadeStick.getRawAxis(1) * -1.0;
+            double y = arcadeStick.getRawAxis(0) * -1.0;
+            double hdg = Robot.navx.getAngle();
+
+            // Y-coordinate, CW alias rotation w/ left-handed coordinate system
+            return (x * Math.sin(hdg*Math.PI/180.0)) + (y * Math.cos(hdg*Math.PI/180.0));
+        } else {
+            return arcadeStick.getRawAxis(0) * -1.0; // (axis 0 = left-hand X axis) allows the Joystick to command the Robot's side to side movement
+        }
 	}
 
 	public double getTurnAxis(){
 		return arcadeStick.getRawAxis(4); // (axis 4 = right-hand X axis) allows the Joystick to command the rotation of the Robot
 	}
+
 	public void UpdateSD(){
 		Robot.drivetrain.updateSD();//sends all the data from SwerveDrive subsystem to the SmartDashboard
 	}
