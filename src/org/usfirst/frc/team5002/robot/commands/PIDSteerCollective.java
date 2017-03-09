@@ -11,39 +11,27 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
+ * @author sebastian and bri
  * PIDSteerCollective -- Steer all swerve modules collectively.
  */
 public class PIDSteerCollective extends Command {
+
 	private static final double joystickDeadband = 0.10;
 	private static final double maxDriveOutput = 1.0;
-	
-	private double strRevs = 0;
-	
+	//setting limits and max output
+
+
+	private double dir = 0;
+
 	protected void execute(){
 		if(Robot.oi.arcadeStick.getRawButton(1)) {
-			strRevs = Robot.oi.getHorizontalAxis() * 1024.0;
+			dir = Robot.oi.arcadeStick.getDirectionDegrees();
 		}
-		double fwd = (Math.abs(Robot.oi.getForwardAxis()) > joystickDeadband) ? Robot.oi.getForwardAxis() : 0.0;
 
-		Robot.drivetrain.fl_steer.set(strRevs+Robot.drivetrain.steer_offsets[0]);
-		Robot.drivetrain.fr_steer.set(strRevs+Robot.drivetrain.steer_offsets[1]);
-		Robot.drivetrain.bl_steer.set(strRevs+Robot.drivetrain.steer_offsets[2]);
-		Robot.drivetrain.br_steer.set(strRevs+Robot.drivetrain.steer_offsets[3]);
-
-		/*
-		Robot.drivetrain.fr_drive.set(fwd);
-		Robot.drivetrain.fl_drive.set(fwd);
-		Robot.drivetrain.br_drive.set(fwd);
-		Robot.drivetrain.bl_drive.set(fwd);
-		*/
-		
-		SmartDashboard.putNumber("FL-Pos", Robot.drivetrain.fl_steer.getPosition());
-		SmartDashboard.putNumber("FR-Pos", Robot.drivetrain.fr_steer.getPosition());
-		SmartDashboard.putNumber("BL-Pos", Robot.drivetrain.bl_steer.getPosition());
-		SmartDashboard.putNumber("BR-Pos", Robot.drivetrain.br_steer.getPosition());
-		
-		
-		//SmartDashboard.putNumber("Steer Cmd", strRevs);
+		Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.FL, dir);
+		Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.FR, dir);
+		Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.BL, dir);
+		Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.BR, dir);
 	}
 
 	public PIDSteerCollective() {
@@ -52,6 +40,7 @@ public class PIDSteerCollective extends Command {
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
+		//Robot.drivetrain.bl_steer.clearIAccum();
 		/*
 		Robot.drivetrain.fl_steer.setPosition(0);
 		Robot.drivetrain.bl_steer.setPosition(0);

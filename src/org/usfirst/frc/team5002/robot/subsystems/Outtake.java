@@ -20,10 +20,10 @@ public class Outtake extends Subsystem {
     public void initDefaultCommand() {
     }
     public void run(){
-    	outtake.set(1.0);
+    	outtake.set(-1.0);
     }
     public void runBackwards(){
-    	outtake.set(-1.0);
+    	outtake.set(1.0);
     }
     public void stop(){
     	outtake.set(0);

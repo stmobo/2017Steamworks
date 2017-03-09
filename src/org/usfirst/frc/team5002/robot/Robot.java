@@ -1,7 +1,10 @@
 package org.usfirst.frc.team5002.robot;
 
+import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -25,12 +28,14 @@ import java.io.FileInputStream;
  */
 public class Robot extends IterativeRobot {
 
-	public static final SwerveDrive drivetrain = new SwerveDrive();
+    public static final SwerveDrive drivetrain = new SwerveDrive();
 	public static final Intake intake = new Intake();
 	public static final Launcherer launcherer = new Launcherer();
 	public static final RopeClimber ropeClimber = new RopeClimber();
 	public static final Outtake outtake = new Outtake();
 	public static OI oi;
+
+	public static AHRS navx;
 
 	Command autonomousCommand;
     SendableChooser<String> slotSelector = new SendableChooser<String>();
@@ -51,6 +56,23 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		oi = new OI();
+
+        try {
+			/* NOTE: With respect to the NavX, the robot's front is in the -X direction.
+			 * The robot's right side is in the +Y direction,
+			 * and the robot's top side is in the +Z direction as usual.
+             * Clockwise rotation = increasing yaw.
+             */
+
+			navx = new AHRS(Port.kMXP);
+		} catch (RuntimeException ex) {
+			DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
+			navx = null;
+		}
+
+        if(navx != null) {
+            navx.zeroYaw();
+        }
 
 		/* Add PID Test commands. */
 		SmartDashboard.putData("PIDSteerTest-FrontLeft", new PIDSteerTestSingle(drivetrain.fl_steer));
@@ -146,7 +168,7 @@ public class Robot extends IterativeRobot {
             oi.loadStateFromReplay();
         }
 
-        Robot.drivetrain.updateSD();
+        oi.updateSD();
 
 		Scheduler.getInstance().run();
 	}
@@ -181,10 +203,7 @@ public class Robot extends IterativeRobot {
             oi.saveStateToReplay();
         }
 
-        // button 3 = X button
-        if(oi.arcadeStick.getRawButton(3)) {
-            oi.saveReplayToFile(replayDir + "slot1.replay");
-        }
+        oi.updateSD();
 
 		Scheduler.getInstance().run();
 	}

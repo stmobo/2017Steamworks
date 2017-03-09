@@ -17,7 +17,7 @@ import java.io.FileInputStream;
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
-	public Joystick arcadeStick; //named Joystick
+	public Joystick arcadeStick = new Joystick(0); //named Joystick
 
     // replay control state:
     public boolean currentlyReplaying = false;
@@ -34,35 +34,34 @@ public class OI {
     /* Keep instances of the Commands here to share between teleop & replay-auto */
     private ClimbUp climbup = new ClimbUp();
     private ClimbDown climbdown = new ClimbDown();
-    private LaunchererC launchererC = new LaunchererC();
-    private INtaker intaker = new INtaker();
+    //private INtaker intaker = new INtaker();
     private OUTtaker outtaker = new OUTtaker();
     private TakeOuter takeouter = new TakeOuter();
     private ReverseInTaker reverseInTaker = new ReverseInTaker();
 
     /* Ditto with the buttons. */
-    public Button A = new JoystickButton(arcadeStick, 1);
-    public Button B = new JoystickButton(arcadeStick, 2);
-    public Button X = new JoystickButton(arcadeStick, 3);
-    public Button Y = new JoystickButton(arcadeStick, 4);
-    public Button LB = new JoystickButton(arcadeStick, 5);
-    public Button RB = new JoystickButton(arcadeStick, 6);
-    public Button home = new JoystickButton(arcadeStick, 7);
-    public Button menu = new JoystickButton(arcadeStick, 8);
+    private Button A = new JoystickButton(arcadeStick, 1);
+    private Button B = new JoystickButton(arcadeStick, 2);
+    private Button X = new JoystickButton(arcadeStick, 3);
+    private Button Y = new JoystickButton(arcadeStick, 4);
+    private Button LB = new JoystickButton(arcadeStick, 5);
+    private Button RB = new JoystickButton(arcadeStick, 6);
+    private Button home = new JoystickButton(arcadeStick, 7);
+    private Button menu = new JoystickButton(arcadeStick, 8);
+
+    private Button toggleFOC = new JoystickButton(arcadeStick, 7);
+    private Button activateLowSpeed = new JoystickButton(arcadeStick, 10); // Bumper 1 (left)
+    private Button activateHighSpeed = new JoystickButton(arcadeStick, 11); // Bumper 2 (right)
 
 	public OI(){
-		arcadeStick = new Joystick(0); //gave Joystick a job
+		Y.whileHeld(new ClimbUp());//turns the climb motor on while Y is being held
+		RB.whileHeld(new ClimbDown());//turns launcher motor on when B is pressed once, and off when B is pressed again
 
-		Y.whileHeld(climbup);//turns the climb motor on while Y is being held
+		//A.toggleWhenPressed(new INtaker()); //turns the intake motor on when A is pressed once, and off when A is pressed again
+		B.toggleWhenPressed(new OUTtaker()); //turns the outake motor on at the same time as the intake motor
 
-		B.toggleWhenPressed(launchererC);//turns launcher motor on when B is pressed once, and off when B is pressed again
-
-		A.toggleWhenPressed(intaker); //turns the intake motor on when A is pressed once, and off when A is pressed again
-		A.toggleWhenPressed(outtaker); //turns the outake motor on at the same time as the intake motor
-
-		LB.whileHeld(takeouter); // emergency reverse for outtake motor
-		LB.whileHeld(reverseInTaker);// emergency reverse for intake motor
-		LB.whileHeld(climbdown);//emergency reverse for climb motor
+		LB.whileHeld(new TakeOuter()); // emergency reverse for outtake motor
+		LB.whileHeld(new ReverseInTaker());// emergency reverse for intake motor
 	}
 
     private double getRawForwardAxis() {
@@ -77,6 +76,23 @@ public class OI {
         return arcadeStick.getRawAxis(4);//allows the Joystick to command the rotation of the Robot
     }
 
+    public void loadStateFromController() {
+        lastState = currentState;
+        currentState = ControlState.newBuilder()
+            .setForwardAxis(getRawForwardAxis())
+            .setHorizontalAxis(getRawHorizontalAxis())
+            .setTurnAxis(getRawTurnAxis())
+            .setButtonA(A.get())
+            .setButtonB(B.get())
+            .setButtonX(X.get())
+            .setButtonY(Y.get())
+            .setButtonLB(LB.get())
+            .setButtonRB(RB.get())
+            .setButtonHome(home.get())
+            .setButtonMenu(menu.get())
+            .build();
+    }
+
     public void loadStateFromReplay() {
         if( currentReplay != null && currentReplayIndex < currentReplay.getStateCount()) {
             lastState = currentState;
@@ -87,69 +103,11 @@ public class OI {
             // (These values should effectively stop the robot.)
             currentState = ControlState.getDefaultInstance();
         }
-
-        /* Trigger button-based commands if necessary: */
-        if(currentState.getButtonY()) {
-            climbup.start();
-        } else {
-            climbup.cancel();
-        }
-
-        if(currentState.getButtonLB()) {
-            takeouter.start();
-            reverseInTaker.start();
-            climbdown.start();
-        } else {
-            takeouter.cancel();
-            reverseInTaker.cancel();
-            climbdown.cancel();
-        }
-
-        /* Keep track of toggle state. */
-
-        /* Check for button state transition:  */
-        /* If button A was not pressed last time and it is pressed now... */
-        if(!lastState.getButtonA() && currentState.getButtonA()) {
-            toggleA = !toggleA; // Invert toggleA.
-        }
-
-        /* Ditto for B. */
-        if(!lastState.getButtonB() && currentState.getButtonB()) {
-            toggleB = !toggleB;
-        }
-
-        /* Start toggled commands if necessary. */
-        if(toggleA) {
-            intaker.start();
-            outtaker.start();
-        } else {
-            intaker.cancel();
-            outtaker.cancel();
-        }
-
-        if(toggleB) {
-            launchererC.start();
-        } else {
-            launchererC.cancel();
-        }
     }
 
     public void saveStateToReplay() {
         if(currentRecording != null) {
-            currentRecording.addState(
-                ControlState.newBuilder()
-                    .setForwardAxis(getRawForwardAxis())
-                    .setHorizontalAxis(getRawHorizontalAxis())
-                    .setTurnAxis(getRawTurnAxis())
-                    .setButtonA(A.get())
-                    .setButtonB(B.get())
-                    .setButtonX(X.get())
-                    .setButtonY(Y.get())
-                    .setButtonLB(LB.get())
-                    .setButtonRB(RB.get())
-                    .setButtonHome(home.get())
-                    .setButtonMenu(menu.get())
-            );
+            currentRecording.addState(currentState);
         }
     }
 
@@ -182,28 +140,102 @@ public class OI {
         }
     }
 
-	public double getForwardAxis() {
-        if(currentlyReplaying) {
-            return currentState.getForwardAxis();
+    public void updateOIState() {
+        /* Trigger button-based commands if necessary: */
+        if(currentState.getButtonY()) {
+            climbup.start();
         } else {
-            return getRawForwardAxis();
+            climbup.cancel();
+        }
+
+        if(currentState.getButtonRB()) {
+            climbdown.start();
+        } else {
+            climbdown.cancel();
+        }
+
+        if(currentState.getButtonLB()) {
+            takeouter.start();
+            reverseInTaker.start();
+        } else {
+            takeouter.cancel();
+            reverseInTaker.cancel();
+        }
+
+        /* Keep track of toggle state. */
+
+        /* Check for button state transition:  */
+        /* If button A was not pressed last time and it is pressed now... */
+        if(!lastState.getButtonA() && currentState.getButtonA()) {
+            toggleA = !toggleA; // Invert toggleA.
+        }
+
+        /* Ditto for B. */
+        if(!lastState.getButtonB() && currentState.getButtonB()) {
+            toggleB = !toggleB;
+        }
+
+        // and for FOC toggle...
+        if(!lastState.getButtonFOC() && currentState.getButtonFOC()) {
+            focEnabled = !focEnabled;
+        }
+
+        /* Start toggled commands if necessary. */
+
+        if(toggleB) {
+            outtaker.start();
+        } else {
+            outtaker.cancel();
+        }
+    }
+
+    /* set multipliers for teleop drive speed outputs */
+    public double getDriveSpeedCoefficient() {
+        if(currentState.getActivateLowSpeed()) {
+            return 0.5;
+        } else if(currentState.getActivateHighSpeed()) {
+            return 1.0;
+        } else {
+            return 0.75;
+        }
+    }
+
+    /* Return magnitude of main driving control stick / inputs.
+     * Should be equivalent to Math.hypot(getForwardAxis(), getHorizontalAxis()). */
+    public double getDriveMagnitude() {
+        return Math.hypot(currentState.getForwardAxis(), currentState.getHorizontalAxis());
+    }
+
+	public double getForwardAxis() {
+        if(focEnabled && Robot.navx != null) {
+            // Zero degrees = towards opposing side
+            double x = currentState.getForwardAxis();
+            double y = currentState.getHorizontalAxis();
+            double hdg = Robot.navx.getAngle();
+
+            // X-coordinate -> CW alias rotation (left-handed)
+            return (x * Math.cos(hdg*Math.PI/180.0)) + (y * -Math.sin(hdg*Math.PI/180.0));
+        } else {
+            return currentState.getForwardAxis();  // (axis 1 = left-hand Y axis) allows the Joystick to command the Robot's forwards and backwards movement
         }
 	}
 
-	public double getHorizontalAxis(){
-        if(currentlyReplaying) {
-            return currentState.getHorizontalAxis();
+	public double getHorizontalAxis() {
+        if(focEnabled && Robot.navx != null) {
+            // Right = +Y
+            double x = currentState.getForwardAxis();
+            double y = currentState.getHorizontalAxis();
+            double hdg = Robot.navx.getAngle();
+
+            // Y-coordinate, CW alias rotation w/ left-handed coordinate system
+            return (x * Math.sin(hdg*Math.PI/180.0)) + (y * Math.cos(hdg*Math.PI/180.0));
         } else {
-            return getRawHorizontalAxis();
+            return currentState.getHorizontalAxis(); // (axis 0 = left-hand X axis) allows the Joystick to command the Robot's side to side movement
         }
 	}
 
 	public double getTurnAxis(){
-        if(currentlyReplaying) {
-            return currentState.getTurnAxis();
-        } else {
-            return getRawTurnAxis();
-        }
+        return currentState.getTurnAxis();
 	}
 
 	public void UpdateSD(){

@@ -8,11 +8,13 @@ import edu.wpi.first.wpilibj.command.Command;
 
 /**
  * KillDrivetrain.java -- the usual safety stuff
+ * @author sebastian mobo
  */
 public class KillDrivetrain extends Command {
 
     public KillDrivetrain() {
     	requires(Robot.drivetrain);
+    	//get the right info from the right places
     }
 
     // Called just before this Command runs the first time
@@ -21,10 +23,14 @@ public class KillDrivetrain extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+    	
+    	/*
     	Robot.drivetrain.fl_drive.set(0.0);
     	Robot.drivetrain.fr_drive.set(0.0);
     	Robot.drivetrain.bl_drive.set(0.0);
     	Robot.drivetrain.br_drive.set(0.0);
+    	*/
+    	//sets all motors to zero, stops the motors
   
     }
 

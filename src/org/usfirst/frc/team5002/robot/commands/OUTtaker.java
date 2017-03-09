@@ -13,6 +13,7 @@ public class OUTtaker extends Command {
 
     public OUTtaker() {
         requires(Robot.outtake);
+        //getting right infor from right places
     }
 
     protected void initialize() {
@@ -20,6 +21,7 @@ public class OUTtaker extends Command {
 
     protected void execute() {		//Makes motor go backward when activated
         Robot.outtake.run();
+        //the other part to intaker, reverse
 
     }
 
@@ -30,6 +32,7 @@ public class OUTtaker extends Command {
     // Called once after isFinished returns true
     protected void end() {
     	Robot.outtake.stop();
+    	//stops once it's done
     }
 
     // Called when another command which requires one or more of the same
