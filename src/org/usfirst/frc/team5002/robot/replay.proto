@@ -16,6 +16,9 @@ message ControlState {
     bool button_RB = 9;              // Button ID = 6
     bool button_home = 10;           // Button ID = 7
     bool button_menu = 11;           // Button ID = 8
+    bool toggle_FOC = 12;            // Button ID = 7 (alias of menu?)
+    bool activate_low_speed = 13;    // button ID = 10 (left paddle)
+    bool activate_high_speed = 14;    // button ID = 11 (right paddle)
 }
 
 message Replay {

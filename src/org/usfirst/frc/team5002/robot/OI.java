@@ -90,7 +90,13 @@ public class OI {
             .setButtonRB(RB.get())
             .setButtonHome(home.get())
             .setButtonMenu(menu.get())
+            .setToggleFOC(menu.get())
+            .setActivateLowSpeed(activateLowSpeed.get())
+            .setActivateHighSpeed(activateHighSpeed.get())
             .build();
+
+
+        updateOIState();
     }
 
     public void loadStateFromReplay() {
@@ -103,6 +109,8 @@ public class OI {
             // (These values should effectively stop the robot.)
             currentState = ControlState.getDefaultInstance();
         }
+
+        updateOIState();
     }
 
     public void saveStateToReplay() {

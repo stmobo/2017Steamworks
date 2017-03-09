@@ -199,6 +199,8 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+        oi.loadStateFromController();
+
         if(replayUpdateTimer.hasPeriodPassed(1/replayFrequency)) {
             oi.saveStateToReplay();
         }

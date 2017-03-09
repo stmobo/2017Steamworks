@@ -105,4 +105,31 @@ public interface ControlStateOrBuilder extends
    * <code>optional bool button_menu = 11;</code>
    */
   boolean getButtonMenu();
+
+  /**
+   * <pre>
+   * Button ID = 7 (alias of menu?)
+   * </pre>
+   *
+   * <code>optional bool toggle_FOC = 12;</code>
+   */
+  boolean getToggleFOC();
+
+  /**
+   * <pre>
+   * button ID = 10 (left paddle)
+   * </pre>
+   *
+   * <code>optional bool activate_low_speed = 13;</code>
+   */
+  boolean getActivateLowSpeed();
+
+  /**
+   * <pre>
+   * button ID = 11 (right paddle)
+   * </pre>
+   *
+   * <code>optional bool activate_high_speed = 14;</code>
+   */
+  boolean getActivateHighSpeed();
 }

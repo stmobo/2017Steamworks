@@ -26,6 +26,9 @@ public  final class ControlState extends
     buttonRB_ = false;
     buttonHome_ = false;
     buttonMenu_ = false;
+    toggleFOC_ = false;
+    activateLowSpeed_ = false;
+    activateHighSpeed_ = false;
   }
 
   @java.lang.Override
@@ -106,6 +109,21 @@ public  final class ControlState extends
           case 88: {
 
             buttonMenu_ = input.readBool();
+            break;
+          }
+          case 96: {
+
+            toggleFOC_ = input.readBool();
+            break;
+          }
+          case 104: {
+
+            activateLowSpeed_ = input.readBool();
+            break;
+          }
+          case 112: {
+
+            activateHighSpeed_ = input.readBool();
             break;
           }
         }
@@ -274,6 +292,45 @@ public  final class ControlState extends
     return buttonMenu_;
   }
 
+  public static final int TOGGLE_FOC_FIELD_NUMBER = 12;
+  private boolean toggleFOC_;
+  /**
+   * <pre>
+   * Button ID = 7 (alias of menu?)
+   * </pre>
+   *
+   * <code>optional bool toggle_FOC = 12;</code>
+   */
+  public boolean getToggleFOC() {
+    return toggleFOC_;
+  }
+
+  public static final int ACTIVATE_LOW_SPEED_FIELD_NUMBER = 13;
+  private boolean activateLowSpeed_;
+  /**
+   * <pre>
+   * button ID = 10 (left paddle)
+   * </pre>
+   *
+   * <code>optional bool activate_low_speed = 13;</code>
+   */
+  public boolean getActivateLowSpeed() {
+    return activateLowSpeed_;
+  }
+
+  public static final int ACTIVATE_HIGH_SPEED_FIELD_NUMBER = 14;
+  private boolean activateHighSpeed_;
+  /**
+   * <pre>
+   * button ID = 11 (right paddle)
+   * </pre>
+   *
+   * <code>optional bool activate_high_speed = 14;</code>
+   */
+  public boolean getActivateHighSpeed() {
+    return activateHighSpeed_;
+  }
+
   private byte memoizedIsInitialized = -1;
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
@@ -318,6 +375,15 @@ public  final class ControlState extends
     }
     if (buttonMenu_ != false) {
       output.writeBool(11, buttonMenu_);
+    }
+    if (toggleFOC_ != false) {
+      output.writeBool(12, toggleFOC_);
+    }
+    if (activateLowSpeed_ != false) {
+      output.writeBool(13, activateLowSpeed_);
+    }
+    if (activateHighSpeed_ != false) {
+      output.writeBool(14, activateHighSpeed_);
     }
   }
 
@@ -370,6 +436,18 @@ public  final class ControlState extends
       size += com.google.protobuf.CodedOutputStream
         .computeBoolSize(11, buttonMenu_);
     }
+    if (toggleFOC_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(12, toggleFOC_);
+    }
+    if (activateLowSpeed_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(13, activateLowSpeed_);
+    }
+    if (activateHighSpeed_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(14, activateHighSpeed_);
+    }
     memoizedSize = size;
     return size;
   }
@@ -414,6 +492,12 @@ public  final class ControlState extends
         == other.getButtonHome());
     result = result && (getButtonMenu()
         == other.getButtonMenu());
+    result = result && (getToggleFOC()
+        == other.getToggleFOC());
+    result = result && (getActivateLowSpeed()
+        == other.getActivateLowSpeed());
+    result = result && (getActivateHighSpeed()
+        == other.getActivateHighSpeed());
     return result;
   }
 
@@ -457,6 +541,15 @@ public  final class ControlState extends
     hash = (37 * hash) + BUTTON_MENU_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
         getButtonMenu());
+    hash = (37 * hash) + TOGGLE_FOC_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getToggleFOC());
+    hash = (37 * hash) + ACTIVATE_LOW_SPEED_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getActivateLowSpeed());
+    hash = (37 * hash) + ACTIVATE_HIGH_SPEED_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getActivateHighSpeed());
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -597,6 +690,12 @@ public  final class ControlState extends
 
       buttonMenu_ = false;
 
+      toggleFOC_ = false;
+
+      activateLowSpeed_ = false;
+
+      activateHighSpeed_ = false;
+
       return this;
     }
 
@@ -630,6 +729,9 @@ public  final class ControlState extends
       result.buttonRB_ = buttonRB_;
       result.buttonHome_ = buttonHome_;
       result.buttonMenu_ = buttonMenu_;
+      result.toggleFOC_ = toggleFOC_;
+      result.activateLowSpeed_ = activateLowSpeed_;
+      result.activateHighSpeed_ = activateHighSpeed_;
       onBuilt();
       return result;
     }
@@ -703,6 +805,15 @@ public  final class ControlState extends
       }
       if (other.getButtonMenu() != false) {
         setButtonMenu(other.getButtonMenu());
+      }
+      if (other.getToggleFOC() != false) {
+        setToggleFOC(other.getToggleFOC());
+      }
+      if (other.getActivateLowSpeed() != false) {
+        setActivateLowSpeed(other.getActivateLowSpeed());
+      }
+      if (other.getActivateHighSpeed() != false) {
+        setActivateHighSpeed(other.getActivateHighSpeed());
       }
       onChanged();
       return this;
@@ -1144,6 +1255,120 @@ public  final class ControlState extends
     public Builder clearButtonMenu() {
       
       buttonMenu_ = false;
+      onChanged();
+      return this;
+    }
+
+    private boolean toggleFOC_ ;
+    /**
+     * <pre>
+     * Button ID = 7 (alias of menu?)
+     * </pre>
+     *
+     * <code>optional bool toggle_FOC = 12;</code>
+     */
+    public boolean getToggleFOC() {
+      return toggleFOC_;
+    }
+    /**
+     * <pre>
+     * Button ID = 7 (alias of menu?)
+     * </pre>
+     *
+     * <code>optional bool toggle_FOC = 12;</code>
+     */
+    public Builder setToggleFOC(boolean value) {
+      
+      toggleFOC_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Button ID = 7 (alias of menu?)
+     * </pre>
+     *
+     * <code>optional bool toggle_FOC = 12;</code>
+     */
+    public Builder clearToggleFOC() {
+      
+      toggleFOC_ = false;
+      onChanged();
+      return this;
+    }
+
+    private boolean activateLowSpeed_ ;
+    /**
+     * <pre>
+     * button ID = 10 (left paddle)
+     * </pre>
+     *
+     * <code>optional bool activate_low_speed = 13;</code>
+     */
+    public boolean getActivateLowSpeed() {
+      return activateLowSpeed_;
+    }
+    /**
+     * <pre>
+     * button ID = 10 (left paddle)
+     * </pre>
+     *
+     * <code>optional bool activate_low_speed = 13;</code>
+     */
+    public Builder setActivateLowSpeed(boolean value) {
+      
+      activateLowSpeed_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * button ID = 10 (left paddle)
+     * </pre>
+     *
+     * <code>optional bool activate_low_speed = 13;</code>
+     */
+    public Builder clearActivateLowSpeed() {
+      
+      activateLowSpeed_ = false;
+      onChanged();
+      return this;
+    }
+
+    private boolean activateHighSpeed_ ;
+    /**
+     * <pre>
+     * button ID = 11 (right paddle)
+     * </pre>
+     *
+     * <code>optional bool activate_high_speed = 14;</code>
+     */
+    public boolean getActivateHighSpeed() {
+      return activateHighSpeed_;
+    }
+    /**
+     * <pre>
+     * button ID = 11 (right paddle)
+     * </pre>
+     *
+     * <code>optional bool activate_high_speed = 14;</code>
+     */
+    public Builder setActivateHighSpeed(boolean value) {
+      
+      activateHighSpeed_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * button ID = 11 (right paddle)
+     * </pre>
+     *
+     * <code>optional bool activate_high_speed = 14;</code>
+     */
+    public Builder clearActivateHighSpeed() {
+      
+      activateHighSpeed_ = false;
       onChanged();
       return this;
     }
