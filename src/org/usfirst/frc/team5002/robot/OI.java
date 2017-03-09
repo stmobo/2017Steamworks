@@ -40,8 +40,8 @@ public class OI {
 		Button home = new JoystickButton(arcadeStick, 7);
 		Button menu = new JoystickButton(arcadeStick, 8);
 
-        activateLowSpeed = new JoystickButton(arcadeStick, 10); // Bumper 1 (left)
-        activateHighSpeed = new JoystickButton(arcadeStick, 11); // Bumper 2 (right)
+        activateLowSpeed = new JoystickButton(arcadeStick, 9); // Bumper 1 (left)
+        activateHighSpeed = new JoystickButton(arcadeStick, 10); // Bumper 2 (right)
         toggleFOC = home;
 
 		Y.whileHeld(new ClimbUp());//turns the climb motor on while Y is being held
