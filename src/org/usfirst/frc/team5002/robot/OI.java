@@ -30,6 +30,7 @@ public class OI {
 
     private boolean toggleA = false;
     private boolean toggleB = false;
+    private boolean focEnabled = false;
 
     /* Keep instances of the Commands here to share between teleop & replay-auto */
     private ClimbUp climbup = new ClimbUp();
@@ -184,7 +185,7 @@ public class OI {
         }
 
         // and for FOC toggle...
-        if(!lastState.getButtonFOC() && currentState.getButtonFOC()) {
+        if(!lastState.getToggleFOC() && currentState.getToggleFOC()) {
             focEnabled = !focEnabled;
         }
 
@@ -246,7 +247,7 @@ public class OI {
         return currentState.getTurnAxis();
 	}
 
-	public void UpdateSD(){
+	public void updateSD(){
 		Robot.drivetrain.updateSD();//sends all the data from SwerveDrive subsystem to the SmartDashboard
 	}
 }

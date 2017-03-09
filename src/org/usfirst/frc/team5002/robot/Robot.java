@@ -74,12 +74,6 @@ public class Robot extends IterativeRobot {
             navx.zeroYaw();
         }
 
-		/* Add PID Test commands. */
-		SmartDashboard.putData("PIDSteerTest-FrontLeft", new PIDSteerTestSingle(drivetrain.fl_steer));
-		SmartDashboard.putData("PIDSteerTest-FrontRight", new PIDSteerTestSingle(drivetrain.fr_steer));
-		SmartDashboard.putData("PIDSteerTest-BackLeft", new PIDSteerTestSingle(drivetrain.bl_steer));
-		SmartDashboard.putData("PIDSteerTest-BackRight", new PIDSteerTestSingle(drivetrain.br_steer));
-
         /* Recording commands. */
         SmartDashboard.putData("StartRecording", new StartRecording());
         SmartDashboard.putData("Save-Slot1", new SaveRecording(replayDir + "slot1.replay"));
@@ -105,14 +99,6 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void disabledPeriodic() {
-		SmartDashboard.putNumber("FL-Pos", Robot.drivetrain.fl_steer.getPosition());
-		SmartDashboard.putNumber("FR-Pos", Robot.drivetrain.fr_steer.getPosition());
-		SmartDashboard.putNumber("BL-Pos", Robot.drivetrain.bl_steer.getPosition());
-		SmartDashboard.putNumber("BR-Pos", Robot.drivetrain.br_steer.getPosition());
-
-		//Robot.drivetrain.UpdateSDSingle(Robot.drivetrain.fr_steer);
-		//Robot.drivetrain.UpdateSDSingle(Robot.drivetrain.fl_steer);
-
 		Robot.drivetrain.updateSD();
 		Scheduler.getInstance().run();
 	}
