@@ -142,12 +142,12 @@ public class Robot extends IterativeRobot {
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
 
-		PIDSteerCollective PIDTest = new PIDSteerCollective();
-		Scheduler.getInstance().add(PIDTest);
+		//PIDSteerCollective PIDTest = new PIDSteerCollective();
+		//Scheduler.getInstance().add(PIDTest);
 		
-		//Teleop teleopTest = new Teleop();
-		//Scheduler.getInstance().add(teleopTest);
-		//
+		Teleop teleopTest = new Teleop();
+		Scheduler.getInstance().add(teleopTest);
+		
 		
 		//Command test = new SteerTestVbus();
 		//Scheduler.getInstance().add(test);
