@@ -3,6 +3,7 @@ package org.usfirst.frc.team5002.robot;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.SPI.Port;
@@ -56,8 +57,8 @@ public class Robot extends IterativeRobot {
 			/* NOTE: With respect to the NavX, the robot's front is in the -X direction.
 			 * The robot's right side is in the +Y direction,
 			 * and the robot's top side is in the +Z direction as usual.
-             * Clockwise rotation = increasing yaw.
-             */
+       * Clockwise rotation = increasing yaw.
+       */
 
 			navx = new AHRS(Port.kMXP);
 		} catch (RuntimeException ex) {
@@ -65,6 +66,8 @@ public class Robot extends IterativeRobot {
 			navx = null;
 		}
 
+        // start camera stream lol
+        CameraServer.getInstance().startAutomaticCapture();
         if(navx != null) {
             navx.zeroYaw();
         }
@@ -155,7 +158,7 @@ public class Robot extends IterativeRobot {
 		Teleop teleopTest = new Teleop();
 		Scheduler.getInstance().add(teleopTest);
 
-        oi.updateOIState();
+    oi.updateOIState();
 
 		//Command test = new SteerTestVbus();
 		//Scheduler.getInstance().add(test);
