@@ -25,6 +25,7 @@ public class OI {
 
     private Button activateLowSpeed;
     private Button activateHighSpeed;
+    private Button toggleFOC;
 
     boolean focEnabled = false;
 
@@ -41,6 +42,7 @@ public class OI {
 
         activateLowSpeed = new JoystickButton(arcadeStick, 10); // Bumper 1 (left)
         activateHighSpeed = new JoystickButton(arcadeStick, 11); // Bumper 2 (right)
+        toggleFOC = home;
 
 		Y.whileHeld(new ClimbUp());//turns the climb motor on while Y is being held
 		RB.whileHeld(new ClimbDown());//turns launcher motor on when B is pressed once, and off when B is pressed again
@@ -50,8 +52,18 @@ public class OI {
 
 		LB.whileHeld(new TakeOuter()); // emergency reverse for outtake motor
 		LB.whileHeld(new ReverseInTaker());// emergency reverse for intake motor
-
 	}
+
+    // For toggle buttons that don't warrant their own commands.
+    boolean focDebounce = false;
+    public void updateOIState() {
+        if(toggleFOC.get() && !focDebounce) {
+            focEnabled = !focEnabled;
+            focDebounce = true;
+        } else {
+            focDebounce = false;
+        }
+    }
 
     /* set multipliers for teleop drive speed outputs */
     public double getDriveSpeedCoefficient() {

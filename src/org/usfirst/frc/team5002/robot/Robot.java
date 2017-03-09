@@ -155,6 +155,7 @@ public class Robot extends IterativeRobot {
 		Teleop teleopTest = new Teleop();
 		Scheduler.getInstance().add(teleopTest);
 
+        oi.updateOIState();
 
 		//Command test = new SteerTestVbus();
 		//Scheduler.getInstance().add(test);
