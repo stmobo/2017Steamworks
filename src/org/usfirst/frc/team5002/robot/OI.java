@@ -95,6 +95,8 @@ public class OI {
             .setActivateLowSpeed(activateLowSpeed.get())
             .setActivateHighSpeed(activateHighSpeed.get())
             .setPOV(arcadeStick.getPOV())
+            .setLeftTrigger(arcadeStick.getRawAxis(2))
+            .setRightTrigger(arcadeStick.getRawAxis(3))
             .build();
 
 
@@ -280,7 +282,14 @@ public class OI {
 	}
 
 	public double getTurnAxis(){
-        return currentState.getTurnAxis();
+        double stick = currentState.getTurnAxis();
+        double trig = (currentState.getRightTrigger() - currentState.getLeftTrigger());
+
+        if(Math.abs(stick) > Math.abs(trig)) {
+            return stick;
+        } else {
+            return trig;
+        }
 	}
 
 	public void updateSD(){
