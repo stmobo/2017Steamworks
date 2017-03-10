@@ -75,19 +75,19 @@ public class OI {
     public boolean isPOVPressed() {
     	int angle = arcadeStick.getPOV(0);
     	if(angle == -1) {
-    		return true;
+    		return false;
     	}
-    	return false;
+    	return true;
     }
     
     public double getFwdPOV() {
     	int angle = arcadeStick.getPOV(0);
-    	return Math.sin((Math.PI/180.0)*angle);
+    	return Math.cos(Math.toRadians((double)angle));
     }
     
     public double getStrPOV() {
     	int angle = arcadeStick.getPOV(0);
-    	return Math.cos((Math.PI/180.0)*angle);
+    	return Math.sin(Math.toRadians((double)angle));
     }
 
     /* set multipliers for teleop drive speed outputs */
@@ -150,7 +150,8 @@ public class OI {
 	public void UpdateSD(){
 		Robot.drivetrain.updateSD();//sends all the data from SwerveDrive subsystem to the SmartDashboard
 		SmartDashboard.putBoolean("Intake Switch", Robot.limSwitch.get());
-		SmartDashboard.putDouble("Start Yaw", Robot.startYaw);
+		SmartDashboard.putNumber("Start Yaw", Robot.startYaw);
+		SmartDashboard.putNumber("POV", arcadeStick.getPOV(0));
 		if(Robot.navx != null) {
 			SmartDashboard.putBoolean("NavX Present", true);
 			SmartDashboard.putBoolean("Calibrating", Robot.navx.isCalibrating());
