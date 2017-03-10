@@ -45,6 +45,24 @@ public interface ControlStateOrBuilder extends
 
   /**
    * <pre>
+   * Left trigger "axis"
+   * </pre>
+   *
+   * <code>optional double left_trigger = 16;</code>
+   */
+  double getLeftTrigger();
+
+  /**
+   * <pre>
+   * Right trigger "axis"
+   * </pre>
+   *
+   * <code>optional double right_trigger = 17;</code>
+   */
+  double getRightTrigger();
+
+  /**
+   * <pre>
    * Button ID = 1
    * </pre>
    *

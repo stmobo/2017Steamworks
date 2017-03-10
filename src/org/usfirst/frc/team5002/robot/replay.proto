@@ -8,6 +8,8 @@ message ControlState {
     double horizontal_axis = 2;         // Left / right strafing axis.
     double turn_axis = 3;               // CW / CCW rotation axis.
     int32 POV = 15;                     // POV angle.
+    double left_trigger = 16;           // Left trigger "axis"
+    double right_trigger = 17;          // Right trigger "axis"
 
     bool button_A = 4;               // Button ID = 1
     bool button_B = 5;               // Button ID = 2

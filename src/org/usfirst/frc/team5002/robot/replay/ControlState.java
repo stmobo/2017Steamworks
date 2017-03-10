@@ -19,6 +19,8 @@ public  final class ControlState extends
     horizontalAxis_ = 0D;
     turnAxis_ = 0D;
     pOV_ = 0;
+    leftTrigger_ = 0D;
+    rightTrigger_ = 0D;
     buttonA_ = false;
     buttonB_ = false;
     buttonX_ = false;
@@ -132,6 +134,16 @@ public  final class ControlState extends
             pOV_ = input.readInt32();
             break;
           }
+          case 129: {
+
+            leftTrigger_ = input.readDouble();
+            break;
+          }
+          case 137: {
+
+            rightTrigger_ = input.readDouble();
+            break;
+          }
         }
       }
     } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -205,6 +217,32 @@ public  final class ControlState extends
    */
   public int getPOV() {
     return pOV_;
+  }
+
+  public static final int LEFT_TRIGGER_FIELD_NUMBER = 16;
+  private double leftTrigger_;
+  /**
+   * <pre>
+   * Left trigger "axis"
+   * </pre>
+   *
+   * <code>optional double left_trigger = 16;</code>
+   */
+  public double getLeftTrigger() {
+    return leftTrigger_;
+  }
+
+  public static final int RIGHT_TRIGGER_FIELD_NUMBER = 17;
+  private double rightTrigger_;
+  /**
+   * <pre>
+   * Right trigger "axis"
+   * </pre>
+   *
+   * <code>optional double right_trigger = 17;</code>
+   */
+  public double getRightTrigger() {
+    return rightTrigger_;
   }
 
   public static final int BUTTON_A_FIELD_NUMBER = 4;
@@ -407,6 +445,12 @@ public  final class ControlState extends
     if (pOV_ != 0) {
       output.writeInt32(15, pOV_);
     }
+    if (leftTrigger_ != 0D) {
+      output.writeDouble(16, leftTrigger_);
+    }
+    if (rightTrigger_ != 0D) {
+      output.writeDouble(17, rightTrigger_);
+    }
   }
 
   public int getSerializedSize() {
@@ -474,6 +518,14 @@ public  final class ControlState extends
       size += com.google.protobuf.CodedOutputStream
         .computeInt32Size(15, pOV_);
     }
+    if (leftTrigger_ != 0D) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeDoubleSize(16, leftTrigger_);
+    }
+    if (rightTrigger_ != 0D) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeDoubleSize(17, rightTrigger_);
+    }
     memoizedSize = size;
     return size;
   }
@@ -504,6 +556,14 @@ public  final class ControlState extends
             other.getTurnAxis()));
     result = result && (getPOV()
         == other.getPOV());
+    result = result && (
+        java.lang.Double.doubleToLongBits(getLeftTrigger())
+        == java.lang.Double.doubleToLongBits(
+            other.getLeftTrigger()));
+    result = result && (
+        java.lang.Double.doubleToLongBits(getRightTrigger())
+        == java.lang.Double.doubleToLongBits(
+            other.getRightTrigger()));
     result = result && (getButtonA()
         == other.getButtonA());
     result = result && (getButtonB()
@@ -547,6 +607,12 @@ public  final class ControlState extends
         java.lang.Double.doubleToLongBits(getTurnAxis()));
     hash = (37 * hash) + POV_FIELD_NUMBER;
     hash = (53 * hash) + getPOV();
+    hash = (37 * hash) + LEFT_TRIGGER_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        java.lang.Double.doubleToLongBits(getLeftTrigger()));
+    hash = (37 * hash) + RIGHT_TRIGGER_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        java.lang.Double.doubleToLongBits(getRightTrigger()));
     hash = (37 * hash) + BUTTON_A_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
         getButtonA());
@@ -706,6 +772,10 @@ public  final class ControlState extends
 
       pOV_ = 0;
 
+      leftTrigger_ = 0D;
+
+      rightTrigger_ = 0D;
+
       buttonA_ = false;
 
       buttonB_ = false;
@@ -754,6 +824,8 @@ public  final class ControlState extends
       result.horizontalAxis_ = horizontalAxis_;
       result.turnAxis_ = turnAxis_;
       result.pOV_ = pOV_;
+      result.leftTrigger_ = leftTrigger_;
+      result.rightTrigger_ = rightTrigger_;
       result.buttonA_ = buttonA_;
       result.buttonB_ = buttonB_;
       result.buttonX_ = buttonX_;
@@ -817,6 +889,12 @@ public  final class ControlState extends
       }
       if (other.getPOV() != 0) {
         setPOV(other.getPOV());
+      }
+      if (other.getLeftTrigger() != 0D) {
+        setLeftTrigger(other.getLeftTrigger());
+      }
+      if (other.getRightTrigger() != 0D) {
+        setRightTrigger(other.getRightTrigger());
       }
       if (other.getButtonA() != false) {
         setButtonA(other.getButtonA());
@@ -1025,6 +1103,82 @@ public  final class ControlState extends
     public Builder clearPOV() {
       
       pOV_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private double leftTrigger_ ;
+    /**
+     * <pre>
+     * Left trigger "axis"
+     * </pre>
+     *
+     * <code>optional double left_trigger = 16;</code>
+     */
+    public double getLeftTrigger() {
+      return leftTrigger_;
+    }
+    /**
+     * <pre>
+     * Left trigger "axis"
+     * </pre>
+     *
+     * <code>optional double left_trigger = 16;</code>
+     */
+    public Builder setLeftTrigger(double value) {
+      
+      leftTrigger_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Left trigger "axis"
+     * </pre>
+     *
+     * <code>optional double left_trigger = 16;</code>
+     */
+    public Builder clearLeftTrigger() {
+      
+      leftTrigger_ = 0D;
+      onChanged();
+      return this;
+    }
+
+    private double rightTrigger_ ;
+    /**
+     * <pre>
+     * Right trigger "axis"
+     * </pre>
+     *
+     * <code>optional double right_trigger = 17;</code>
+     */
+    public double getRightTrigger() {
+      return rightTrigger_;
+    }
+    /**
+     * <pre>
+     * Right trigger "axis"
+     * </pre>
+     *
+     * <code>optional double right_trigger = 17;</code>
+     */
+    public Builder setRightTrigger(double value) {
+      
+      rightTrigger_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Right trigger "axis"
+     * </pre>
+     *
+     * <code>optional double right_trigger = 17;</code>
+     */
+    public Builder clearRightTrigger() {
+      
+      rightTrigger_ = 0D;
       onChanged();
       return this;
     }
