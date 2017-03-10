@@ -36,6 +36,15 @@ public interface ControlStateOrBuilder extends
 
   /**
    * <pre>
+   * POV angle.
+   * </pre>
+   *
+   * <code>optional int32 POV = 15;</code>
+   */
+  int getPOV();
+
+  /**
+   * <pre>
    * Button ID = 1
    * </pre>
    *

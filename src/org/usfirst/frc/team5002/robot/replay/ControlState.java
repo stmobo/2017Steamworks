@@ -18,6 +18,7 @@ public  final class ControlState extends
     forwardAxis_ = 0D;
     horizontalAxis_ = 0D;
     turnAxis_ = 0D;
+    pOV_ = 0;
     buttonA_ = false;
     buttonB_ = false;
     buttonX_ = false;
@@ -126,6 +127,11 @@ public  final class ControlState extends
             activateHighSpeed_ = input.readBool();
             break;
           }
+          case 120: {
+
+            pOV_ = input.readInt32();
+            break;
+          }
         }
       }
     } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -186,6 +192,19 @@ public  final class ControlState extends
    */
   public double getTurnAxis() {
     return turnAxis_;
+  }
+
+  public static final int POV_FIELD_NUMBER = 15;
+  private int pOV_;
+  /**
+   * <pre>
+   * POV angle.
+   * </pre>
+   *
+   * <code>optional int32 POV = 15;</code>
+   */
+  public int getPOV() {
+    return pOV_;
   }
 
   public static final int BUTTON_A_FIELD_NUMBER = 4;
@@ -385,6 +404,9 @@ public  final class ControlState extends
     if (activateHighSpeed_ != false) {
       output.writeBool(14, activateHighSpeed_);
     }
+    if (pOV_ != 0) {
+      output.writeInt32(15, pOV_);
+    }
   }
 
   public int getSerializedSize() {
@@ -448,6 +470,10 @@ public  final class ControlState extends
       size += com.google.protobuf.CodedOutputStream
         .computeBoolSize(14, activateHighSpeed_);
     }
+    if (pOV_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(15, pOV_);
+    }
     memoizedSize = size;
     return size;
   }
@@ -476,6 +502,8 @@ public  final class ControlState extends
         java.lang.Double.doubleToLongBits(getTurnAxis())
         == java.lang.Double.doubleToLongBits(
             other.getTurnAxis()));
+    result = result && (getPOV()
+        == other.getPOV());
     result = result && (getButtonA()
         == other.getButtonA());
     result = result && (getButtonB()
@@ -517,6 +545,8 @@ public  final class ControlState extends
     hash = (37 * hash) + TURN_AXIS_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         java.lang.Double.doubleToLongBits(getTurnAxis()));
+    hash = (37 * hash) + POV_FIELD_NUMBER;
+    hash = (53 * hash) + getPOV();
     hash = (37 * hash) + BUTTON_A_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
         getButtonA());
@@ -674,6 +704,8 @@ public  final class ControlState extends
 
       turnAxis_ = 0D;
 
+      pOV_ = 0;
+
       buttonA_ = false;
 
       buttonB_ = false;
@@ -721,6 +753,7 @@ public  final class ControlState extends
       result.forwardAxis_ = forwardAxis_;
       result.horizontalAxis_ = horizontalAxis_;
       result.turnAxis_ = turnAxis_;
+      result.pOV_ = pOV_;
       result.buttonA_ = buttonA_;
       result.buttonB_ = buttonB_;
       result.buttonX_ = buttonX_;
@@ -781,6 +814,9 @@ public  final class ControlState extends
       }
       if (other.getTurnAxis() != 0D) {
         setTurnAxis(other.getTurnAxis());
+      }
+      if (other.getPOV() != 0) {
+        setPOV(other.getPOV());
       }
       if (other.getButtonA() != false) {
         setButtonA(other.getButtonA());
@@ -951,6 +987,44 @@ public  final class ControlState extends
     public Builder clearTurnAxis() {
       
       turnAxis_ = 0D;
+      onChanged();
+      return this;
+    }
+
+    private int pOV_ ;
+    /**
+     * <pre>
+     * POV angle.
+     * </pre>
+     *
+     * <code>optional int32 POV = 15;</code>
+     */
+    public int getPOV() {
+      return pOV_;
+    }
+    /**
+     * <pre>
+     * POV angle.
+     * </pre>
+     *
+     * <code>optional int32 POV = 15;</code>
+     */
+    public Builder setPOV(int value) {
+      
+      pOV_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * POV angle.
+     * </pre>
+     *
+     * <code>optional int32 POV = 15;</code>
+     */
+    public Builder clearPOV() {
+      
+      pOV_ = 0;
       onChanged();
       return this;
     }

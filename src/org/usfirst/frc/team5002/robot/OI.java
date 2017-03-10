@@ -94,6 +94,7 @@ public class OI {
             .setToggleFOC(menu.get())
             .setActivateLowSpeed(activateLowSpeed.get())
             .setActivateHighSpeed(activateHighSpeed.get())
+            .setPOV(arcadeStick.getPOV())
             .build();
 
 
@@ -199,7 +200,7 @@ public class OI {
     }
 
     public boolean isPOVPressed() {
-    	int angle = arcadeStick.getPOV(0);
+    	int angle = currentState.getPOV();
     	if(angle == -1) {
     		return true;
     	}
@@ -207,12 +208,12 @@ public class OI {
     }
 
     public double getFwdPOV() {
-    	int angle = arcadeStick.getPOV(0);
+    	int angle = currentState.getPOV();
     	return Math.sin((Math.PI/180.0)*angle);
     }
 
     public double getStrPOV() {
-    	int angle = arcadeStick.getPOV(0);
+    	int angle = currentState.getPOV();
     	return Math.cos((Math.PI/180.0)*angle);
     }
 

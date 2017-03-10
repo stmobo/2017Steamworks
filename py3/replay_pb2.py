@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='replay.proto',
   package='team5002',
   syntax='proto3',
-  serialized_pb=_b('\n\x0creplay.proto\x12\x08team5002\"\xb5\x02\n\x0c\x43ontrolState\x12\x14\n\x0c\x66orward_axis\x18\x01 \x01(\x01\x12\x17\n\x0fhorizontal_axis\x18\x02 \x01(\x01\x12\x11\n\tturn_axis\x18\x03 \x01(\x01\x12\x10\n\x08\x62utton_A\x18\x04 \x01(\x08\x12\x10\n\x08\x62utton_B\x18\x05 \x01(\x08\x12\x10\n\x08\x62utton_X\x18\x06 \x01(\x08\x12\x10\n\x08\x62utton_Y\x18\x07 \x01(\x08\x12\x11\n\tbutton_LB\x18\x08 \x01(\x08\x12\x11\n\tbutton_RB\x18\t \x01(\x08\x12\x13\n\x0b\x62utton_home\x18\n \x01(\x08\x12\x13\n\x0b\x62utton_menu\x18\x0b \x01(\x08\x12\x12\n\ntoggle_FOC\x18\x0c \x01(\x08\x12\x1a\n\x12\x61\x63tivate_low_speed\x18\r \x01(\x08\x12\x1b\n\x13\x61\x63tivate_high_speed\x18\x0e \x01(\x08\"b\n\x06Replay\x12%\n\x05state\x18\x01 \x03(\x0b\x32\x16.team5002.ControlState\x12\x18\n\x10replay_frequency\x18\x02 \x01(\x01\x12\x17\n\x0f\x62\x61ttery_voltage\x18\x03 \x01(\x01\x42)\n%org.usfirst.frc.team5002.robot.replayP\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x0creplay.proto\x12\x08team5002\"\xc2\x02\n\x0c\x43ontrolState\x12\x14\n\x0c\x66orward_axis\x18\x01 \x01(\x01\x12\x17\n\x0fhorizontal_axis\x18\x02 \x01(\x01\x12\x11\n\tturn_axis\x18\x03 \x01(\x01\x12\x0b\n\x03POV\x18\x0f \x01(\x05\x12\x10\n\x08\x62utton_A\x18\x04 \x01(\x08\x12\x10\n\x08\x62utton_B\x18\x05 \x01(\x08\x12\x10\n\x08\x62utton_X\x18\x06 \x01(\x08\x12\x10\n\x08\x62utton_Y\x18\x07 \x01(\x08\x12\x11\n\tbutton_LB\x18\x08 \x01(\x08\x12\x11\n\tbutton_RB\x18\t \x01(\x08\x12\x13\n\x0b\x62utton_home\x18\n \x01(\x08\x12\x13\n\x0b\x62utton_menu\x18\x0b \x01(\x08\x12\x12\n\ntoggle_FOC\x18\x0c \x01(\x08\x12\x1a\n\x12\x61\x63tivate_low_speed\x18\r \x01(\x08\x12\x1b\n\x13\x61\x63tivate_high_speed\x18\x0e \x01(\x08\"b\n\x06Replay\x12%\n\x05state\x18\x01 \x03(\x0b\x32\x16.team5002.ControlState\x12\x18\n\x10replay_frequency\x18\x02 \x01(\x01\x12\x17\n\x0f\x62\x61ttery_voltage\x18\x03 \x01(\x01\x42)\n%org.usfirst.frc.team5002.robot.replayP\x01\x62\x06proto3')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -55,77 +55,84 @@ _CONTROLSTATE = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='button_A', full_name='team5002.ControlState.button_A', index=3,
+      name='POV', full_name='team5002.ControlState.POV', index=3,
+      number=15, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='button_A', full_name='team5002.ControlState.button_A', index=4,
       number=4, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='button_B', full_name='team5002.ControlState.button_B', index=4,
+      name='button_B', full_name='team5002.ControlState.button_B', index=5,
       number=5, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='button_X', full_name='team5002.ControlState.button_X', index=5,
+      name='button_X', full_name='team5002.ControlState.button_X', index=6,
       number=6, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='button_Y', full_name='team5002.ControlState.button_Y', index=6,
+      name='button_Y', full_name='team5002.ControlState.button_Y', index=7,
       number=7, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='button_LB', full_name='team5002.ControlState.button_LB', index=7,
+      name='button_LB', full_name='team5002.ControlState.button_LB', index=8,
       number=8, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='button_RB', full_name='team5002.ControlState.button_RB', index=8,
+      name='button_RB', full_name='team5002.ControlState.button_RB', index=9,
       number=9, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='button_home', full_name='team5002.ControlState.button_home', index=9,
+      name='button_home', full_name='team5002.ControlState.button_home', index=10,
       number=10, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='button_menu', full_name='team5002.ControlState.button_menu', index=10,
+      name='button_menu', full_name='team5002.ControlState.button_menu', index=11,
       number=11, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='toggle_FOC', full_name='team5002.ControlState.toggle_FOC', index=11,
+      name='toggle_FOC', full_name='team5002.ControlState.toggle_FOC', index=12,
       number=12, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='activate_low_speed', full_name='team5002.ControlState.activate_low_speed', index=12,
+      name='activate_low_speed', full_name='team5002.ControlState.activate_low_speed', index=13,
       number=13, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='activate_high_speed', full_name='team5002.ControlState.activate_high_speed', index=13,
+      name='activate_high_speed', full_name='team5002.ControlState.activate_high_speed', index=14,
       number=14, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
@@ -144,7 +151,7 @@ _CONTROLSTATE = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=27,
-  serialized_end=336,
+  serialized_end=349,
 )
 
 
@@ -188,8 +195,8 @@ _REPLAY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=338,
-  serialized_end=436,
+  serialized_start=351,
+  serialized_end=449,
 )
 
 _REPLAY.fields_by_name['state'].message_type = _CONTROLSTATE
