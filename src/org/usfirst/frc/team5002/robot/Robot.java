@@ -45,6 +45,8 @@ public class Robot extends IterativeRobot {
 	public static final RopeClimber ropeClimber = new RopeClimber();
 	public static final Outtake outtake = new Outtake();
 	public static OI oi;
+	
+	public static double startYaw;
 
 	public static DigitalInput limSwitch;
 	private Timer intakeStopTimer;
@@ -56,6 +58,19 @@ public class Robot extends IterativeRobot {
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
 
+	/* A more reliable form of navx.getAngle() */
+	public static double getRobotHeading() {
+		if(navx != null) {
+			if(Math.abs(navx.getAngle()) <= 0.001) {
+				return (navx.getYaw() - startYaw);
+			} else {
+				return navx.getAngle();
+			}
+		} else {
+			return 0;
+		}
+	}
+	
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -87,6 +102,9 @@ public class Robot extends IterativeRobot {
         
         if(navx != null) {
             navx.zeroYaw();
+            startYaw = navx.getYaw();
+        } else {
+        	startYaw = 0;
         }
         
         chooser.addObject("Auto Left", new AutonomousTemp(-0.1));

@@ -114,7 +114,7 @@ public class OI {
             // Zero degrees = towards opposing side
             double x = arcadeStick.getRawAxis(1) * -1.0;
             double y = arcadeStick.getRawAxis(0) * -1.0;
-            double hdg = Robot.navx.getAngle();
+            double hdg = Robot.getRobotHeading();
 
             // X-coordinate -> CW alias rotation (left-handed)
             return (x * Math.cos(hdg*Math.PI/180.0)) + (y * -Math.sin(hdg*Math.PI/180.0));
@@ -128,7 +128,7 @@ public class OI {
             // Right = +Y
             double x = arcadeStick.getRawAxis(1) * -1.0;
             double y = arcadeStick.getRawAxis(0) * -1.0;
-            double hdg = Robot.navx.getAngle();
+            double hdg = Robot.getRobotHeading();
 
             // Y-coordinate, CW alias rotation w/ left-handed coordinate system
             return (x * Math.sin(hdg*Math.PI/180.0)) + (y * Math.cos(hdg*Math.PI/180.0));
@@ -150,6 +150,7 @@ public class OI {
 	public void UpdateSD(){
 		Robot.drivetrain.updateSD();//sends all the data from SwerveDrive subsystem to the SmartDashboard
 		SmartDashboard.putBoolean("Intake Switch", Robot.limSwitch.get());
+		SmartDashboard.putDouble("Start Yaw", Robot.startYaw);
 		if(Robot.navx != null) {
 			SmartDashboard.putBoolean("NavX Present", true);
 			SmartDashboard.putBoolean("Calibrating", Robot.navx.isCalibrating());
