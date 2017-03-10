@@ -54,9 +54,14 @@ public class Teleop extends Command {
 		double str = (Math.abs(Robot.oi.getHorizontalAxis()) > joystickDeadband) ? Robot.oi.getHorizontalAxis() : 0.0;
 		//double rcw = 0.0;
 		double rcw = (Math.abs(Robot.oi.getTurnAxis()) > joystickDeadband) ? Robot.oi.getTurnAxis() : 0.0;
-
+		
 		if(Math.abs(fwd)>1.0 || Math.abs(str)>1.0 || Math.abs(rcw)>1.0){
 			return;
+		}
+		
+		if(Robot.oi.isPOVPressed()) {
+			fwd = Robot.oi.getFwdPOV();
+			str = Robot.oi.getStrPOV();
 		}
 
 		double r = Math.sqrt(Math.pow(LENGTH_INCHES,2) + Math.pow(WIDTH_INCHES,2));
@@ -88,10 +93,15 @@ public class Teleop extends Command {
 		speeds[3] = (maxWs > 1 ? spd_br / maxWs : spd_br) * Robot.oi.getDriveSpeedCoefficient();
 
 		if(!enableAngleHold || Robot.oi.arcadeStick.getMagnitude() <= 0.50) {
-			angles[0] = (c==0 && b==0) ? 0.0 : (Math.atan2(b, c) * 180 / Math.PI); // back right
-			angles[1] = (d==0 && b==0) ? 0.0 : (Math.atan2(b, d) * 180 / Math.PI); // back left
-			angles[2] = (d==0 && a==0) ? 0.0 : (Math.atan2(a, d) * 180 / Math.PI); // front left
-			angles[3] = (c==0 && a==0) ? 0.0 : (Math.atan2(a, c) * 180 / Math.PI); // front right
+			if((Math.abs(fwd) > 0.0)  ||
+				(Math.abs(str) > 0.0) ||
+				(Math.abs(rcw) > 0.0)
+			) {
+				angles[0] = (c==0 && b==0) ? 0.0 : (Math.atan2(b, c) * 180 / Math.PI); // back right
+				angles[1] = (d==0 && b==0) ? 0.0 : (Math.atan2(b, d) * 180 / Math.PI); // back left
+				angles[2] = (d==0 && a==0) ? 0.0 : (Math.atan2(a, d) * 180 / Math.PI); // front left
+				angles[3] = (c==0 && a==0) ? 0.0 : (Math.atan2(a, c) * 180 / Math.PI); // front right
+			}
 		}
 
 		Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.BR, angles[0]);
@@ -113,6 +123,12 @@ public class Teleop extends Command {
     protected void initialize() {
     	/* Set main controls for driving... */
     	Robot.drivetrain.setDriveTeleop();
+    	
+
+		Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.BR, 0.0);
+		Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.BL, 0.0);
+		Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.FL, 0.0);
+		Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.FR, 0.0);
     }
 
     // Make this return true when this Command no longer needs to run execute()

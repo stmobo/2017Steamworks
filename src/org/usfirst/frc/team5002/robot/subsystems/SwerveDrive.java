@@ -48,9 +48,11 @@ public class SwerveDrive extends Subsystem {
     private double[] steer_offsets = { 135.0, 617.0, 940.0, 667.0 };
     private double[] maxEncoderOutput = {1024.0, 1024.0, 1024.0, 1024.0};
     private double[] minEncoderOutput = {0.0, 0.0, 0.0, 0.0};
+    private double[] currentSteerTarget = {0.0, 0.0, 0.0, 0.0};
     boolean driveReversalStatus[] = {false, false, false, false};
     boolean driveReversalConst[] = {true, false, true, false};
 
+    
     public enum ModulePosition {
     	FL,    ///< Front-left
     	FR,    ///< Front-right
@@ -163,6 +165,26 @@ public class SwerveDrive extends Subsystem {
     }
     
     /**
+     * Gets a steer module's current steer target.
+     *
+     * @param pos position of the steer module to inspect.
+     */
+    private double getSteerTarget(ModulePosition pos) {
+    	switch(pos) {
+    	case FL:
+    		return currentSteerTarget[0];
+    	case FR:
+    		return currentSteerTarget[1];
+    	case BL:
+    		return currentSteerTarget[2];
+    	case BR:
+    		return currentSteerTarget[3];
+    	}
+
+    	return 0.0;
+    }
+    
+    /**
      * Gets whether a given steer module's drive motor should be reversed by default.
      *
      * @param pos position of the steer module to inspect.
@@ -171,12 +193,16 @@ public class SwerveDrive extends Subsystem {
     	switch(pos) {
     	case FL:
     		driveReversalStatus[0] = stat;
+    		break;
     	case FR:
     		driveReversalStatus[1] = stat;
+    		break;
     	case BL:
     		driveReversalStatus[2] = stat;
+    		break;
     	case BR:
     		driveReversalStatus[3] = stat;
+    		break;
     	}
     }
 
@@ -298,7 +324,14 @@ public class SwerveDrive extends Subsystem {
      */
     public void setDriveOutput(ModulePosition pos, double out) {
     	CANTalon drive = getDriveController(pos);
-    	drive.set(out * (getDriveReverseConst(pos) ? -1 : 1) * (getDriveReverse(pos) ? -1 : 1));
+    	CANTalon steer = getSteerController(pos);
+    	
+    	// 45 native units is about equal to 15 degrees
+    	if(Math.abs(steer.getPosition() - getSteerTarget(pos)) >= 45) {
+    		drive.set(0);
+    	} else {
+    		drive.set(out * (getDriveReverseConst(pos) ? -1 : 1) * (getDriveReverse(pos) ? -1 : 1));
+    	}
     }
 
     /**
@@ -325,6 +358,21 @@ public class SwerveDrive extends Subsystem {
     	nativePos += getSteerOffset(pos);
         nativePos += getMinSteerHack(pos);
 
+        switch(pos) {
+    	case FL:
+    		currentSteerTarget[0] = nativePos;
+    		break;
+    	case FR:
+    		currentSteerTarget[1] = nativePos;
+    		break;
+    	case BL:
+    		currentSteerTarget[2] = nativePos;
+    		break;
+    	case BR:
+    		currentSteerTarget[3] = nativePos;
+    		break;
+    	}
+        
     	steer.set(nativePos);
     }
 

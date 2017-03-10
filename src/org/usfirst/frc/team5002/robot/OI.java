@@ -26,6 +26,7 @@ public class OI {
     private Button activateLowSpeed;
     private Button activateHighSpeed;
     private Button toggleFOC;
+    private Button resetHdg;
 
     boolean focEnabled = false;
 
@@ -43,6 +44,7 @@ public class OI {
         activateLowSpeed = new JoystickButton(arcadeStick, 9); // Bumper 1 (left)
         activateHighSpeed = new JoystickButton(arcadeStick, 10); // Bumper 2 (right)
         toggleFOC = home;
+        resetHdg = menu;
 
 		Y.whileHeld(new ClimbUp());//turns the climb motor on while Y is being held
 		RB.whileHeld(new ClimbDown());//turns launcher motor on when B is pressed once, and off when B is pressed again
@@ -63,16 +65,39 @@ public class OI {
         } else {
             focDebounce = false;
         }
+        
+        if(resetHdg.get()) {
+        	Robot.navx.zeroYaw();
+        }
+        
+    }
+    
+    public boolean isPOVPressed() {
+    	int angle = arcadeStick.getPOV(0);
+    	if(angle == -1) {
+    		return true;
+    	}
+    	return false;
+    }
+    
+    public double getFwdPOV() {
+    	int angle = arcadeStick.getPOV(0);
+    	return Math.sin((Math.PI/180.0)*angle);
+    }
+    
+    public double getStrPOV() {
+    	int angle = arcadeStick.getPOV(0);
+    	return Math.cos((Math.PI/180.0)*angle);
     }
 
     /* set multipliers for teleop drive speed outputs */
     public double getDriveSpeedCoefficient() {
         if(activateLowSpeed.get()) {
-            return 0.5;
+            return 0.25;
         } else if(activateHighSpeed.get()) {
             return 1.0;
         } else {
-            return 0.75;
+            return 0.50;
         }
     }
 
@@ -116,9 +141,16 @@ public class OI {
 
 	public void UpdateSD(){
 		Robot.drivetrain.updateSD();//sends all the data from SwerveDrive subsystem to the SmartDashboard
+		SmartDashboard.putBoolean("Intake Switch", Robot.limSwitch.get());
 		if(Robot.navx != null) {
 			SmartDashboard.putBoolean("NavX Present", true);
+			SmartDashboard.putBoolean("Calibrating", Robot.navx.isCalibrating());
+			SmartDashboard.putBoolean("Connected", Robot.navx.isConnected());
+			
 			SmartDashboard.putNumber("Heading", Robot.navx.getAngle());	
+			SmartDashboard.putNumber("Compass", Robot.navx.getCompassHeading());
+			SmartDashboard.putNumber("Yaw", Robot.navx.getYaw());
+			SmartDashboard.putNumber("Fused", Robot.navx.getFusedHeading());
 			if(focEnabled) {
 				SmartDashboard.putString("Control Mode", "Field-Oriented");
 			} else {

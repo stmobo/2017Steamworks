@@ -5,8 +5,12 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -15,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team5002.robot.commands.Teleop;
+import org.usfirst.frc.team5002.robot.commands.AutoIntake;
 import org.usfirst.frc.team5002.robot.commands.KillDrivetrain;
 import org.usfirst.frc.team5002.robot.commands.PIDSteerCollective;
 import org.usfirst.frc.team5002.robot.commands.PIDSteerTestSingle;
@@ -41,6 +46,11 @@ public class Robot extends IterativeRobot {
 	public static final Outtake outtake = new Outtake();
 	public static OI oi;
 
+	public static DigitalInput limSwitch;
+	private Timer intakeStopTimer;
+	private boolean intakeTimingStarted;
+	private boolean intakeTimePassed;
+	
 	public static AHRS navx;
 
 	Command autonomousCommand;
@@ -53,15 +63,18 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		oi = new OI();
-
+		
+		limSwitch = new DigitalInput(0);
+		intakeStopTimer = new Timer();
+		
 		try {
 			/* NOTE: With respect to the NavX, the robot's front is in the -X direction.
 			 * The robot's right side is in the +Y direction,
 			 * and the robot's top side is in the +Z direction as usual.
-       * Clockwise rotation = increasing yaw.
-       */
+		     * Clockwise rotation = increasing yaw.
+		     */
 
-			navx = new AHRS(Port.kMXP);
+			navx = new AHRS(SerialPort.Port.kMXP);
 		} catch (RuntimeException ex) {
 			DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
 			navx = null;
@@ -70,7 +83,7 @@ public class Robot extends IterativeRobot {
         // start camera stream lol
         UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
         cam.setFPS(15);
-        cam.setResolution(640, 480);
+        cam.setResolution(320, 240);
         
         if(navx != null) {
             navx.zeroYaw();
@@ -161,6 +174,8 @@ public class Robot extends IterativeRobot {
 		Teleop teleopTest = new Teleop();
 		Scheduler.getInstance().add(teleopTest);
 
+		//Scheduler.getInstance().add(new AutoIntake());
+		
 		oi.updateOIState();
 
 		//Command test = new SteerTestVbus();
@@ -173,6 +188,26 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		//Robot.oi.testing();
+		
+		if(!limSwitch.get()) {
+			Robot.intake.run();
+			intakeTimePassed = false;
+			intakeTimingStarted = false;
+			intakeStopTimer.stop();
+		} else {
+			if(!intakeTimingStarted) {
+				intakeTimingStarted = true;
+				intakeStopTimer.reset();
+				intakeStopTimer.start();
+			} else {
+				if(!intakeTimePassed && intakeStopTimer.get() >= 1.5) {
+					Robot.intake.stop();
+					intakeStopTimer.stop();
+					intakeTimePassed = true;
+				}
+			}
+		}
+		
 		oi.UpdateSD();
 		oi.updateOIState();
 		Scheduler.getInstance().run();
