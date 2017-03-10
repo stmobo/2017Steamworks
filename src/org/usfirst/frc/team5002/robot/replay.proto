@@ -1,0 +1,29 @@
+syntax = "proto3";
+package team5002;
+option java_package="org.usfirst.frc.team5002.robot.replay";
+option java_multiple_files=true;
+
+message ControlState {
+    double forward_axis = 1;            // Forward / backward movement axis.
+    double horizontal_axis = 2;         // Left / right strafing axis.
+    double turn_axis = 3;               // CW / CCW rotation axis.
+    int32 POV = 15;                     // POV angle.
+
+    bool button_A = 4;               // Button ID = 1
+    bool button_B = 5;               // Button ID = 2
+    bool button_X = 6;               // Button ID = 3
+    bool button_Y = 7;               // Button ID = 4
+    bool button_LB = 8;              // Button ID = 5
+    bool button_RB = 9;              // Button ID = 6
+    bool button_home = 10;           // Button ID = 7
+    bool button_menu = 11;           // Button ID = 8
+    bool toggle_FOC = 12;            // Button ID = 7 (alias of menu?)
+    bool activate_low_speed = 13;    // button ID = 10 (left paddle)
+    bool activate_high_speed = 14;    // button ID = 11 (right paddle)
+}
+
+message Replay {
+    repeated ControlState state = 1;    // Actual replay data.
+    double replay_frequency = 2;        // Frequency of state updates, in Hz
+    double battery_voltage = 3;         // Battery level at the beginning of the recording session, in volts.
+}

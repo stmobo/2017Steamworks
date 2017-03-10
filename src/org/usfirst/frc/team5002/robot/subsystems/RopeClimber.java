@@ -5,7 +5,7 @@ import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import com.ctre.CANTalon.TalonControlMode;
 /**
- *@author elweb & Jonathan 
+ *@author elweb & Jonathan
  *@version Last Modified  2/7/17
  */
 public class RopeClimber extends Subsystem {
@@ -14,11 +14,12 @@ public class RopeClimber extends Subsystem {
 
     public void initDefaultCommand() {
     }
-    public RopeClimber(){
 
-    	ropeClimb = new CANTalon(3);//TODO input actual port number
+    public RopeClimber(){
+    	ropeClimb = new CANTalon(3);
     	ropeClimb.changeControlMode(TalonControlMode.PercentVbus);
-    	}
+	}
+
     public void run(){
     	ropeClimb.set(1.0);
     }
@@ -29,4 +30,3 @@ public class RopeClimber extends Subsystem {
     	ropeClimb.set(0);
     }
 }
-
