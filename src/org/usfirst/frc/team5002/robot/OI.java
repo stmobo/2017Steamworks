@@ -35,7 +35,7 @@ public class OI {
     /* Keep instances of the Commands here to share between teleop & replay-auto */
     private ClimbUp climbup = new ClimbUp();
     private ClimbDown climbdown = new ClimbDown();
-    //private INtaker intaker = new INtaker();
+    private INtaker intaker = new INtaker();
     private OUTtaker outtaker = new OUTtaker();
     private TakeOuter takeouter = new TakeOuter();
     private ReverseInTaker reverseInTaker = new ReverseInTaker();
@@ -58,7 +58,7 @@ public class OI {
 		Y.whileHeld(new ClimbUp());//turns the climb motor on while Y is being held
 		RB.whileHeld(new ClimbDown());//turns launcher motor on when B is pressed once, and off when B is pressed again
 
-		//A.toggleWhenPressed(new INtaker()); //turns the intake motor on when A is pressed once, and off when A is pressed again
+		A.toggleWhenPressed(new INtaker()); //turns the intake motor on when A is pressed once, and off when A is pressed again
 		B.toggleWhenPressed(new OUTtaker()); //turns the outake motor on at the same time as the intake motor
 
 		LB.whileHeld(new TakeOuter()); // emergency reverse for outtake motor
@@ -191,6 +191,11 @@ public class OI {
         }
 
         /* Start toggled commands if necessary. */
+        if(toggleA) {
+            intaker.start();
+        } else {
+            intaker.cancel();
+        }
 
         if(toggleB) {
             outtaker.start();
