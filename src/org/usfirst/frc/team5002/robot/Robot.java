@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team5002.robot.commands.Teleop;
 import org.usfirst.frc.team5002.robot.commands.AutoIntake;
+import org.usfirst.frc.team5002.robot.commands.AutonomousTemp;
 import org.usfirst.frc.team5002.robot.commands.KillDrivetrain;
 import org.usfirst.frc.team5002.robot.commands.PIDSteerCollective;
 import org.usfirst.frc.team5002.robot.commands.PIDSteerTestSingle;
@@ -88,14 +89,11 @@ public class Robot extends IterativeRobot {
         if(navx != null) {
             navx.zeroYaw();
         }
-
-		/* Add PID Test commands. */
-		/*
-		SmartDashboard.putData("PIDSteerTest-FrontLeft", new PIDSteerTestSingle(drivetrain.fl_steer));
-		SmartDashboard.putData("PIDSteerTest-FrontRight", new PIDSteerTestSingle(drivetrain.fr_steer));
-		SmartDashboard.putData("PIDSteerTest-BackLeft", new PIDSteerTestSingle(drivetrain.bl_steer));
-		SmartDashboard.putData("PIDSteerTest-BackRight", new PIDSteerTestSingle(drivetrain.br_steer));
-		*/
+        
+        chooser.addObject("Auto Left", new AutonomousTemp(-0.1));
+        chooser.addObject("Auto Right", new AutonomousTemp(0.1));
+        chooser.addObject("Auto Straight", new AutonomousTemp(0.0));
+        chooser.addDefault("No Auto", new KillDrivetrain());
 	}
 
 	/**
@@ -137,7 +135,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		autonomousCommand = new KillDrivetrain();
+		autonomousCommand = chooser.getSelected();
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
 		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand

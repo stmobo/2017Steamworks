@@ -96,6 +96,8 @@ public class OI {
             return 0.25;
         } else if(activateHighSpeed.get()) {
             return 1.0;
+        } else if(isPOVPressed()) {
+        	return 0.25;
         } else {
             return 0.50;
         }
@@ -136,7 +138,13 @@ public class OI {
 	}
 
 	public double getTurnAxis(){
-		return arcadeStick.getRawAxis(4); // (axis 4 = right-hand X axis) allows the Joystick to command the rotation of the Robot
+		double trig = arcadeStick.getRawAxis(3) - arcadeStick.getRawAxis(2);
+		double stick = arcadeStick.getRawAxis(4); // (axis 4 = right-hand X axis) allows the Joystick to command the rotation of the Robot
+		if(Math.abs(stick) > Math.abs(trig)) {
+			return stick;
+		} else {
+			return trig;
+		}
 	}
 
 	public void UpdateSD(){
