@@ -128,7 +128,7 @@ public class Robot extends IterativeRobot {
 		//Robot.drivetrain.UpdateSDSingle(Robot.drivetrain.fr_steer);
 		//Robot.drivetrain.UpdateSDSingle(Robot.drivetrain.fl_steer);
 
-		oi.UpdateSD();
+		oi.updateSD();
 		Scheduler.getInstance().run();
 	}
 
