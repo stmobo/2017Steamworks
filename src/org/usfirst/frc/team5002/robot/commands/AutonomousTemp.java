@@ -12,13 +12,13 @@ import edu.wpi.first.wpilibj.command.Command;
 public class AutonomousTemp extends Command {
 	Timer timer;
 	
-	double leftBias;
+	double leftBias = 0.1;
     
 	public AutonomousTemp(double bias) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	requires(Robot.drivetrain);
-    	leftBias = bias;
+    	leftBias += bias;
     }
 
     // Called just before this Command runs the first time

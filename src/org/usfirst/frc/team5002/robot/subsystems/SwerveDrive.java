@@ -59,6 +59,20 @@ public class SwerveDrive extends Subsystem {
     	BL,    ///< Back-left
     	BR     ///< Back-right
     };
+    
+    private int positionToIndex(ModulePosition pos) {
+    	switch(pos) {
+    	case FL:
+		default:
+    		return 0;
+    	case FR:
+    		return 1;
+    	case BL:
+    		return 2;
+    	case BR:
+    		return 3;
+    	}
+    }
 
     /**
      * Gets the maximum possible value returned by the encoder hardware.
@@ -333,6 +347,18 @@ public class SwerveDrive extends Subsystem {
     		drive.set(out * (getDriveReverseConst(pos) ? -1 : 1) * (getDriveReverse(pos) ? -1 : 1));
     	}
     }
+    
+    private double getCurrentSteerPositionDegrees(ModulePosition pos) {
+    	CANTalon steer = getSteerController(pos);
+    	double nativeUnits = steer.getPosition();
+    	
+    	nativeUnits -= getMinSteerHack(pos);
+    	nativeUnits -= getSteerOffset(pos);
+    	double degrees = nativeUnits * (360.0 / (getSteerHack(pos) - getMinSteerHack(pos)));
+    	
+    	return degrees;
+    	
+    }
 
     /**
      * Sets the given swerve module's steering position.
@@ -347,12 +373,33 @@ public class SwerveDrive extends Subsystem {
     	CANTalon steer = getSteerController(pos);
     	CANTalon drive = getDriveController(pos);
 
+    	/*
+    	 * When setting the steering angle, we have two options:
+    	 *  1. Drive to the angle directly and drive forward, or
+    	 *  2. Drive to the opposite angle (angle+180 mod 360) and drive backwards.
+    	 */
+    	
+    	double angleTwo = (degrees + 180.0) % 360.0;
+    	double currentAngle = getCurrentSteerPositionDegrees(pos);
+    	double targetAngle = degrees;
+    	
+    	if(Math.abs(degrees - currentAngle) < Math.abs(angleTwo - currentAngle)) {
+    		/* Drive directly. */
+    		setDriveReverse(pos, false);
+    	} else {
+    		/* Drive to opposite angle. */
+    		targetAngle = angleTwo;
+    		setDriveReverse(pos, true);
+    	}
+    	
+    	/*
     	if(degrees >= 180.0) {
     		degrees -= 180.0;
     		setDriveReverse(pos, true);
     	} else {
     		setDriveReverse(pos, false);
     	}
+    	*/
 
     	double nativePos = degrees * ((getSteerHack(pos) - getMinSteerHack(pos)) / 360.0);
     	nativePos += getSteerOffset(pos);
