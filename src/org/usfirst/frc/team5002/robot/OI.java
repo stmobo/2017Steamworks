@@ -30,7 +30,7 @@ public class OI {
 
     private boolean toggleA = false;
     private boolean toggleB = false;
-    private boolean focEnabled = false;
+    private boolean focEnabled = true;
 
     /* Keep instances of the Commands here to share between teleop & replay-auto */
     private ClimbUp climbup = new ClimbUp();
