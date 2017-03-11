@@ -8,7 +8,9 @@ import org.usfirst.frc.team5002.robot.commands.OUTtaker;
 import org.usfirst.frc.team5002.robot.commands.ReverseInTaker;
 import org.usfirst.frc.team5002.robot.commands.TakeOuter;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -55,9 +57,9 @@ public class OI {
 		RB.whileHeld(new ClimbDown());//turns launcher motor on when B is pressed once, and off when B is pressed again
 
 		//A.toggleWhenPressed(new INtaker()); //turns the intake motor on when A is pressed once, and off when A is pressed again
-		B.toggleWhenPressed(new OUTtaker()); //turns the outake motor on at the same time as the intake motor
+		//B.toggleWhenPressed(new OUTtaker()); //turns the outake motor on at the same time as the intake motor
 
-		LB.whileHeld(new TakeOuter()); // emergency reverse for outtake motor
+		//LB.whileHeld(new TakeOuter()); // emergency reverse for outtake motor
 		//LB.whileHeld(new ReverseInTaker());// emergency reverse for intake motor
 	}
 
@@ -163,6 +165,23 @@ public class OI {
 	public void UpdateSD(){
 		Robot.drivetrain.updateSD();//sends all the data from SwerveDrive subsystem to the SmartDashboard
 		Robot.intake.updateSD();
+
+		if(!DriverStation.getInstance().isDisabled()) {
+			if(DriverStation.getInstance().isAutonomous()) {
+				SmartDashboard.putNumber("Match Time", (int)(15.0 - Timer.getMatchTime()));
+			} else {
+				SmartDashboard.putNumber("Match Time", (int)(150.0 - Timer.getMatchTime()));
+			}
+			
+			if((int)(150.0 - Timer.getMatchTime()) <= 40.0) {
+				SmartDashboard.putBoolean("40-Second Watch", true);
+			} else {
+				SmartDashboard.putBoolean("40-Second Watch", false);
+			}
+		} else {
+			SmartDashboard.putNumber("Match Time", (int)0);
+			SmartDashboard.putBoolean("40-Second Watch", false);
+		}
 		
 		SmartDashboard.putNumber("Start Yaw", Robot.startYaw);
 		SmartDashboard.putNumber("POV", arcadeStick.getPOV(0));
