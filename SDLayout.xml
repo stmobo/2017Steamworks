@@ -1,7 +1,13 @@
 <xml version="1.0">
 <dashboard>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
+		<location x="1329" y="13"/>
+		<width>236</width>
+		<height>35</height>
+	</static-widget>
 	<widget field="Fused" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="463" y="327"/>
+		<location x="474" y="327"/>
+		<width>116</width>
 	</widget>
 	<widget field="Intake Switch" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="331" y="175"/>
@@ -33,25 +39,13 @@
 		<width>153</width>
 	</widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.CameraServerViewer">
-		<location x="662" y="10"/>
+		<location x="662" y="11"/>
 		<width>649</width>
-		<height>522</height>
+		<height>521</height>
 		<property name="Camera Choice" value=""/>
 	</static-widget>
-	<widget field="Pos-DriveFR" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="157" y="173"/>
-	</widget>
 	<widget field="SteerPos-BL" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="14" y="140"/>
-	</widget>
-	<widget field="Pos-DriveBR" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="160" y="195"/>
-	</widget>
-	<widget field="Pos-DriveFL" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="11" y="172"/>
-	</widget>
-	<widget field="Pos-DriveBL" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="13" y="194"/>
 	</widget>
 	<widget field="DriveErr-FR" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="480" y="121"/>
@@ -91,7 +85,7 @@
 		<location x="14" y="58"/>
 	</widget>
 	<widget field="SteerADC-FL" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="7" y="5"/>
+		<location x="6" y="7"/>
 	</widget>
 	<widget field="DriveSpeed-BL" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="322" y="84"/>
@@ -100,7 +94,7 @@
 		<location x="14" y="83"/>
 	</widget>
 	<widget field="SteerADC-BL" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="7" y="28"/>
+		<location x="5" y="28"/>
 	</widget>
 	<widget field="DrivePos-FR" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="469" y="11"/>
@@ -123,6 +117,52 @@
 	</widget>
 	<widget field="SteerPos-FL" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="14" y="119"/>
+	</widget>
+	<widget field="Autonomous" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
+		<location x="55" y="256"/>
+	</widget>
+	<widget field="SteerRawTarget-FR" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="191" y="391"/>
+	</widget>
+	<widget field="SteerTarget-FL" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="3" y="176"/>
+	</widget>
+	<widget field="SteerTarget-FR" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="166" y="176"/>
+	</widget>
+	<widget field="SteerRawTarget-FL" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="9" y="391"/>
+	</widget>
+	<widget field="Start Yaw" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="457" y="351"/>
+	</widget>
+	<widget field="Strafe" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="502" y="199"/>
+	</widget>
+	<widget field="POV" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="512" y="246"/>
+	</widget>
+	<widget field="SteerTarget-BR" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="165" y="196"/>
+	</widget>
+	<widget field="SteerTarget-BL" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="3" y="197"/>
+	</widget>
+	<widget field="SteerRawTarget-BR" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="191" y="414"/>
+	</widget>
+	<widget field="SteerRawTarget-BL" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="8" y="414"/>
+	</widget>
+	<widget field="Steer Encoder Calibration" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="169" y="254"/>
+		<width>288</width>
+	</widget>
+	<widget field="Forward" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="493" y="175"/>
+	</widget>
+	<widget field="Rotate" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="500" y="223"/>
 	</widget>
 </dashboard>
 <live-window>
