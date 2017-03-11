@@ -46,7 +46,7 @@ public class OI {
         toggleFOC = home;
         resetHdg = menu;
 
-		Y.whileHeld(new ClimbUp());//turns the climb motor on while Y is being held
+		Y.toggleWhenPressed(new ClimbUp());//turns the climb motor on while Y is being held
 		RB.whileHeld(new ClimbDown());//turns launcher motor on when B is pressed once, and off when B is pressed again
 
 		A.toggleWhenPressed(new INtaker()); //turns the intake motor on when A is pressed once, and off when A is pressed again
@@ -75,19 +75,19 @@ public class OI {
     public boolean isPOVPressed() {
     	int angle = arcadeStick.getPOV(0);
     	if(angle == -1) {
-    		return true;
+    		return false;
     	}
-    	return false;
+    	return true;
     }
     
     public double getFwdPOV() {
     	int angle = arcadeStick.getPOV(0);
-    	return Math.sin((Math.PI/180.0)*angle);
+    	return Math.cos(Math.toRadians((double)angle));
     }
     
     public double getStrPOV() {
     	int angle = arcadeStick.getPOV(0);
-    	return Math.cos((Math.PI/180.0)*angle);
+    	return Math.sin(Math.toRadians((double)angle));
     }
 
     /* set multipliers for teleop drive speed outputs */
@@ -114,7 +114,7 @@ public class OI {
             // Zero degrees = towards opposing side
             double x = arcadeStick.getRawAxis(1) * -1.0;
             double y = arcadeStick.getRawAxis(0) * -1.0;
-            double hdg = Robot.navx.getAngle();
+            double hdg = Robot.getRobotHeading();
 
             // X-coordinate -> CW alias rotation (left-handed)
             return (x * Math.cos(hdg*Math.PI/180.0)) + (y * -Math.sin(hdg*Math.PI/180.0));
@@ -128,7 +128,7 @@ public class OI {
             // Right = +Y
             double x = arcadeStick.getRawAxis(1) * -1.0;
             double y = arcadeStick.getRawAxis(0) * -1.0;
-            double hdg = Robot.navx.getAngle();
+            double hdg = Robot.getRobotHeading();
 
             // Y-coordinate, CW alias rotation w/ left-handed coordinate system
             return (x * Math.sin(hdg*Math.PI/180.0)) + (y * Math.cos(hdg*Math.PI/180.0));
@@ -150,6 +150,8 @@ public class OI {
 	public void UpdateSD(){
 		Robot.drivetrain.updateSD();//sends all the data from SwerveDrive subsystem to the SmartDashboard
 		SmartDashboard.putBoolean("Intake Switch", Robot.limSwitch.get());
+		SmartDashboard.putNumber("Start Yaw", Robot.startYaw);
+		SmartDashboard.putNumber("POV", arcadeStick.getPOV(0));
 		if(Robot.navx != null) {
 			SmartDashboard.putBoolean("NavX Present", true);
 			SmartDashboard.putBoolean("Calibrating", Robot.navx.isCalibrating());

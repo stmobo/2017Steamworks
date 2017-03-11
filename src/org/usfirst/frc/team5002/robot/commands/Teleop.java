@@ -5,6 +5,7 @@ import org.usfirst.frc.team5002.robot.subsystems.SwerveDrive;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Teleop.java -- teleop drive control code for linear movement + rotation
@@ -63,6 +64,10 @@ public class Teleop extends Command {
 			fwd = Robot.oi.getFwdPOV();
 			str = Robot.oi.getStrPOV();
 		}
+		
+		SmartDashboard.putNumber("Forward", fwd);
+		SmartDashboard.putNumber("Strafe", str);
+		SmartDashboard.putNumber("Rotate", rcw);
 
 		double r = Math.sqrt(Math.pow(LENGTH_INCHES,2) + Math.pow(WIDTH_INCHES,2));
 
@@ -101,6 +106,11 @@ public class Teleop extends Command {
 				angles[1] = (d==0 && b==0) ? 0.0 : (Math.atan2(b, d) * 180 / Math.PI); // back left
 				angles[2] = (d==0 && a==0) ? 0.0 : (Math.atan2(a, d) * 180 / Math.PI); // front left
 				angles[3] = (c==0 && a==0) ? 0.0 : (Math.atan2(a, c) * 180 / Math.PI); // front right
+				
+				SmartDashboard.putNumber("Angle-BR", angles[0]);
+				SmartDashboard.putNumber("Angle-BL", angles[1]);
+				SmartDashboard.putNumber("Angle-FL", angles[2]);
+				SmartDashboard.putNumber("Angle-FR", angles[3]);
 			}
 		}
 
