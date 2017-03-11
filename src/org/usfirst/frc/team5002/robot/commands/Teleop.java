@@ -106,6 +106,11 @@ public class Teleop extends Command {
 				angles[1] = (d==0 && b==0) ? 0.0 : (Math.atan2(b, d) * 180 / Math.PI); // back left
 				angles[2] = (d==0 && a==0) ? 0.0 : (Math.atan2(a, d) * 180 / Math.PI); // front left
 				angles[3] = (c==0 && a==0) ? 0.0 : (Math.atan2(a, c) * 180 / Math.PI); // front right
+				
+				SmartDashboard.putNumber("Angle-BR", angles[0]);
+				SmartDashboard.putNumber("Angle-BL", angles[1]);
+				SmartDashboard.putNumber("Angle-FL", angles[2]);
+				SmartDashboard.putNumber("Angle-FR", angles[3]);
 			}
 		}
 

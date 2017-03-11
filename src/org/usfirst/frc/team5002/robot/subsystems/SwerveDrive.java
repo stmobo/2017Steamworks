@@ -45,10 +45,11 @@ public class SwerveDrive extends Subsystem {
     /* value ordering: FrontLeft, FrontRight, BackLeft, BackRight
      * Yes, for all 4 arrays (or however many there are.)
      */
-    private double[] steer_offsets = { 135.0, 617.0, 940.0, 667.0 };
+    private double[] steer_offsets = { 884.0, 521.0, 400.0, 465.0 };
     private double[] maxEncoderOutput = {1024.0, 1024.0, 1024.0, 1024.0};
     private double[] minEncoderOutput = {0.0, 0.0, 0.0, 0.0};
     private double[] currentSteerTarget = {0.0, 0.0, 0.0, 0.0};
+    private double[] currentSteerDegrees = {0.0, 0.0, 0.0, 0.0};
     boolean driveReversalStatus[] = {false, false, false, false};
     boolean driveReversalConst[] = {true, false, true, false};
 
@@ -71,6 +72,21 @@ public class SwerveDrive extends Subsystem {
     		return 2;
     	case BR:
     		return 3;
+    	}
+    }
+    
+    private String positionToFriendlyName(ModulePosition pos) {
+    	switch(pos) {
+    	case FL:
+    		return "FL";
+    	case FR:
+    		return "FR";
+    	case BL:
+    		return "BL";
+    	case BR:
+    		return "BR";
+    	default:
+    		return "UN";
     	}
     }
 
@@ -376,11 +392,11 @@ public class SwerveDrive extends Subsystem {
     	/*
     	 * When setting the steering angle, we have two options:
     	 *  1. Drive to the angle directly and drive forward, or
-    	 *  2. Drive to the opposite angle (angle+180 mod 360) and drive backwards.
+    	 *  2. Drive to the opposite angle (angle+180) and drive backwards.
     	 */
     	
-    	double angleTwo = (degrees + 180.0) % 360.0;
-    	double currentAngle = getCurrentSteerPositionDegrees(pos);
+    	double angleTwo = degrees - 180.0;
+    	double currentAngle = getCurrentSteerPositionDegrees(pos) % 360.0;
     	double targetAngle = degrees;
     	
     	if(Math.abs(degrees - currentAngle) < Math.abs(angleTwo - currentAngle)) {
@@ -392,6 +408,9 @@ public class SwerveDrive extends Subsystem {
     		setDriveReverse(pos, true);
     	}
     	
+    	SmartDashboard.putNumber("SteerRawTarget-"+positionToFriendlyName(pos), degrees);
+    	SmartDashboard.putNumber("SteerTarget-"+positionToFriendlyName(pos), targetAngle);
+    	
     	/*
     	if(degrees >= 180.0) {
     		degrees -= 180.0;
@@ -401,10 +420,12 @@ public class SwerveDrive extends Subsystem {
     	}
     	*/
 
-    	double nativePos = degrees * ((getSteerHack(pos) - getMinSteerHack(pos)) / 360.0);
+    	double nativePos = targetAngle * ((getSteerHack(pos) - getMinSteerHack(pos)) / 360.0);
     	nativePos += getSteerOffset(pos);
         nativePos += getMinSteerHack(pos);
 
+        currentSteerDegrees[positionToIndex(pos)] = targetAngle;
+        
         switch(pos) {
     	case FL:
     		currentSteerTarget[0] = nativePos;
@@ -475,5 +496,12 @@ public class SwerveDrive extends Subsystem {
     	UpdateSDSingle(ModulePosition.FR, "FR");
     	UpdateSDSingle(ModulePosition.BL, "BL");
     	UpdateSDSingle(ModulePosition.BR, "BR");
+    	
+    	SmartDashboard.putString("Steer Encoder Calibration",
+    		"{ " + Double.toString(fl_steer.getAnalogInRaw()) + ", "
+				 + Double.toString(fr_steer.getAnalogInRaw()) + ", "
+				 + Double.toString(bl_steer.getAnalogInRaw()) + ", "
+				 + Double.toString(br_steer.getAnalogInRaw()) + " }"
+    	);
     }
 }

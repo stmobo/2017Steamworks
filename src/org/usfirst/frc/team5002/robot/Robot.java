@@ -100,6 +100,8 @@ public class Robot extends IterativeRobot {
         cam.setFPS(15);
         cam.setResolution(320, 240);
         
+        SmartDashboard.putData("Autonomous", chooser);
+        
         if(navx != null) {
             navx.zeroYaw();
             startYaw = navx.getYaw();
