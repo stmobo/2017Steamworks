@@ -28,19 +28,24 @@ public class OI {
     private Button toggleFOC;
     private Button resetHdg;
 
+    private Button A;
+	private Button LB;
+    
     boolean focEnabled = false;
 
 	public OI(){
 		arcadeStick = new Joystick(0); //gave Joystick a job
-		Button A = new JoystickButton(arcadeStick, 1);
+		A = new JoystickButton(arcadeStick, 1);
 		Button B = new JoystickButton(arcadeStick, 2);
 		Button X = new JoystickButton(arcadeStick, 3);
 		Button Y = new JoystickButton(arcadeStick, 4);
-		Button LB = new JoystickButton(arcadeStick, 5);
 		Button RB = new JoystickButton(arcadeStick, 6);
 		Button home = new JoystickButton(arcadeStick, 7);
 		Button menu = new JoystickButton(arcadeStick, 8);
-
+		LB  = new JoystickButton(arcadeStick, 5);
+		
+		
+		
         activateLowSpeed = new JoystickButton(arcadeStick, 9); // Bumper 1 (left)
         activateHighSpeed = new JoystickButton(arcadeStick, 10); // Bumper 2 (right)
         toggleFOC = home;
@@ -49,11 +54,11 @@ public class OI {
 		Y.toggleWhenPressed(new ClimbUp());//turns the climb motor on while Y is being held
 		RB.whileHeld(new ClimbDown());//turns launcher motor on when B is pressed once, and off when B is pressed again
 
-		A.toggleWhenPressed(new INtaker()); //turns the intake motor on when A is pressed once, and off when A is pressed again
+		//A.toggleWhenPressed(new INtaker()); //turns the intake motor on when A is pressed once, and off when A is pressed again
 		B.toggleWhenPressed(new OUTtaker()); //turns the outake motor on at the same time as the intake motor
 
 		LB.whileHeld(new TakeOuter()); // emergency reverse for outtake motor
-		LB.whileHeld(new ReverseInTaker());// emergency reverse for intake motor
+		//LB.whileHeld(new ReverseInTaker());// emergency reverse for intake motor
 	}
 
     // For toggle buttons that don't warrant their own commands.
@@ -70,6 +75,14 @@ public class OI {
         	Robot.navx.zeroYaw();
         }
         
+    }
+    
+    public boolean intakeButtonActivated() {
+    	return A.get();
+    }
+    
+    public boolean reverseButtonActivated() {
+    	return LB.get();
     }
     
     public boolean isPOVPressed() {
@@ -149,7 +162,8 @@ public class OI {
 
 	public void UpdateSD(){
 		Robot.drivetrain.updateSD();//sends all the data from SwerveDrive subsystem to the SmartDashboard
-		SmartDashboard.putBoolean("Intake Switch", Robot.limSwitch.get());
+		Robot.intake.updateSD();
+		
 		SmartDashboard.putNumber("Start Yaw", Robot.startYaw);
 		SmartDashboard.putNumber("POV", arcadeStick.getPOV(0));
 		if(Robot.navx != null) {

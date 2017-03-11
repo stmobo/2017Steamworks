@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team5002.robot.commands.Teleop;
 import org.usfirst.frc.team5002.robot.commands.AutonomousTemp;
+import org.usfirst.frc.team5002.robot.commands.INtaker;
 import org.usfirst.frc.team5002.robot.commands.KillDrivetrain;
 import org.usfirst.frc.team5002.robot.commands.PIDSteerCollective;
 import org.usfirst.frc.team5002.robot.commands.PIDSteerTestSingle;
@@ -47,11 +48,6 @@ public class Robot extends IterativeRobot {
 	public static OI oi;
 	
 	public static double startYaw;
-
-	public static DigitalInput limSwitch;
-	private Timer intakeStopTimer;
-	private boolean intakeTimingStarted;
-	private boolean intakeTimePassed;
 	
 	public static AHRS navx;
 
@@ -78,9 +74,6 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		oi = new OI();
-		
-		limSwitch = new DigitalInput(0);
-		intakeStopTimer = new Timer();
 		
 		try {
 			/* NOTE: With respect to the NavX, the robot's front is in the -X direction.
@@ -189,8 +182,10 @@ public class Robot extends IterativeRobot {
 		//Scheduler.getInstance().add(PIDTest);
 
 		Teleop teleopTest = new Teleop();
+		Command intakeCmd = new INtaker();
 		Scheduler.getInstance().add(teleopTest);
-
+		Scheduler.getInstance().add(intakeCmd);
+		
 		//Scheduler.getInstance().add(new AutoIntake());
 		
 		oi.updateOIState();
@@ -206,24 +201,7 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		//Robot.oi.testing();
 		
-		if(!limSwitch.get()) {
-			Robot.intake.run();
-			intakeTimePassed = false;
-			intakeTimingStarted = false;
-			intakeStopTimer.stop();
-		} else {
-			if(!intakeTimingStarted) {
-				intakeTimingStarted = true;
-				intakeStopTimer.reset();
-				intakeStopTimer.start();
-			} else {
-				if(!intakeTimePassed && intakeStopTimer.get() >= 1.5) {
-					Robot.intake.stop();
-					intakeStopTimer.stop();
-					intakeTimePassed = true;
-				}
-			}
-		}
+		
 		
 		oi.UpdateSD();
 		oi.updateOIState();
