@@ -1,5 +1,17 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Angle-FR" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="190" y="436"/>
+	</widget>
+	<widget field="Angle-FL" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="60" y="437"/>
+	</widget>
+	<widget field="Angle-BL" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="58" y="459"/>
+	</widget>
+	<widget field="Angle-BR" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="189" y="458"/>
+	</widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
 		<location x="1329" y="13"/>
 		<width>236</width>
