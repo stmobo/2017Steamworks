@@ -12,7 +12,6 @@ import org.usfirst.frc.team5002.robot.*;
 public class AutonomousFinal extends Command {
 
     public AutonomousFinal() {
-
     	requires(Robot.drivetrain);
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);

@@ -5,7 +5,7 @@ import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import com.ctre.CANTalon.TalonControlMode;
 
-/**@author elweb
+/**@author elweb 
  * @version Last Modified 2/8/17
  *
  */
@@ -13,7 +13,8 @@ public class Outtake extends Subsystem {
 
     private CANTalon outtake;
     public Outtake(){
-    	outtake = new CANTalon(8);
+
+    	outtake = new CANTalon(8); //TODO replace with real controller ID
     	outtake.changeControlMode(TalonControlMode.PercentVbus);
     }
 
@@ -29,3 +30,4 @@ public class Outtake extends Subsystem {
     	outtake.set(0);
     }
 }
+

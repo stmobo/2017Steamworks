@@ -3,14 +3,10 @@ name: "Default"
 args: ['deploy']
 targets:
 	deploy:
-        cmd: 'ant'
-        name: "Deploy to Robot"
-        args: ['deploy']
-    compile:
-        cmd: 'ant'
-        name: "Compile"
-        args: ['compile']
-    jar:
-        cmd: 'ant'
-        name: "Make Jar"
-        args: ['jar']
+		cmd: 'ant'
+		name: "Deploy to Robot"
+		args: ['deploy']
+	compile:
+		cmd: 'ant'
+		name: "Compile"
+		args: ['compile']
