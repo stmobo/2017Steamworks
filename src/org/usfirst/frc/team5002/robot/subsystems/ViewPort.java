@@ -18,48 +18,57 @@ public class ViewPort extends Subsystem {
     private String[] cameraNames = {
         "Feed 1"
     };
-
     private VideoSource[] sources;
-    private VideoSource currentSrc;
+    private int currentSrc;
+
     private MjpegServer server;
-    private SendableChooser<VideoSource> srcChooser;
 
     public ViewPort() {
         /* Init all sources */
         sources = VideoSource.enumerateSources();
-        currentSrc = null;
-        srcChooser = new SendableChooser<VideoSource>();
 
         int i = 0;
         for(VideoSource src : sources) {
             src.setFPS(15);
             src.setResolution(320, 240);
-
-            if(i == 0) {
-                srcChooser.addDefault(cameraNames[i] + " (" + src.getName()+")", src);
-            } else {
-                srcChooser.addObject(cameraNames[i] + " (" + src.getName()+")", src);
+            if(cameraNames.length > i) {
+                cameraNames[i] = cameraNames[i] + " (" + src.getName() + ")";
             }
-
             i++;
         }
 
         server = CameraServer.getInstance().addServer("ViewPort");
         if(i != 0) {
+            currentSrc = 0;
             server.setSource(sources[0]);
-            currentSrc = sources[0];
         }
-        SmartDashboard.putData("Camera", srcChooser);
 	}
 
-	public void initDefaultCommand() {}
-
-	public void updateSD() {
-        /* Update video source if necessary */
-        VideoSource chosen = srcChooser.getSelected();
-        if(chosen != null && chosen != currentSrc) {
-            server.setSource(chosen);
-            currentSrc = chosen;
+    public String getFeedName() {
+        if(cameraNames.length > currentSrc) {
+            return cameraNames[currentSrc];
+        } else {
+            return sources[currentSrc].getName();
         }
     }
+
+    public void setView(int index) {
+        if(index < sources.length && index != currentSrc) {
+            currentSrc = index;
+            server.setSource(sources[index]);
+        }
+    }
+
+    /**
+     * Retrieves the number of views available for use.
+     */
+    public int getViewCount() {
+        return sources.length;
+    }
+
+    public void updateSD() {
+        SmartDashboard.putString("Selected View", getFeedName());
+    }
+
+	public void initDefaultCommand() {}
 }
