@@ -374,7 +374,13 @@ public class SwerveDrive extends Subsystem {
     	double degrees = nativeUnits * (360.0 / (getSteerHack(pos) - getMinSteerHack(pos)));
 
     	return degrees;
+    }
 
+    private int getCurrentSteerRotations(ModulePosition pos) {
+        CANTalon steer = getSteerController(pos);
+        double nativeUnits = steer.getPosition();
+
+        return (int)Math.floor(nativeUnits / 1024);
     }
 
     /**
@@ -391,57 +397,64 @@ public class SwerveDrive extends Subsystem {
     	CANTalon drive = getDriveController(pos);
 
 
-    	double angleTwo = 0;
-    	double currentAngle = getCurrentSteerPositionDegrees(pos) % 360.0;
-    	double targetAngle = degrees;
+    	double currentAngle = getCurrentSteerPositionDegrees(pos);
+        double angleAdjustment = getCurrentSteerRotations(pos) * 360.0;
 
-        if(degrees < 0) {
-            angleTwo = degrees + 180;
+        /*
+         * Angle 0: Original angle, original rotation
+         * Angle 1: Opposite angle, original rotation
+         * Angle 2: Original angle, opposite rotation
+         * Angle 3: Opposite angle, opposite rotation
+         * Angle 4: Original angle + 1 rotation, original rotation
+         *
+         * Angle 0 handles the normal case.
+         *
+         * Angle 1 handles the same-sign "opposite angle" case.
+         * Angle 2 handles the opposite-sign "opposite angle" case.
+         * (In these cases, the drive direction has to be reversed.)
+         *
+         * Angle 3 is necessary to handle Q4 -> Q3 transitions (across signs)
+         *  (Going to -179 from +179 is better done as going to +181 from +179)
+         * Angle 4 is necessary to handle Q2 -> Q1 transitions (across rotations)
+         *  (Going to +1 from +359 is better done as going to +361 from +359)
+         */
+
+        double angles[] = { 0, 0, 0, 0, 0 };
+
+        angles[0] = degrees + angleAdjustment; // adjust target to be relative to module rotation
+        if(degrees > 0) {
+            angles[1] = (angles[0] + 180.0);
+            angles[2] = (angles[0] - 180.0);
+            angles[3] = (angles[0] - 360.0);
+            angles[4] = (angles[0] + 360.0);
         } else {
-            angleTwo = degrees - 180;
+            angles[1] = (angles[0] - 180.0);
+            angles[2] = (angles[0] + 180.0);
+            angles[3] = (angles[0] + 360.0);
+            angles[4] = (angles[0] - 360.0);
         }
 
-    	if(Math.abs(degrees - currentAngle) < Math.abs(angleTwo - currentAngle)) {
-    		/* Drive directly. */
-    		setDriveReverse(pos, false);
-    	} else {
-    		/* Drive to opposite angle. */
-    		targetAngle = angleTwo;
-    		setDriveReverse(pos, true);
-    	}
+        /* Find target angle with smallest distance from current: */
+        int minIdx = 0;
+        for(int i=0;i<5;i++) {
+            if( Math.abs(angles[i] - currentAngle) < Math.abs(angles[minIdx] - currentAngle) ) {
+                minIdx = i;
+            }
+        }
+
+        if(minIdx == 1 || minIdx == 2) {
+            setDriveReverse(pos, true);
+        } else {
+            setDriveReverse(pos, false);
+        }
+
 
     	SmartDashboard.putNumber("SteerRawTarget-"+positionToFriendlyName(pos), degrees);
-    	SmartDashboard.putNumber("SteerTarget-"+positionToFriendlyName(pos), targetAngle);
+    	SmartDashboard.putNumber("SteerTarget-"+positionToFriendlyName(pos), angles[minIdx]);
 
-    	/*
-    	if(degrees >= 180.0) {
-    		degrees -= 180.0;
-    		setDriveReverse(pos, true);
-    	} else {
-    		setDriveReverse(pos, false);
-    	}
-    	*/
-
-    	double nativePos = targetAngle * ((getSteerHack(pos) - getMinSteerHack(pos)) / 360.0);
+    	double nativePos = angles[minIdx] * ((getSteerHack(pos) - getMinSteerHack(pos)) / 360.0);
     	nativePos += getSteerOffset(pos);
         nativePos += getMinSteerHack(pos);
-
-        currentSteerDegrees[positionToIndex(pos)] = targetAngle;
-
-        switch(pos) {
-    	case FL:
-    		currentSteerTarget[0] = nativePos;
-    		break;
-    	case FR:
-    		currentSteerTarget[1] = nativePos;
-    		break;
-    	case BL:
-    		currentSteerTarget[2] = nativePos;
-    		break;
-    	case BR:
-    		currentSteerTarget[3] = nativePos;
-    		break;
-    	}
 
     	steer.set(nativePos);
     }
