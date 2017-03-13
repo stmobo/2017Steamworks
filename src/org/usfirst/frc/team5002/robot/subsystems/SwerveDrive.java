@@ -388,6 +388,10 @@ public class SwerveDrive extends Subsystem {
         CANTalon steer = getSteerController(pos);
         double nativeUnits = steer.getPosition();
 
+        /* Round towards 0: */
+        if(nativeUnits < 0) {
+            return (int)Math.ceil(nativeUnits / 1024);
+        }
         return (int)Math.floor(nativeUnits / 1024);
     }
 
