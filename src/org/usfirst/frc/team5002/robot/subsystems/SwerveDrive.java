@@ -26,13 +26,6 @@ public class SwerveDrive extends Subsystem {
     private CANTalon bl_drive;
     private CANTalon br_drive;
 
-    /* Steering zero positions:
-     *  FL: -0.54,
-     *  FR: -0.04,
-     *  BL: -0.35,
-     *  BR: -0.33
-     */
-
     /*
      * Control system values:
      * (P/I/D/FeedFwd/IZone/RampRate)
@@ -43,11 +36,16 @@ public class SwerveDrive extends Subsystem {
      */
 
     /* value ordering: FrontLeft, FrontRight, BackLeft, BackRight
-     * Yes, for all 4 arrays (or however many there are.)
+     * Yes, for all 7 arrays (or however many there are.)
      */
-    private double[] steer_offsets = { 142.0, 514.0, 408.0, 473.0 };
-    private double[] maxEncoderOutput = {1024.0, 1024.0, 1024.0, 1024.0};
-    private double[] minEncoderOutput = {0.0, 0.0, 0.0, 0.0};
+    private final double[] steer_offsets = { 142.0, 514.0, 408.0, 473.0 };
+    private final double[] maxEncoderOutput = {1024.0, 1024.0, 1024.0, 1024.0};
+    private final double[] minEncoderOutput = {0.0, 0.0, 0.0, 0.0};
+
+    private final double wheelRadius = 4.0; // inches
+    private final double maxWheelSpeed = (11.0 * 12.0); // inches per second
+    private final double cimConversionFactor = (40.0/(2*Math.PI*wheelRadius)); // ticks over circumference
+
     private double[] currentSteerTarget = {0.0, 0.0, 0.0, 0.0};
     private double[] currentSteerDegrees = {0.0, 0.0, 0.0, 0.0};
 
@@ -325,7 +323,8 @@ public class SwerveDrive extends Subsystem {
     	CANTalon srx = getDriveController(pos);
 
     	srx.reverseOutput(getDriveReverseConst(pos)); // not even sure this works
-    	srx.changeControlMode(TalonControlMode.PercentVbus);
+    	srx.changeControlMode(TalonControlMode.Speed);
+        srx.setProfile(1);
 
         /* Sensor setup: */
     	srx.setFeedbackDevice(FeedbackDevice.QuadEncoder);
@@ -346,6 +345,7 @@ public class SwerveDrive extends Subsystem {
 
         if(drive.getControlMode() != TalonControlMode.Position) {
             drive.changeControlMode(TalonControlMode.Position);
+            drive.setProfile(0);
         }
 
         drive.set(out);
@@ -361,9 +361,13 @@ public class SwerveDrive extends Subsystem {
     	CANTalon drive = getDriveController(pos);
     	CANTalon steer = getSteerController(pos);
 
-        if(drive.getControlMode() != TalonControlMode.PercentVbus) {
-            drive.changeControlMode(TalonControlMode.PercentVbus);
+        if(drive.getControlMode() != TalonControlMode.Speed) {
+            drive.changeControlMode(TalonControlMode.Speed);
+            drive.setProfile(1);
         }
+
+        // Speed in CIMCoder ticks per second, times input coefficient:
+        double speed = (maxWheelSpeed * cimConversionFactor) * out;
 
     	// 45 native units is about equal to 15 degrees
     	if(Math.abs(steer.getPosition() - getSteerTarget(pos)) >= 45) {
