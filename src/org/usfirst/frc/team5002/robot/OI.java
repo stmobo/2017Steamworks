@@ -28,7 +28,7 @@ public class OI {
     private Button toggleFOC;
     private Button resetHdg;
 
-    boolean focEnabled = false;
+    boolean focEnabled = true;
 
 	public OI(){
 		arcadeStick = new Joystick(0); //gave Joystick a job
@@ -57,21 +57,13 @@ public class OI {
 	}
 
     // For toggle buttons that don't warrant their own commands.
-    boolean focDebounce = false;
+    //boolean focDebounce = false;
     public void updateOIState() {
-        if(toggleFOC.get() && !focDebounce) {
-            focEnabled = !focEnabled;
-            focDebounce = true;
-        } else {
-            focDebounce = false;
-        }
-        
         if(resetHdg.get()) {
         	Robot.navx.zeroYaw();
         }
-        
     }
-    
+
     public boolean isPOVPressed() {
     	int angle = arcadeStick.getPOV(0);
     	if(angle == -1) {
@@ -79,12 +71,12 @@ public class OI {
     	}
     	return false;
     }
-    
+
     public double getFwdPOV() {
     	int angle = arcadeStick.getPOV(0);
     	return Math.sin((Math.PI/180.0)*angle);
     }
-    
+
     public double getStrPOV() {
     	int angle = arcadeStick.getPOV(0);
     	return Math.cos((Math.PI/180.0)*angle);
@@ -96,9 +88,21 @@ public class OI {
             return 0.25;
         } else if(activateHighSpeed.get()) {
             return 1.0;
+        } else if(isPOVPressed()) {
+            return 0.25;
         } else {
             return 0.50;
         }
+    }
+
+    public double[] focRotate(double[] coords) {
+        double hdg = Robot.navx.getAngle();
+        double out[] = {0, 0};
+
+        out[0] = (coords[0] * Math.cos(hdg*Math.PI/180.0)) + (coords[1] * -Math.sin(hdg*Math.PI/180.0));
+        out[1] = (coords[0] * Math.sin(hdg*Math.PI/180.0)) + (coords[1] * Math.cos(hdg*Math.PI/180.0));
+
+        return out;
     }
 
     /* Return magnitude of main driving control stick / inputs.
@@ -113,7 +117,7 @@ public class OI {
             double x = arcadeStick.getRawAxis(1) * -1.0;
             double y = arcadeStick.getRawAxis(0) * -1.0;
             double hdg = Robot.navx.getAngle();
-
+            
             // X-coordinate -> CW alias rotation (left-handed)
             return (x * Math.cos(hdg*Math.PI/180.0)) + (y * -Math.sin(hdg*Math.PI/180.0));
         } else {
@@ -136,7 +140,13 @@ public class OI {
 	}
 
 	public double getTurnAxis(){
-		return arcadeStick.getRawAxis(4); // (axis 4 = right-hand X axis) allows the Joystick to command the rotation of the Robot
+		double stick = arcadeStick.getRawAxis(4); // (axis 4 = right-hand X axis) allows the Joystick to command the rotation of the Robot
+        double trig = arcadeStick.getRawAxis(3) - arcadeStick.getRawAxis(2);
+        if(Math.abs(stick) > Math.abs(trig)) {
+            return stick;
+        } else {
+            return trig;
+        }
 	}
 
 	public void UpdateSD(){
@@ -146,8 +156,8 @@ public class OI {
 			SmartDashboard.putBoolean("NavX Present", true);
 			SmartDashboard.putBoolean("Calibrating", Robot.navx.isCalibrating());
 			SmartDashboard.putBoolean("Connected", Robot.navx.isConnected());
-			
-			SmartDashboard.putNumber("Heading", Robot.navx.getAngle());	
+
+			SmartDashboard.putNumber("Heading", Robot.navx.getAngle());
 			SmartDashboard.putNumber("Compass", Robot.navx.getCompassHeading());
 			SmartDashboard.putNumber("Yaw", Robot.navx.getYaw());
 			SmartDashboard.putNumber("Fused", Robot.navx.getFusedHeading());
