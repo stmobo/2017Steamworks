@@ -32,11 +32,12 @@ public class OI {
 
     private Button A;
 	private Button LB;
-    
+
     boolean focEnabled = false;
 
 	public OI(){
 		arcadeStick = new Joystick(0); //gave Joystick a job
+
 		A = new JoystickButton(arcadeStick, 1);
 		Button B = new JoystickButton(arcadeStick, 2);
 		Button X = new JoystickButton(arcadeStick, 3);
@@ -45,22 +46,18 @@ public class OI {
 		Button home = new JoystickButton(arcadeStick, 7);
 		Button menu = new JoystickButton(arcadeStick, 8);
 		LB  = new JoystickButton(arcadeStick, 5);
-		
-		
-		
+
+
+
         activateLowSpeed = new JoystickButton(arcadeStick, 9); // Bumper 1 (left)
         activateHighSpeed = new JoystickButton(arcadeStick, 10); // Bumper 2 (right)
         toggleFOC = home;
         resetHdg = menu;
 
 		Y.toggleWhenPressed(new ClimbUp());//turns the climb motor on while Y is being held
-		RB.whileHeld(new ClimbDown());//turns launcher motor on when B is pressed once, and off when B is pressed again
-
-		//A.toggleWhenPressed(new INtaker()); //turns the intake motor on when A is pressed once, and off when A is pressed again
-		//B.toggleWhenPressed(new OUTtaker()); //turns the outake motor on at the same time as the intake motor
-
-		//LB.whileHeld(new TakeOuter()); // emergency reverse for outtake motor
-		//LB.whileHeld(new ReverseInTaker());// emergency reverse for intake motor
+        if(!DriverStation.getInstance().isFMSAttached()) {
+    		RB.whileHeld(new ClimbDown());
+        }
 	}
 
     // For toggle buttons that don't warrant their own commands.
@@ -72,21 +69,21 @@ public class OI {
         } else {
             focDebounce = false;
         }
-        
+
         if(resetHdg.get()) {
         	Robot.navx.zeroYaw();
         }
-        
+
     }
-    
+
     public boolean intakeButtonActivated() {
     	return A.get();
     }
-    
+
     public boolean reverseButtonActivated() {
     	return LB.get();
     }
-    
+
     public boolean isPOVPressed() {
     	int angle = arcadeStick.getPOV(0);
     	if(angle == -1) {
@@ -94,12 +91,12 @@ public class OI {
     	}
     	return true;
     }
-    
+
     public double getFwdPOV() {
     	int angle = arcadeStick.getPOV(0);
     	return Math.cos(Math.toRadians((double)angle));
     }
-    
+
     public double getStrPOV() {
     	int angle = arcadeStick.getPOV(0);
     	return Math.sin(Math.toRadians((double)angle));
@@ -108,13 +105,13 @@ public class OI {
     /* set multipliers for teleop drive speed outputs */
     public double getDriveSpeedCoefficient() {
         if(activateLowSpeed.get()) {
-            return 0.25;
+            return 0.25 * arcadeStick.getRawAxis(4) * -1.0;
         } else if(activateHighSpeed.get()) {
-            return 1.0;
+            return 1.0 * arcadeStick.getRawAxis(4) * -1.0;
         } else if(isPOVPressed()) {
         	return 0.25;
         } else {
-            return 0.50;
+            return 0.50 * arcadeStick.getRawAxis(4) * -1.0;
         }
     }
 
@@ -153,13 +150,7 @@ public class OI {
 	}
 
 	public double getTurnAxis(){
-		double trig = arcadeStick.getRawAxis(3) - arcadeStick.getRawAxis(2);
-		double stick = arcadeStick.getRawAxis(4); // (axis 4 = right-hand X axis) allows the Joystick to command the rotation of the Robot
-		if(Math.abs(stick) > Math.abs(trig)) {
-			return stick;
-		} else {
-			return trig;
-		}
+    	return arcadeStick.getRawAxis(3) - arcadeStick.getRawAxis(2);
 	}
 
 	public void UpdateSD(){
@@ -172,7 +163,7 @@ public class OI {
 			} else {
 				SmartDashboard.putNumber("Match Time", (int)(150.0 - Timer.getMatchTime()));
 			}
-			
+
 			if((int)(150.0 - Timer.getMatchTime()) <= 40.0) {
 				SmartDashboard.putBoolean("40-Second Watch", true);
 			} else {
@@ -182,15 +173,15 @@ public class OI {
 			SmartDashboard.putNumber("Match Time", (int)0);
 			SmartDashboard.putBoolean("40-Second Watch", false);
 		}
-		
+
 		SmartDashboard.putNumber("Start Yaw", Robot.startYaw);
 		SmartDashboard.putNumber("POV", arcadeStick.getPOV(0));
 		if(Robot.navx != null) {
 			SmartDashboard.putBoolean("NavX Present", true);
 			SmartDashboard.putBoolean("Calibrating", Robot.navx.isCalibrating());
 			SmartDashboard.putBoolean("Connected", Robot.navx.isConnected());
-			
-			SmartDashboard.putNumber("Heading", Robot.navx.getAngle());	
+
+			SmartDashboard.putNumber("Heading", Robot.navx.getAngle());
 			SmartDashboard.putNumber("Compass", Robot.navx.getCompassHeading());
 			SmartDashboard.putNumber("Yaw", Robot.navx.getYaw());
 			SmartDashboard.putNumber("Fused", Robot.navx.getFusedHeading());
