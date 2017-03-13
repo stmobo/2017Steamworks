@@ -284,10 +284,10 @@ public class SwerveDrive extends Subsystem {
         bl_steer = new CANTalon(RobotMap.bl_steer);
         br_steer = new CANTalon(RobotMap.br_steer);
 
-		this.configureSteerMotor(fr_steer, false);
-        this.configureSteerMotor(fl_steer, false);
-        this.configureSteerMotor(bl_steer, false);
-        this.configureSteerMotor(br_steer, false);
+		this.configureSteerMotor(fr_steer);
+        this.configureSteerMotor(fl_steer);
+        this.configureSteerMotor(bl_steer);
+        this.configureSteerMotor(br_steer);
 
         /* Init drive motors... */
         fl_drive = new CANTalon(RobotMap.fl_drive);
@@ -295,8 +295,10 @@ public class SwerveDrive extends Subsystem {
         bl_drive = new CANTalon(RobotMap.bl_drive);
         br_drive = new CANTalon(RobotMap.br_drive);
 
-        /* Drive motor config is left to teleop/auto commands */
-
+        configureDriveMotor(ModulePosition.FL);
+        configureDriveMotor(ModulePosition.FR);
+        configureDriveMotor(ModulePosition.BL);
+        configureDriveMotor(ModulePosition.BR);
     }
 
     /**
@@ -305,7 +307,7 @@ public class SwerveDrive extends Subsystem {
      * @param srx reference to a steer motor controller
      * @param reverse reversal status of given motor controller (true = reversed motor outputs)
      */
-    private void configureSteerMotor(CANTalon srx, boolean reverse) {
+    private void configureSteerMotor(CANTalon srx) {
     	srx.changeControlMode(TalonControlMode.Position);
     	srx.setFeedbackDevice(FeedbackDevice.AnalogEncoder);
     	//srx.configPotentiometerTurns(1);
@@ -319,43 +321,49 @@ public class SwerveDrive extends Subsystem {
      *
      * @param pos Steer module to reconfigure
      */
-    private void configureDriveMotorTeleop(ModulePosition pos) {
+    private void configureDriveMotor(ModulePosition pos) {
     	CANTalon srx = getDriveController(pos);
-    	srx.reverseOutput(getDriveReverseConst(pos));
+
+    	srx.reverseOutput(getDriveReverseConst(pos)); // not even sure this works
     	srx.changeControlMode(TalonControlMode.PercentVbus);
+
+        /* Sensor setup: */
+    	srx.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+    	srx.configEncoderCodesPerRev(40);
+
     	srx.set(0); // Reset to stopped
     }
 
     /**
-     * Configures a swerve module for autonomous control (Closed-loop on drive)
-     *
-     * @param pos Steer module to reconfigure
-     */
-    private void configureDriveMotorAutonomous(ModulePosition pos) {
-    	CANTalon srx = getDriveController(pos);
-
-    	srx.changeControlMode(TalonControlMode.Position);
-    	//control mode is in position
-    	srx.reverseOutput(getDriveReverseConst(pos));
-    	//making the sensor read positively
-    	srx.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-    	//making it a quad encoder
-    	srx.configEncoderCodesPerRev(40);
-    }
-
-    /**
-     * Sets the given swerve module's drive target.
-     *
-     * As this effectively acts as a wrapper around CANTalon.set(), the
-     * semantics of this call vary on the configured drive mode, which can
-     * be either PercentVBus (teleop) or ClosedLoopPosition.
+     * Sets the given swerve module to drive to a given distance.
      *
      * @param pos Steer module to drive
      * @param out Output target to set to
      */
-    public void setDriveOutput(ModulePosition pos, double out) {
+    public void setDriveDistance(ModulePosition pos, double out) {
     	CANTalon drive = getDriveController(pos);
     	CANTalon steer = getSteerController(pos);
+
+        if(drive.getControlMode() != TalonControlMode.Position) {
+            drive.changeControlMode(TalonControlMode.Position);
+        }
+
+        drive.set(out);
+    }
+
+    /**
+     * Sets the given swerve module to drive at given % of max speed.
+     *
+     * @param pos Steer module to drive
+     * @param out Output target to set to
+     */
+    public void setDriveSpeed(ModulePosition pos, double out) {
+    	CANTalon drive = getDriveController(pos);
+    	CANTalon steer = getSteerController(pos);
+
+        if(drive.getControlMode() != TalonControlMode.PercentVbus) {
+            drive.changeControlMode(TalonControlMode.PercentVbus);
+        }
 
     	// 45 native units is about equal to 15 degrees
     	if(Math.abs(steer.getPosition() - getSteerTarget(pos)) >= 45) {
@@ -457,26 +465,6 @@ public class SwerveDrive extends Subsystem {
         nativePos += getMinSteerHack(pos);
 
     	steer.set(nativePos);
-    }
-
-    /**
-     * Reconfigure all drive motors for direct (teleop) control.
-     */
-    public void setDriveTeleop() {
-    	configureDriveMotorTeleop(ModulePosition.FL);
-    	configureDriveMotorTeleop(ModulePosition.FR);
-    	configureDriveMotorTeleop(ModulePosition.BL);
-    	configureDriveMotorTeleop(ModulePosition.BR);
-    }
-
-    /**
-     * Reconfigure all drive motors for autonomous (closed-loop) control.
-     */
-    public void setDriveAuto() {
-    	configureDriveMotorAutonomous(ModulePosition.FL);
-    	configureDriveMotorAutonomous(ModulePosition.FR);
-    	configureDriveMotorAutonomous(ModulePosition.BL);
-    	configureDriveMotorAutonomous(ModulePosition.BR);
     }
 
     public void initDefaultCommand() {

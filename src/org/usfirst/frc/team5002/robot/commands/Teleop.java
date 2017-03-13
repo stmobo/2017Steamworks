@@ -40,7 +40,6 @@ public class Teleop extends Command {
 	 * WS2 (front left wheel speed command, 0 to +1)
 	 * WS3 (rear left wheel speed command, 0 to +1)
 	 * WS4 (rear right wheel speed command, 0 to +1)
-	 *
 
 	 * @param fwd	-1.0 to 1.0, forward to reverse velocity
 	 * @param str	-1.0 to 1.0, left to right velocity
@@ -114,16 +113,15 @@ public class Teleop extends Command {
 			}
 		}
 
-        /* Angles are in the range of +/- 180 degrees. */
 		Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.BR, angles[0]);
 		Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.BL, angles[1]);
 		Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.FL, angles[2]);
 		Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.FR, angles[3]);
 
-		Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.BR, speeds[0]);
-		Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.BL, speeds[1]);
-		Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.FL, speeds[2]);
-		Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.FR, speeds[3]);
+		Robot.drivetrain.setDriveSpeed(SwerveDrive.ModulePosition.BR, speeds[0]);
+		Robot.drivetrain.setDriveSpeed(SwerveDrive.ModulePosition.BL, speeds[1]);
+		Robot.drivetrain.setDriveSpeed(SwerveDrive.ModulePosition.FL, speeds[2]);
+		Robot.drivetrain.setDriveSpeed(SwerveDrive.ModulePosition.FR, speeds[3]);
 	}
 
     public Teleop() {
@@ -132,10 +130,6 @@ public class Teleop extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	/* Set main controls for driving... */
-    	Robot.drivetrain.setDriveTeleop();
-
-
 		Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.BR, 0.0);
 		Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.BL, 0.0);
 		Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.FL, 0.0);

@@ -11,9 +11,9 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class AutonomousTemp extends Command {
 	Timer timer;
-	
+
 	double leftBias = 0.0;
-    
+
 	public AutonomousTemp(double bias) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
@@ -26,7 +26,6 @@ public class AutonomousTemp extends Command {
     protected void initialize() {
     	timer.reset();
     	timer.start();
-    	Robot.drivetrain.setDriveTeleop();
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -35,12 +34,12 @@ public class AutonomousTemp extends Command {
     	Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.FR, 0.0);
     	Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.BL, 0.0);
     	Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.BR, 0.0);
-    	
-    	Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.FL, 0.5 + leftBias);
-    	Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.BL, 0.5 + leftBias);
-    	
-    	Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.FR, 0.5 - leftBias);
-    	Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.BR, 0.5 - leftBias);
+
+    	Robot.drivetrain.setDriveSpeed(SwerveDrive.ModulePosition.FL, 0.5 + leftBias);
+    	Robot.drivetrain.setDriveSpeed(SwerveDrive.ModulePosition.BL, 0.5 + leftBias);
+
+    	Robot.drivetrain.setDriveSpeed(SwerveDrive.ModulePosition.FR, 0.5 - leftBias);
+    	Robot.drivetrain.setDriveSpeed(SwerveDrive.ModulePosition.BR, 0.5 - leftBias);
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -50,18 +49,18 @@ public class AutonomousTemp extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.FL, 0.0);
-    	Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.FR, 0.0);
-    	Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.BL, 0.0);
-    	Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.BR, 0.0);
+    	Robot.drivetrain.setDriveSpeed(SwerveDrive.ModulePosition.FL, 0.0);
+    	Robot.drivetrain.setDriveSpeed(SwerveDrive.ModulePosition.FR, 0.0);
+    	Robot.drivetrain.setDriveSpeed(SwerveDrive.ModulePosition.BL, 0.0);
+    	Robot.drivetrain.setDriveSpeed(SwerveDrive.ModulePosition.BR, 0.0);
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.FL, 0.0);
-    	Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.FR, 0.0);
-    	Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.BL, 0.0);
-    	Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.BR, 0.0);
+    	Robot.drivetrain.setDriveSpeed(SwerveDrive.ModulePosition.FL, 0.0);
+    	Robot.drivetrain.setDriveSpeed(SwerveDrive.ModulePosition.FR, 0.0);
+    	Robot.drivetrain.setDriveSpeed(SwerveDrive.ModulePosition.BL, 0.0);
+    	Robot.drivetrain.setDriveSpeed(SwerveDrive.ModulePosition.BR, 0.0);
     }
 }
