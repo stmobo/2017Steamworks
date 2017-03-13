@@ -44,7 +44,9 @@ public class SwerveDrive extends Subsystem {
 
     private final double wheelRadius = 4.0; // inches
     private final double maxWheelSpeed = (11.0 * 12.0); // inches per second
-    private final double cimConversionFactor = (40.0/(2*Math.PI*wheelRadius)); // ticks over circumference
+    /* Drive is geared at 6.67:1 (according to andymark)
+     * CIMcoders output 20 pulses (x4 encoding = 80 ticks) per revolution */
+    private final double cimConversionFactor = (80.0 / 6.67) / (2*Math.PI*wheelRadius); // ticks over circumference
 
     private double[] currentSteerTarget = {0.0, 0.0, 0.0, 0.0};
     private double[] currentSteerDegrees = {0.0, 0.0, 0.0, 0.0};
@@ -328,7 +330,6 @@ public class SwerveDrive extends Subsystem {
 
         /* Sensor setup: */
     	srx.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-    	srx.configEncoderCodesPerRev(40);
 
     	srx.set(0); // Reset to stopped
     }
@@ -368,6 +369,7 @@ public class SwerveDrive extends Subsystem {
 
         // Speed in CIMCoder ticks per second, times input coefficient:
         double speed = (maxWheelSpeed * cimConversionFactor) * out;
+        speed /= 10.0;  /* Units for Velocity Closed-Loop are (Native Units / 100ms) */
 
     	// 45 native units is about equal to 15 degrees
     	if(Math.abs(steer.getPosition() - getSteerTarget(pos)) >= 45) {
