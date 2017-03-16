@@ -19,6 +19,7 @@ public class ViewPort extends Subsystem {
         "Feed 1"
     };
     private VideoSource[] sources;
+    private CvSink[] dummySinks;
     private int currentSrc;
 
     private MjpegServer server;
@@ -26,11 +27,17 @@ public class ViewPort extends Subsystem {
     public ViewPort() {
         /* Init all sources */
         sources = VideoSource.enumerateSources();
+        dummySinks = new CvSink[sources.length];
 
         int i = 0;
         for(VideoSource src : sources) {
             src.setFPS(15);
             src.setResolution(320, 240);
+
+            dummySinks[i] = new CvSink("DummySink-"+Integer.toString(i));
+            dummySinks[i].setSource(src);
+            dummySinks[i].setEnabled(true);
+
             if(cameraNames.length > i) {
                 cameraNames[i] = cameraNames[i] + " (" + src.getName() + ")";
             }
