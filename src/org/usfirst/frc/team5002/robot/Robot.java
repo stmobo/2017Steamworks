@@ -18,19 +18,8 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import org.usfirst.frc.team5002.robot.commands.Teleop;
-import org.usfirst.frc.team5002.robot.commands.AutonomousTemp;
-import org.usfirst.frc.team5002.robot.commands.INtaker;
-import org.usfirst.frc.team5002.robot.commands.KillDrivetrain;
-import org.usfirst.frc.team5002.robot.commands.PIDSteerCollective;
-import org.usfirst.frc.team5002.robot.commands.PIDSteerTestSingle;
-import org.usfirst.frc.team5002.robot.commands.SteerTestVbus;
-import org.usfirst.frc.team5002.robot.subsystems.Intake;
-import org.usfirst.frc.team5002.robot.subsystems.Launcherer;
-import org.usfirst.frc.team5002.robot.subsystems.Outtake;
-import org.usfirst.frc.team5002.robot.subsystems.RopeClimber;
-import org.usfirst.frc.team5002.robot.subsystems.Sensors;
-import org.usfirst.frc.team5002.robot.subsystems.SwerveDrive;
+import org.usfirst.frc.team5002.robot.commands.*;
+import org.usfirst.frc.team5002.robot.subsystems.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -111,6 +100,7 @@ public class Robot extends IterativeRobot {
         chooser.addObject("Auto Left", new AutonomousTemp(-0.1));
         chooser.addObject("Auto Right", new AutonomousTemp(0.1));
         chooser.addObject("Auto Straight", new AutonomousTemp(0.0));
+        chooser.addObject("Auto Gear", new AutoFull());
         chooser.addDefault("No Auto", new KillDrivetrain());
 
 		teleopCommand = new Teleop();
