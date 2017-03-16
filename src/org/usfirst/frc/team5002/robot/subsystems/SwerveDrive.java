@@ -50,18 +50,18 @@ public class SwerveDrive extends Subsystem {
     private double[] minEncoderOutput = {0.0, 0.0, 0.0, 0.0};
     private double[] currentSteerTarget = {0.0, 0.0, 0.0, 0.0};
     private double[] currentSteerDegrees = {0.0, 0.0, 0.0, 0.0};
-    
+
     boolean driveReversalStatus[] = {false, false, false, false};
     boolean driveReversalConst[] = {true, false, true, false};
 
-    
+
     public enum ModulePosition {
     	FL,    ///< Front-left
     	FR,    ///< Front-right
     	BL,    ///< Back-left
     	BR     ///< Back-right
     };
-    
+
     private int positionToIndex(ModulePosition pos) {
     	switch(pos) {
     	case FL:
@@ -75,7 +75,7 @@ public class SwerveDrive extends Subsystem {
     		return 3;
     	}
     }
-    
+
     private String positionToFriendlyName(ModulePosition pos) {
     	switch(pos) {
     	case FL:
@@ -174,7 +174,7 @@ public class SwerveDrive extends Subsystem {
 
     	return false;
     }
-    
+
     /**
      * Gets whether a given steer module's drive motor should be reversed by default.
      *
@@ -194,7 +194,7 @@ public class SwerveDrive extends Subsystem {
 
     	return false;
     }
-    
+
     /**
      * Gets a steer module's current steer target.
      *
@@ -214,7 +214,7 @@ public class SwerveDrive extends Subsystem {
 
     	return 0.0;
     }
-    
+
     /**
      * Gets whether a given steer module's drive motor should be reversed by default.
      *
@@ -356,7 +356,7 @@ public class SwerveDrive extends Subsystem {
     public void setDriveOutput(ModulePosition pos, double out) {
     	CANTalon drive = getDriveController(pos);
     	CANTalon steer = getSteerController(pos);
-    	
+
     	// 45 native units is about equal to 15 degrees
     	if(Math.abs(steer.getPosition() - getSteerTarget(pos)) >= 45) {
     		drive.set(0);
@@ -364,17 +364,17 @@ public class SwerveDrive extends Subsystem {
     		drive.set(out * (getDriveReverseConst(pos) ? -1 : 1) * (getDriveReverse(pos) ? -1 : 1));
     	}
     }
-    
+
     private double getCurrentSteerPositionDegrees(ModulePosition pos) {
     	CANTalon steer = getSteerController(pos);
     	double nativeUnits = steer.getPosition();
-    	
+
     	nativeUnits -= getMinSteerHack(pos);
     	nativeUnits -= getSteerOffset(pos);
     	double degrees = nativeUnits * (360.0 / (getSteerHack(pos) - getMinSteerHack(pos)));
-    	
+
     	return degrees;
-    	
+
     }
 
     /**
@@ -395,11 +395,11 @@ public class SwerveDrive extends Subsystem {
     	 *  1. Drive to the angle directly and drive forward, or
     	 *  2. Drive to the opposite angle (angle+180) and drive backwards.
     	 */
-    	
+
     	double angleTwo = degrees - 180.0;
     	double currentAngle = getCurrentSteerPositionDegrees(pos) % 360.0;
     	double targetAngle = degrees;
-    	
+
     	if(Math.abs(degrees - currentAngle) < Math.abs(angleTwo - currentAngle)) {
     		/* Drive directly. */
     		setDriveReverse(pos, false);
@@ -408,10 +408,10 @@ public class SwerveDrive extends Subsystem {
     		targetAngle = angleTwo;
     		setDriveReverse(pos, true);
     	}
-    	
+
     	SmartDashboard.putNumber("SteerRawTarget-"+positionToFriendlyName(pos), degrees);
     	SmartDashboard.putNumber("SteerTarget-"+positionToFriendlyName(pos), targetAngle);
-    	
+
     	/*
     	if(degrees >= 180.0) {
     		degrees -= 180.0;
@@ -426,7 +426,7 @@ public class SwerveDrive extends Subsystem {
         nativePos += getMinSteerHack(pos);
 
         currentSteerDegrees[positionToIndex(pos)] = targetAngle;
-        
+
         switch(pos) {
     	case FL:
     		currentSteerTarget[0] = nativePos;
@@ -441,7 +441,7 @@ public class SwerveDrive extends Subsystem {
     		currentSteerTarget[3] = nativePos;
     		break;
     	}
-        
+
     	steer.set(nativePos);
     }
 
@@ -463,6 +463,26 @@ public class SwerveDrive extends Subsystem {
     	configureDriveMotorAutonomous(ModulePosition.FR);
     	configureDriveMotorAutonomous(ModulePosition.BL);
     	configureDriveMotorAutonomous(ModulePosition.BR);
+    }
+
+    /**
+     * Sets swerve module direction for all modules at once.
+     */
+    public void setSteerDegreesCollective(double degrees) {
+    	setSteerDegrees(ModulePosition.FL, degrees);
+    	setSteerDegrees(ModulePosition.FR, degrees);
+    	setSteerDegrees(ModulePosition.BL, degrees);
+    	setSteerDegrees(ModulePosition.BR, degrees);
+    }
+
+    /**
+     * Sets swerve module drive speed / distance for all modules at once.
+     */
+    public void setDriveOutputCollective(double out) {
+    	setDriveOutput(ModulePosition.FL, out);
+    	setDriveOutput(ModulePosition.FR, out);
+    	setDriveOutput(ModulePosition.BL, out);
+    	setDriveOutput(ModulePosition.BR, out);
     }
 
     public void initDefaultCommand() {
@@ -497,7 +517,7 @@ public class SwerveDrive extends Subsystem {
     	UpdateSDSingle(ModulePosition.FR, "FR");
     	UpdateSDSingle(ModulePosition.BL, "BL");
     	UpdateSDSingle(ModulePosition.BR, "BR");
-    	
+
     	SmartDashboard.putString("Steer Encoder Calibration",
     		"{ " + Double.toString(fl_steer.getAnalogInRaw()) + ", "
 				 + Double.toString(fr_steer.getAnalogInRaw()) + ", "

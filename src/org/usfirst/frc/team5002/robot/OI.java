@@ -10,6 +10,7 @@ import org.usfirst.frc.team5002.robot.commands.TakeOuter;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -32,7 +33,7 @@ public class OI {
 
     private Button A;
 	private Button LB;
-    
+
     boolean focEnabled = false;
 
 	public OI(){
@@ -45,9 +46,9 @@ public class OI {
 		Button home = new JoystickButton(arcadeStick, 7);
 		Button menu = new JoystickButton(arcadeStick, 8);
 		LB  = new JoystickButton(arcadeStick, 5);
-		
-		
-		
+
+
+
         activateLowSpeed = new JoystickButton(arcadeStick, 9); // Bumper 1 (left)
         activateHighSpeed = new JoystickButton(arcadeStick, 10); // Bumper 2 (right)
         toggleFOC = home;
@@ -72,21 +73,21 @@ public class OI {
         } else {
             focDebounce = false;
         }
-        
+
         if(resetHdg.get()) {
         	Robot.navx.zeroYaw();
         }
-        
+
     }
-    
+
     public boolean intakeButtonActivated() {
     	return A.get();
     }
-    
+
     public boolean reverseButtonActivated() {
     	return LB.get();
     }
-    
+
     public boolean isPOVPressed() {
     	int angle = arcadeStick.getPOV(0);
     	if(angle == -1) {
@@ -94,12 +95,12 @@ public class OI {
     	}
     	return true;
     }
-    
+
     public double getFwdPOV() {
     	int angle = arcadeStick.getPOV(0);
     	return Math.cos(Math.toRadians((double)angle));
     }
-    
+
     public double getStrPOV() {
     	int angle = arcadeStick.getPOV(0);
     	return Math.sin(Math.toRadians((double)angle));
@@ -162,6 +163,16 @@ public class OI {
 		}
 	}
 
+    public void vibrate() {
+        arcadeStick.setRumble(RumbleType.kLeftRumble, 1.0);
+        arcadeStick.setRumble(RumbleType.kRightRumble, 1.0);
+    }
+
+    public void stopVibrate() {
+        arcadeStick.setRumble(RumbleType.kLeftRumble, 0);
+        arcadeStick.setRumble(RumbleType.kRightRumble, 0);
+    }
+
 	public void UpdateSD(){
 		Robot.drivetrain.updateSD();//sends all the data from SwerveDrive subsystem to the SmartDashboard
 		Robot.intake.updateSD();
@@ -172,7 +183,7 @@ public class OI {
 			} else {
 				SmartDashboard.putNumber("Match Time", (int)(150.0 - Timer.getMatchTime()));
 			}
-			
+
 			if((int)(150.0 - Timer.getMatchTime()) <= 40.0) {
 				SmartDashboard.putBoolean("40-Second Watch", true);
 			} else {
@@ -182,15 +193,15 @@ public class OI {
 			SmartDashboard.putNumber("Match Time", (int)0);
 			SmartDashboard.putBoolean("40-Second Watch", false);
 		}
-		
+
 		SmartDashboard.putNumber("Start Yaw", Robot.startYaw);
 		SmartDashboard.putNumber("POV", arcadeStick.getPOV(0));
 		if(Robot.navx != null) {
 			SmartDashboard.putBoolean("NavX Present", true);
 			SmartDashboard.putBoolean("Calibrating", Robot.navx.isCalibrating());
 			SmartDashboard.putBoolean("Connected", Robot.navx.isConnected());
-			
-			SmartDashboard.putNumber("Heading", Robot.navx.getAngle());	
+
+			SmartDashboard.putNumber("Heading", Robot.navx.getAngle());
 			SmartDashboard.putNumber("Compass", Robot.navx.getCompassHeading());
 			SmartDashboard.putNumber("Yaw", Robot.navx.getYaw());
 			SmartDashboard.putNumber("Fused", Robot.navx.getFusedHeading());

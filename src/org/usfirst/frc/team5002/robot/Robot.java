@@ -29,6 +29,7 @@ import org.usfirst.frc.team5002.robot.subsystems.Intake;
 import org.usfirst.frc.team5002.robot.subsystems.Launcherer;
 import org.usfirst.frc.team5002.robot.subsystems.Outtake;
 import org.usfirst.frc.team5002.robot.subsystems.RopeClimber;
+import org.usfirst.frc.team5002.robot.subsystems.Sensors;
 import org.usfirst.frc.team5002.robot.subsystems.SwerveDrive;
 
 /**
@@ -46,9 +47,10 @@ public class Robot extends IterativeRobot {
 	public static final RopeClimber ropeClimber = new RopeClimber();
 	public static final Outtake outtake = new Outtake();
 	public static OI oi;
-	
+	public static Sensors sensors;
+
 	public static double startYaw;
-	
+
 	public static AHRS navx;
 
 	Command autonomousCommand;
@@ -66,7 +68,7 @@ public class Robot extends IterativeRobot {
 			return 0;
 		}
 	}
-	
+
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -74,7 +76,8 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		oi = new OI();
-		
+        sensors = new Sensors();
+
 		try {
 			/* NOTE: With respect to the NavX, the robot's front is in the -X direction.
 			 * The robot's right side is in the +Y direction,
@@ -92,16 +95,16 @@ public class Robot extends IterativeRobot {
         UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
         cam.setFPS(15);
         cam.setResolution(320, 240);
-        
+
         SmartDashboard.putData("Autonomous", chooser);
-        
+
         if(navx != null) {
             navx.zeroYaw();
             startYaw = navx.getYaw();
         } else {
         	startYaw = 0;
         }
-        
+
         chooser.addObject("Auto Left", new AutonomousTemp(-0.1));
         chooser.addObject("Auto Right", new AutonomousTemp(0.1));
         chooser.addObject("Auto Straight", new AutonomousTemp(0.0));
@@ -185,9 +188,9 @@ public class Robot extends IterativeRobot {
 		Command intakeCmd = new INtaker();
 		Scheduler.getInstance().add(teleopTest);
 		Scheduler.getInstance().add(intakeCmd);
-		
+
 		//Scheduler.getInstance().add(new AutoIntake());
-		
+
 		oi.updateOIState();
 
 		//Command test = new SteerTestVbus();
@@ -200,9 +203,9 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		//Robot.oi.testing();
-		
-		
-		
+
+
+
 		oi.UpdateSD();
 		oi.updateOIState();
 		Scheduler.getInstance().run();

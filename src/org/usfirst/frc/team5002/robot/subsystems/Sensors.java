@@ -1,7 +1,14 @@
 package org.usfirst.frc.team5002.robot.subsystems;
 
+import org.usfirst.frc.team5002.robot.RobotMap;
+
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.GenericHID;
+
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Sensors extends Subsystem {
     private AnalogInput distLeft;
