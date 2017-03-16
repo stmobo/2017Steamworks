@@ -11,6 +11,7 @@ import org.usfirst.frc.team5002.robot.*;
 public class AutoFull extends CommandGroup {
     public AutoFull() {
     	addSequential(new AutonomousDrive());
+    	addSequential(new AutoTurn(-45));
     	addSequential(new AutoGear());
     }
 }
