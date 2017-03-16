@@ -57,10 +57,6 @@ public class AutoGear extends Command {
             } else if(dist < targetDistance) {
                 Robot.drivetrain.setDriveOutputCollective(-driveSpeed);
             }
-        } else {
-            Robot.drivetrain.setDriveOutputCollective(0);
-            Command signal = new OperatorSignal(1.0);
-            Scheduler.getInstance().add(signal);
         }
     }
 
@@ -82,20 +78,18 @@ public class AutoGear extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
+        Robot.drivetrain.setDriveOutputCollective(0);
+
+        Command signal = new OperatorSignal(1.0);
+        Scheduler.getInstance().add(signal);
+
         Robot.inhibitTeleop = false;
-    	Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.FL, 0.0);
-    	Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.FR, 0.0);
-    	Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.BL, 0.0);
-    	Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.BR, 0.0);
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
         Robot.inhibitTeleop = false;
-    	Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.FL, 0.0);
-    	Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.FR, 0.0);
-    	Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.BL, 0.0);
-    	Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.BR, 0.0);
+        Robot.drivetrain.setDriveOutputCollective(0);
     }
 }
