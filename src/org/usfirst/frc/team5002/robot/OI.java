@@ -2,11 +2,7 @@ package org.usfirst.frc.team5002.robot;
 
 import org.usfirst.frc.team5002.robot.commands.ClimbDown;
 import org.usfirst.frc.team5002.robot.commands.ClimbUp;
-import org.usfirst.frc.team5002.robot.commands.INtaker;
-import org.usfirst.frc.team5002.robot.commands.LaunchererC;
-import org.usfirst.frc.team5002.robot.commands.OUTtaker;
-import org.usfirst.frc.team5002.robot.commands.ReverseInTaker;
-import org.usfirst.frc.team5002.robot.commands.TakeOuter;
+import org.usfirst.frc.team5002.robot.commands.AutoGear;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
@@ -30,38 +26,39 @@ public class OI {
     private Button activateHighSpeed;
     private Button toggleFOC;
     private Button resetHdg;
+    private Button activateAutoGear;
 
     private Button A;
+    private Button B;
+    private Button X;
+    private Button Y;
+    private Button RB;
 	private Button LB;
+	private Button home;
+	private Button menu;
 
     boolean focEnabled = false;
 
 	public OI(){
 		arcadeStick = new Joystick(0); //gave Joystick a job
 		A = new JoystickButton(arcadeStick, 1);
-		Button B = new JoystickButton(arcadeStick, 2);
-		Button X = new JoystickButton(arcadeStick, 3);
-		Button Y = new JoystickButton(arcadeStick, 4);
-		Button RB = new JoystickButton(arcadeStick, 6);
-		Button home = new JoystickButton(arcadeStick, 7);
-		Button menu = new JoystickButton(arcadeStick, 8);
+		B = new JoystickButton(arcadeStick, 2);
+		X = new JoystickButton(arcadeStick, 3);
+		Y = new JoystickButton(arcadeStick, 4);
+		RB = new JoystickButton(arcadeStick, 6);
+		home = new JoystickButton(arcadeStick, 7);
+		menu = new JoystickButton(arcadeStick, 8);
 		LB  = new JoystickButton(arcadeStick, 5);
-
-
 
         activateLowSpeed = new JoystickButton(arcadeStick, 9); // Bumper 1 (left)
         activateHighSpeed = new JoystickButton(arcadeStick, 10); // Bumper 2 (right)
         toggleFOC = home;
         resetHdg = menu;
+        activateAutoGear = X;
 
 		Y.toggleWhenPressed(new ClimbUp());//turns the climb motor on while Y is being held
 		RB.whileHeld(new ClimbDown());//turns launcher motor on when B is pressed once, and off when B is pressed again
-
-		//A.toggleWhenPressed(new INtaker()); //turns the intake motor on when A is pressed once, and off when A is pressed again
-		//B.toggleWhenPressed(new OUTtaker()); //turns the outake motor on at the same time as the intake motor
-
-		//LB.whileHeld(new TakeOuter()); // emergency reverse for outtake motor
-		//LB.whileHeld(new ReverseInTaker());// emergency reverse for intake motor
+        activateAutoGear.whenPressed(new AutoGear());
 	}
 
     // For toggle buttons that don't warrant their own commands.
@@ -86,6 +83,10 @@ public class OI {
 
     public boolean reverseButtonActivated() {
     	return LB.get();
+    }
+
+    public boolean autoGearActivated() {
+        return activateAutoGear.get();
     }
 
     public boolean isPOVPressed() {

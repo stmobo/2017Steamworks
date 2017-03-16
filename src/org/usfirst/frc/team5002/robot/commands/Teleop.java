@@ -51,20 +51,20 @@ public class Teleop extends Command {
 	double[] angles = new double[4];
 	double[] speeds = new double[4];
 	protected void execute(){
-		double fwd = (Math.abs(Robot.oi.getForwardAxis()) > joystickDeadband) ? Robot.oi.getForwardAxis() : 0.0;
+        double fwd = (Math.abs(Robot.oi.getForwardAxis()) > joystickDeadband) ? Robot.oi.getForwardAxis() : 0.0;
 		double str = (Math.abs(Robot.oi.getHorizontalAxis()) > joystickDeadband) ? Robot.oi.getHorizontalAxis() : 0.0;
 		//double rcw = 0.0;
 		double rcw = (Math.abs(Robot.oi.getTurnAxis()) > joystickDeadband) ? Robot.oi.getTurnAxis() : 0.0;
-		
+
 		if(Math.abs(fwd)>1.0 || Math.abs(str)>1.0 || Math.abs(rcw)>1.0){
 			return;
 		}
-		
+
 		if(Robot.oi.isPOVPressed()) {
 			fwd = Robot.oi.getFwdPOV();
 			str = Robot.oi.getStrPOV();
 		}
-		
+
 		SmartDashboard.putNumber("Forward", fwd);
 		SmartDashboard.putNumber("Strafe", str);
 		SmartDashboard.putNumber("Rotate", rcw);
@@ -106,7 +106,7 @@ public class Teleop extends Command {
 				angles[1] = (d==0 && b==0) ? 0.0 : (Math.atan2(b, d) * 180 / Math.PI); // back left
 				angles[2] = (d==0 && a==0) ? 0.0 : (Math.atan2(a, d) * 180 / Math.PI); // front left
 				angles[3] = (c==0 && a==0) ? 0.0 : (Math.atan2(a, c) * 180 / Math.PI); // front right
-				
+
 				SmartDashboard.putNumber("Angle-BR", angles[0]);
 				SmartDashboard.putNumber("Angle-BL", angles[1]);
 				SmartDashboard.putNumber("Angle-FL", angles[2]);
@@ -133,7 +133,7 @@ public class Teleop extends Command {
     protected void initialize() {
     	/* Set main controls for driving... */
     	Robot.drivetrain.setDriveTeleop();
-    	
+
 
 		Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.BR, 0.0);
 		Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.BL, 0.0);

@@ -53,6 +53,9 @@ public class Robot extends IterativeRobot {
 
 	public static AHRS navx;
 
+    private Teleop teleopCommand;
+    public static boolean inhibitTeleop;
+
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
 
@@ -109,6 +112,9 @@ public class Robot extends IterativeRobot {
         chooser.addObject("Auto Right", new AutonomousTemp(0.1));
         chooser.addObject("Auto Straight", new AutonomousTemp(0.0));
         chooser.addDefault("No Auto", new KillDrivetrain());
+
+		teleopCommand = new Teleop();
+        inhibitTeleop = false;
 	}
 
 	/**
@@ -123,16 +129,6 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void disabledPeriodic() {
-		/*
-		SmartDashboard.putNumber("FL-Pos", Robot.drivetrain.fl_steer.getPosition());
-		SmartDashboard.putNumber("FR-Pos", Robot.drivetrain.fr_steer.getPosition());
-		SmartDashboard.putNumber("BL-Pos", Robot.drivetrain.bl_steer.getPosition());
-		SmartDashboard.putNumber("BR-Pos", Robot.drivetrain.br_steer.getPosition());
-		*/
-
-		//Robot.drivetrain.UpdateSDSingle(Robot.drivetrain.fr_steer);
-		//Robot.drivetrain.UpdateSDSingle(Robot.drivetrain.fl_steer);
-
 		oi.UpdateSD();
 		Scheduler.getInstance().run();
 	}
@@ -181,20 +177,9 @@ public class Robot extends IterativeRobot {
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
 
-		//PIDSteerCollective PIDTest = new PIDSteerCollective();
-		//Scheduler.getInstance().add(PIDTest);
-
-		Teleop teleopTest = new Teleop();
-		Command intakeCmd = new INtaker();
-		Scheduler.getInstance().add(teleopTest);
-		Scheduler.getInstance().add(intakeCmd);
-
-		//Scheduler.getInstance().add(new AutoIntake());
+		Scheduler.getInstance().add(teleopCommand);
 
 		oi.updateOIState();
-
-		//Command test = new SteerTestVbus();
-		//Scheduler.getInstance().add(test);
 	}
 
 	/**
@@ -203,11 +188,14 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		//Robot.oi.testing();
-
-
-
 		oi.UpdateSD();
 		oi.updateOIState();
+
+        /* Make sure teleop is active whenever possible */
+        if(!inhibitTeleop && !teleopCommand.isRunning()) {
+            Scheduler.getInstance().add(teleopCommand);
+        }
+
 		Scheduler.getInstance().run();
 	}
 

@@ -6,8 +6,6 @@ import org.usfirst.frc.team5002.robot.subsystems.Sensors;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
-
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
 /**
@@ -27,6 +25,8 @@ public class AutoGear extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
+        Robot.inhibitTeleop = true;
+
     	Robot.drivetrain.setDriveTeleop();
         Robot.drivetrain.setSteerDegreesCollective(0);
     }
@@ -66,6 +66,10 @@ public class AutoGear extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
+        if(Robot.oi.autoGearActivated()) {
+            return true;
+        }
+
         double dist = (Robot.sensors.getLeftDistance() + Robot.sensors.getRightDistance()) / 2;
         if(Math.abs(Robot.sensors.getLeftDistance() - Robot.sensors.getRightDistance()) >= alignThreshold) {
             return false;
@@ -78,6 +82,7 @@ public class AutoGear extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
+        Robot.inhibitTeleop = false;
     	Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.FL, 0.0);
     	Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.FR, 0.0);
     	Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.BL, 0.0);
@@ -87,6 +92,7 @@ public class AutoGear extends Command {
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
+        Robot.inhibitTeleop = false;
     	Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.FL, 0.0);
     	Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.FR, 0.0);
     	Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.BL, 0.0);
