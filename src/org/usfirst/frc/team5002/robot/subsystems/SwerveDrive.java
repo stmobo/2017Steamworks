@@ -532,6 +532,7 @@ public class SwerveDrive extends Subsystem {
 
     	SmartDashboard.putNumber("SteerErr-"+suffix, steer.getClosedLoopError());
     	SmartDashboard.putNumber("SteerPos-"+suffix, steer.getPosition());
+    	SmartDashboard.putNumber("SteerVel-"+suffix, steer.getAnalogInVelocity());
     	SmartDashboard.putNumber("SteerADC-"+suffix, steer.getAnalogInRaw());
 
         SmartDashboard.putNumber("DriveSpeed-"+suffix, drive.getSpeed());
