@@ -511,21 +511,21 @@ public class SwerveDrive extends Subsystem {
              * to make sure we're not going to do something to get us DQ'd */
             if(!DriverStation.getInstance().isDisabled()) {
                 /* Enable stuff if necessary */
-                if(!steer.isEnabled()) {
-                    steer.enable();
+                if(!steer.isControlEnabled()) {
+                    steer.enableControl();
                 }
 
-                if(!drive.isEnabled()) {
-                    drive.enable();
+                if(!drive.isControlEnabled()) {
+                    drive.enableControl();
                 }
             }
         } else {
-            if(steer.isEnabled()) {
-                steer.disable();
+            if(steer.isControlEnabled()) {
+                steer.disableControl();
             }
 
-            if(drive.isEnabled()) {
-                drive.disable();
+            if(drive.isControlEnabled()) {
+                drive.disableControl();
             }
         }
 
