@@ -55,7 +55,6 @@ public class SwerveDrive extends Subsystem {
 
     boolean driveReversalStatus[] = {false, false, false, false};
     boolean driveReversalConst[] = {true, false, true, false};
-    boolean swerveEnableStatus[] = {true, true, true, true};
 
     /* NOTE: Exact object type below is SendableChooser<Boolean>.
      * Unfortunately, Java's generics are... not as powerful as I'd like,
