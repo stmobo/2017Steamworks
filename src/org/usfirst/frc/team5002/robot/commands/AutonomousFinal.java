@@ -20,8 +20,6 @@ public class AutonomousFinal extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	/* Set main controls for driving... */
-    	Robot.drivetrain.setDriveAuto();
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -31,10 +29,10 @@ public class AutonomousFinal extends Command {
     	double x = (6.4*12)/12.56;
 
     	//set all the motors in the drivetrain to the variable x, and itll run forward
-        Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.FL, x);
-        Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.FR, x);
-        Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.BL, x);
-        Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.BR, x);
+        Robot.drivetrain.setDriveDistance(SwerveDrive.ModulePosition.FL, x);
+        Robot.drivetrain.setDriveDistance(SwerveDrive.ModulePosition.FR, x);
+        Robot.drivetrain.setDriveDistance(SwerveDrive.ModulePosition.BL, x);
+        Robot.drivetrain.setDriveDistance(SwerveDrive.ModulePosition.BR, x);
     }
 
     // Make this return true when this Command no longer needs to run execute()

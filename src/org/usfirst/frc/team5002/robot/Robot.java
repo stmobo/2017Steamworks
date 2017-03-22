@@ -30,6 +30,7 @@ import org.usfirst.frc.team5002.robot.subsystems.Launcherer;
 import org.usfirst.frc.team5002.robot.subsystems.Outtake;
 import org.usfirst.frc.team5002.robot.subsystems.RopeClimber;
 import org.usfirst.frc.team5002.robot.subsystems.SwerveDrive;
+import org.usfirst.frc.team5002.robot.subsystems.ViewPort;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -42,9 +43,9 @@ public class Robot extends IterativeRobot {
 
 	public static final SwerveDrive drivetrain = new SwerveDrive();
 	public static final RopeClimber ropeClimber = new RopeClimber();
+    public static ViewPort viewport;
 	public static OI oi;
-
-	public static double startYaw;
+  public static double startYaw;
 
 	public static AHRS navx;
 
@@ -71,6 +72,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		oi = new OI();
+        viewport = new ViewPort();
 
 		try {
 			/* NOTE: With respect to the NavX, the robot's front is in the -X direction.
@@ -83,13 +85,7 @@ public class Robot extends IterativeRobot {
 		} catch (RuntimeException ex) {
 			DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
 			navx = null;
-		}
-
-        // start camera stream lol
-        UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
-        cam.setFPS(15);
-        cam.setResolution(320, 240);
-
+		
         SmartDashboard.putData("Autonomous", chooser);
 
         if(navx != null) {
@@ -167,6 +163,11 @@ public class Robot extends IterativeRobot {
 
 		Teleop teleop = new Teleop();
 		Scheduler.getInstance().add(teleop);
+
+		Teleop teleopTest = new Teleop();
+		Command intakeCmd = new INtaker();
+		Scheduler.getInstance().add(teleopTest);
+		Scheduler.getInstance().add(intakeCmd);
 
 		oi.updateOIState();
 	}

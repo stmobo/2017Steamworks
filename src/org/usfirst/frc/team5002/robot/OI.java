@@ -31,7 +31,13 @@ public class OI {
     private Button resetHdg;
 
     private Button A;
+    private Button B;
+    private Button X;
+    private Button Y;
 	private Button LB;
+  private Button RB;
+	private Button home;
+	private Button menu;
 
     boolean focEnabled = false;
 
@@ -39,15 +45,13 @@ public class OI {
 		arcadeStick = new Joystick(0); //gave Joystick a job
 
 		A = new JoystickButton(arcadeStick, 1);
-		Button B = new JoystickButton(arcadeStick, 2);
-		Button X = new JoystickButton(arcadeStick, 3);
-		Button Y = new JoystickButton(arcadeStick, 4);
-		Button RB = new JoystickButton(arcadeStick, 6);
-		Button home = new JoystickButton(arcadeStick, 7);
-		Button menu = new JoystickButton(arcadeStick, 8);
+		B = new JoystickButton(arcadeStick, 2);
+		X = new JoystickButton(arcadeStick, 3);
+		Y = new JoystickButton(arcadeStick, 4);
+		RB = new JoystickButton(arcadeStick, 6);
+		home = new JoystickButton(arcadeStick, 7);
+		menu = new JoystickButton(arcadeStick, 8);
 		LB  = new JoystickButton(arcadeStick, 5);
-
-
 
         activateLowSpeed = new JoystickButton(arcadeStick, 9); // Bumper 1 (left)
         activateHighSpeed = new JoystickButton(arcadeStick, 10); // Bumper 2 (right)
@@ -84,6 +88,14 @@ public class OI {
     	return LB.get();
     }
 
+    public boolean viewForwardButtonActivated() {
+        return A.get();
+    }
+
+    public boolean viewBackwardButtonActivated() {
+        return B.get();
+    }
+  
     public boolean isPOVPressed() {
     	int angle = arcadeStick.getPOV(0);
     	if(angle == -1) {
@@ -155,7 +167,7 @@ public class OI {
 
 	public void UpdateSD(){
 		Robot.drivetrain.updateSD();//sends all the data from SwerveDrive subsystem to the SmartDashboard
-
+		Robot.viewport.updateSD();
 		if(!DriverStation.getInstance().isDisabled()) {
 			if(DriverStation.getInstance().isAutonomous()) {
 				SmartDashboard.putNumber("Match Time", (int)(15.0 - Timer.getMatchTime()));
