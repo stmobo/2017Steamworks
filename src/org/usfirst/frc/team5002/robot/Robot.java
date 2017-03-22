@@ -42,14 +42,10 @@ import org.usfirst.frc.team5002.robot.subsystems.ViewPort;
 public class Robot extends IterativeRobot {
 
 	public static final SwerveDrive drivetrain = new SwerveDrive();
-	public static final Intake intake = new Intake();
-	public static final Launcherer launcherer = new Launcherer();
 	public static final RopeClimber ropeClimber = new RopeClimber();
-	public static final Outtake outtake = new Outtake();
     public static ViewPort viewport;
 	public static OI oi;
-
-	public static double startYaw;
+  public static double startYaw;
 
 	public static AHRS navx;
 
@@ -89,8 +85,7 @@ public class Robot extends IterativeRobot {
 		} catch (RuntimeException ex) {
 			DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
 			navx = null;
-		}
-
+		
         SmartDashboard.putData("Autonomous", chooser);
 
         if(navx != null) {
@@ -118,16 +113,6 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void disabledPeriodic() {
-		/*
-		SmartDashboard.putNumber("FL-Pos", Robot.drivetrain.fl_steer.getPosition());
-		SmartDashboard.putNumber("FR-Pos", Robot.drivetrain.fr_steer.getPosition());
-		SmartDashboard.putNumber("BL-Pos", Robot.drivetrain.bl_steer.getPosition());
-		SmartDashboard.putNumber("BR-Pos", Robot.drivetrain.br_steer.getPosition());
-		*/
-
-		//Robot.drivetrain.UpdateSDSingle(Robot.drivetrain.fr_steer);
-		//Robot.drivetrain.UpdateSDSingle(Robot.drivetrain.fl_steer);
-
 		oi.UpdateSD();
 		Scheduler.getInstance().run();
 	}
@@ -176,20 +161,15 @@ public class Robot extends IterativeRobot {
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
 
-		//PIDSteerCollective PIDTest = new PIDSteerCollective();
-		//Scheduler.getInstance().add(PIDTest);
+		Teleop teleop = new Teleop();
+		Scheduler.getInstance().add(teleop);
 
 		Teleop teleopTest = new Teleop();
 		Command intakeCmd = new INtaker();
 		Scheduler.getInstance().add(teleopTest);
 		Scheduler.getInstance().add(intakeCmd);
 
-		//Scheduler.getInstance().add(new AutoIntake());
-
 		oi.updateOIState();
-
-		//Command test = new SteerTestVbus();
-		//Scheduler.getInstance().add(test);
 	}
 
 	/**
@@ -197,7 +177,6 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		//Robot.oi.testing();
 		oi.UpdateSD();
 		oi.updateOIState();
 		Scheduler.getInstance().run();
