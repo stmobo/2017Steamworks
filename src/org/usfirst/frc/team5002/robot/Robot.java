@@ -30,6 +30,7 @@ import org.usfirst.frc.team5002.robot.subsystems.Launcherer;
 import org.usfirst.frc.team5002.robot.subsystems.Outtake;
 import org.usfirst.frc.team5002.robot.subsystems.RopeClimber;
 import org.usfirst.frc.team5002.robot.subsystems.SwerveDrive;
+import org.usfirst.frc.team5002.robot.subsystems.ViewPort;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -41,14 +42,11 @@ import org.usfirst.frc.team5002.robot.subsystems.SwerveDrive;
 public class Robot extends IterativeRobot {
 
 	public static final SwerveDrive drivetrain = new SwerveDrive();
-	public static final Intake intake = new Intake();
-	public static final Launcherer launcherer = new Launcherer();
 	public static final RopeClimber ropeClimber = new RopeClimber();
-	public static final Outtake outtake = new Outtake();
+    public static ViewPort viewport;
 	public static OI oi;
-	
-	public static double startYaw;
-	
+  public static double startYaw;
+
 	public static AHRS navx;
 
 	Command autonomousCommand;
@@ -66,7 +64,7 @@ public class Robot extends IterativeRobot {
 			return 0;
 		}
 	}
-	
+
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -74,7 +72,8 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		oi = new OI();
-		
+        viewport = new ViewPort();
+
 		try {
 			/* NOTE: With respect to the NavX, the robot's front is in the -X direction.
 			 * The robot's right side is in the +Y direction,
@@ -87,21 +86,16 @@ public class Robot extends IterativeRobot {
 			DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
 			navx = null;
 		}
-
-        // start camera stream lol
-        UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
-        cam.setFPS(15);
-        cam.setResolution(320, 240);
         
         SmartDashboard.putData("Autonomous", chooser);
-        
+
         if(navx != null) {
             navx.zeroYaw();
             startYaw = navx.getYaw();
         } else {
         	startYaw = 0;
         }
-        
+
         chooser.addObject("Auto Left", new AutonomousTemp(-0.1));
         chooser.addObject("Auto Right", new AutonomousTemp(0.1));
         chooser.addObject("Auto Straight", new AutonomousTemp(0.0));
@@ -120,16 +114,6 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void disabledPeriodic() {
-		/*
-		SmartDashboard.putNumber("FL-Pos", Robot.drivetrain.fl_steer.getPosition());
-		SmartDashboard.putNumber("FR-Pos", Robot.drivetrain.fr_steer.getPosition());
-		SmartDashboard.putNumber("BL-Pos", Robot.drivetrain.bl_steer.getPosition());
-		SmartDashboard.putNumber("BR-Pos", Robot.drivetrain.br_steer.getPosition());
-		*/
-
-		//Robot.drivetrain.UpdateSDSingle(Robot.drivetrain.fr_steer);
-		//Robot.drivetrain.UpdateSDSingle(Robot.drivetrain.fl_steer);
-
 		oi.UpdateSD();
 		Scheduler.getInstance().run();
 	}
@@ -178,20 +162,15 @@ public class Robot extends IterativeRobot {
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
 
-		//PIDSteerCollective PIDTest = new PIDSteerCollective();
-		//Scheduler.getInstance().add(PIDTest);
+		Teleop teleop = new Teleop();
+		Scheduler.getInstance().add(teleop);
 
 		Teleop teleopTest = new Teleop();
 		Command intakeCmd = new INtaker();
 		Scheduler.getInstance().add(teleopTest);
 		Scheduler.getInstance().add(intakeCmd);
-		
-		//Scheduler.getInstance().add(new AutoIntake());
-		
-		oi.updateOIState();
 
-		//Command test = new SteerTestVbus();
-		//Scheduler.getInstance().add(test);
+		oi.updateOIState();
 	}
 
 	/**
@@ -199,10 +178,6 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		//Robot.oi.testing();
-		
-		
-		
 		oi.UpdateSD();
 		oi.updateOIState();
 		Scheduler.getInstance().run();
