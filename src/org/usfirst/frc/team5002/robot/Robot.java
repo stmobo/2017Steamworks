@@ -50,7 +50,7 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		drivetrain = new SwerveDrive();
 		ropeClimber = new RopeClimber();
-        // viewport = new ViewPort();
+        viewport = new ViewPort();
         sensors = new Sensors();
         oi = new OI();
 

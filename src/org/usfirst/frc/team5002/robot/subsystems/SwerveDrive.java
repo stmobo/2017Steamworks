@@ -449,7 +449,7 @@ public class SwerveDrive extends Subsystem {
         double angles[] = { 0, 0, 0, 0, 0 };
 
         angles[0] = degrees + angleAdjustment; // adjust target to be relative to module rotation
-        if(degrees > 0) {
+        if(angles[0] > 0) {
             angles[1] = (angles[0] + 180.0);
             angles[2] = (angles[0] - 180.0);
             angles[3] = (angles[0] - 360.0);

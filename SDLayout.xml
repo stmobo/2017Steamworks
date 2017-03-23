@@ -23,22 +23,22 @@
 		<location x="1322" y="87"/>
 	</widget>
 	<widget field="Y-Displacement" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="462" y="300"/>
+		<location x="487" y="319"/>
 	</widget>
 	<widget field="X-Displacement" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="465" y="278"/>
+		<location x="488" y="296"/>
 	</widget>
 	<widget field="RightDist-cm" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="21" y="342"/>
+		<location x="507" y="418"/>
 	</widget>
 	<widget field="LeftDist-cm" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1346" y="135"/>
+		<location x="514" y="395"/>
 	</widget>
 	<widget field="RightDist-Voltage" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="2" y="276"/>
+		<location x="484" y="465"/>
 	</widget>
 	<widget field="LeftDist-Voltage" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="5" y="299"/>
+		<location x="490" y="442"/>
 	</widget>
 	<widget field="Selected View" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="1317" y="328"/>
@@ -110,36 +110,37 @@
 		<height>35</height>
 	</static-widget>
 	<widget field="Fused" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="474" y="327"/>
+		<location x="332" y="298"/>
 		<width>116</width>
+		<height>20</height>
 	</widget>
 	<widget field="Intake Switch" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="331" y="175"/>
 	</widget>
 	<widget field="Compass" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="326" y="329"/>
+		<location x="175" y="319"/>
 	</widget>
 	<widget field="Connected" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="184" y="349"/>
+		<location x="37" y="319"/>
 		<width>138</width>
 	</widget>
 	<widget field="Calibrating" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="185" y="326"/>
+		<location x="37" y="341"/>
 		<width>138</width>
 	</widget>
 	<widget field="Yaw" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="349" y="305"/>
+		<location x="198" y="297"/>
 	</widget>
 	<widget field="Control Mode" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="170" y="278"/>
+		<location x="23" y="271"/>
 		<width>286</width>
 	</widget>
 	<widget field="Heading" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="330" y="352"/>
+		<location x="180" y="340"/>
 		<width>124</width>
 	</widget>
 	<widget field="NavX Present" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="170" y="303"/>
+		<location x="22" y="297"/>
 		<width>153</width>
 	</widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.CameraServerViewer">
@@ -223,7 +224,7 @@
 		<location x="14" y="119"/>
 	</widget>
 	<widget field="Autonomous" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
-		<location x="384" y="423"/>
+		<location x="375" y="385"/>
 	</widget>
 	<widget field="SteerRawTarget-FR" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="191" y="391"/>
@@ -238,7 +239,7 @@
 		<location x="9" y="391"/>
 	</widget>
 	<widget field="Start Yaw" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="457" y="351"/>
+		<location x="313" y="320"/>
 	</widget>
 	<widget field="Strafe" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="502" y="199"/>
@@ -259,7 +260,7 @@
 		<location x="8" y="414"/>
 	</widget>
 	<widget field="Steer Encoder Calibration" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="169" y="254"/>
+		<location x="21" y="248"/>
 		<width>288</width>
 	</widget>
 	<widget field="Forward" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">

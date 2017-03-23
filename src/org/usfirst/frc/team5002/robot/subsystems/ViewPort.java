@@ -29,25 +29,28 @@ public class ViewPort extends Subsystem {
         sources = VideoSource.enumerateSources();
         dummySinks = new CvSink[sources.length];
 
-        int i = 0;
-        for(VideoSource src : sources) {
-            src.setFPS(15);
-            src.setResolution(320, 240);
 
-            dummySinks[i] = new CvSink("DummySink-"+Integer.toString(i));
-            dummySinks[i].setSource(src);
-            dummySinks[i].setEnabled(true);
+        if(sources.length > 0) {
+	        int i = 0;
+	        for(VideoSource src : sources) {
+	            src.setFPS(15);
+	            src.setResolution(320, 240);
+	
+	            dummySinks[i] = new CvSink("DummySink-"+Integer.toString(i));
+	            dummySinks[i].setSource(src);
+	            dummySinks[i].setEnabled(true);
+	
+	            if(cameraNames.length > i) {
+	                cameraNames[i] = cameraNames[i] + " (" + src.getName() + ")";
+	            }
+	            i++;
+	        }
 
-            if(cameraNames.length > i) {
-                cameraNames[i] = cameraNames[i] + " (" + src.getName() + ")";
-            }
-            i++;
-        }
-
-        server = CameraServer.getInstance().addServer("ViewPort");
-        if(i != 0) {
-            currentSrc = 0;
-            server.setSource(sources[0]);
+	        server = CameraServer.getInstance().addServer("ViewPort");
+	        if(i != 0) {
+	            currentSrc = 0;
+	            server.setSource(sources[0]);
+	        }
         }
 	}
 
