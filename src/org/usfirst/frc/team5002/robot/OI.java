@@ -40,7 +40,7 @@ public class OI {
 	private Button home;
 	private Button menu;
 
-    boolean focEnabled = false;
+    public boolean focEnabled = false;
 
     private final Timer ctrlShakeTimer = new Timer();
     private boolean ctrlShaking = false;
@@ -79,7 +79,7 @@ public class OI {
         }
 
         if(resetHdg.get()) {
-        	Robot.navx.zeroYaw();
+        	Robot.sensors.navx.zeroYaw();
         }
 
         if(ctrlShaking) {
@@ -160,11 +160,11 @@ public class OI {
     }
 
 	public double getForwardAxis() {
-        if(focEnabled && Robot.navx != null) {
+        if(focEnabled && Robot.sensors.navx != null) {
             // Zero degrees = towards opposing side
             double x = arcadeStick.getRawAxis(1) * -1.0;
             double y = arcadeStick.getRawAxis(0) * -1.0;
-            double hdg = Robot.getRobotHeading();
+            double hdg = Robot.sensors.getRobotHeading();
 
             // X-coordinate -> CW alias rotation (left-handed)
             return (x * Math.cos(hdg*Math.PI/180.0)) + (y * -Math.sin(hdg*Math.PI/180.0));
@@ -174,11 +174,11 @@ public class OI {
 	}
 
 	public double getHorizontalAxis(){
-        if(focEnabled && Robot.navx != null) {
+        if(focEnabled && Robot.sensors.navx != null) {
             // Right = +Y
             double x = arcadeStick.getRawAxis(1) * -1.0;
             double y = arcadeStick.getRawAxis(0) * -1.0;
-            double hdg = Robot.getRobotHeading();
+            double hdg = Robot.sensors.getRobotHeading();
 
             // Y-coordinate, CW alias rotation w/ left-handed coordinate system
             return (x * Math.sin(hdg*Math.PI/180.0)) + (y * Math.cos(hdg*Math.PI/180.0));
@@ -194,6 +194,8 @@ public class OI {
 	public void UpdateSD(){
 		Robot.drivetrain.updateSD();//sends all the data from SwerveDrive subsystem to the SmartDashboard
 		Robot.viewport.updateSD();
+        Robot.sensors.updateSD();
+
 		if(!DriverStation.getInstance().isDisabled()) {
 			if(DriverStation.getInstance().isAutonomous()) {
 				SmartDashboard.putNumber("Match Time", (int)(15.0 - Timer.getMatchTime()));
@@ -211,25 +213,6 @@ public class OI {
 			SmartDashboard.putBoolean("40-Second Watch", false);
 		}
 
-		SmartDashboard.putNumber("Start Yaw", Robot.startYaw);
-		SmartDashboard.putNumber("POV", arcadeStick.getPOV(0));
-		if(Robot.navx != null) {
-			SmartDashboard.putBoolean("NavX Present", true);
-			SmartDashboard.putBoolean("Calibrating", Robot.navx.isCalibrating());
-			SmartDashboard.putBoolean("Connected", Robot.navx.isConnected());
-
-			SmartDashboard.putNumber("Heading", Robot.navx.getAngle());
-			SmartDashboard.putNumber("Compass", Robot.navx.getCompassHeading());
-			SmartDashboard.putNumber("Yaw", Robot.navx.getYaw());
-			SmartDashboard.putNumber("Fused", Robot.navx.getFusedHeading());
-			if(focEnabled) {
-				SmartDashboard.putString("Control Mode", "Field-Oriented");
-			} else {
-				SmartDashboard.putString("Control Mode", "Robot-Oriented (FOC available)");
-			}
-		} else {
-			SmartDashboard.putBoolean("NavX Present", false);
-			SmartDashboard.putString("Control Mode", "Robot-Oriented (FOC unavailable)");
-		}
+        SmartDashboard.putNumber("POV", arcadeStick.getPOV(0));
 	}
 }

@@ -1,17 +1,11 @@
 
 package org.usfirst.frc.team5002.robot;
 
-import com.kauailabs.navx.frc.AHRS;
-
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.SerialPort;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -44,28 +38,11 @@ public class Robot extends IterativeRobot {
 	public static final SwerveDrive drivetrain = new SwerveDrive();
 	public static final RopeClimber ropeClimber = new RopeClimber();
     public static ViewPort viewport;
-    public static final Sensors sensors = new Sensors();
+    public static Sensors sensors;
 	public static OI oi;
-
-    public static double startYaw;
-
-	public static AHRS navx;
 
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
-
-	/* A more reliable form of navx.getAngle() */
-	public static double getRobotHeading() {
-		if(navx != null) {
-			if(Math.abs(navx.getAngle()) <= 0.001) {
-				return (navx.getYaw() - startYaw);
-			} else {
-				return navx.getAngle();
-			}
-		} else {
-			return 0;
-		}
-	}
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -75,28 +52,9 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		oi = new OI();
         viewport = new ViewPort();
-
-		try {
-			/* NOTE: With respect to the NavX, the robot's front is in the -X direction.
-			 * The robot's right side is in the +Y direction,
-			 * and the robot's top side is in the +Z direction as usual.
-		     * Clockwise rotation = increasing yaw.
-		     */
-
-			navx = new AHRS(SerialPort.Port.kMXP);
-		} catch (RuntimeException ex) {
-			DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
-			navx = null;
-		}
+        sensors = new Sensors();
 
         SmartDashboard.putData("Autonomous", chooser);
-
-        if(navx != null) {
-            navx.zeroYaw();
-            startYaw = navx.getYaw();
-        } else {
-        	startYaw = 0;
-        }
 
         chooser.addObject("Auto Left", new AutonomousTemp(-0.1));
         chooser.addObject("Auto Right", new AutonomousTemp(0.1));
