@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team5002.robot.commands.Teleop;
+import org.usfirst.frc.team5002.robot.commands.ViewControl;
 import org.usfirst.frc.team5002.robot.commands.AutoDriveIMU;
 import org.usfirst.frc.team5002.robot.commands.AutonomousTemp;
 import org.usfirst.frc.team5002.robot.commands.KillDrivetrain;
@@ -32,7 +33,6 @@ import org.usfirst.frc.team5002.robot.subsystems.ViewPort;
  * directory.
  */
 public class Robot extends IterativeRobot {
-
 	public static SwerveDrive drivetrain;
 	public static RopeClimber ropeClimber;
     public static ViewPort viewport;
@@ -50,9 +50,13 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		drivetrain = new SwerveDrive();
 		ropeClimber = new RopeClimber();
-        viewport = new ViewPort();
+        //viewport = new ViewPort();
         sensors = new Sensors();
         oi = new OI();
+        
+        UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
+        cam.setFPS(15);
+        cam.setResolution(240, 320);
 
         SmartDashboard.putData("Autonomous", chooser);
 
@@ -75,6 +79,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void disabledPeriodic() {
+		sensors.updateDistance();
 		oi.UpdateSD();
 		Scheduler.getInstance().run();
 	}
@@ -111,6 +116,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		oi.UpdateSD();
+		sensors.updateDistance();
 		Scheduler.getInstance().run();
 	}
 
@@ -126,6 +132,10 @@ public class Robot extends IterativeRobot {
 		Teleop teleop = new Teleop();
 		Scheduler.getInstance().add(teleop);
 
+		/*
+		ViewControl viewCtrl = new ViewControl();
+		Scheduler.getInstance().add(viewCtrl);
+		*/
 		oi.updateOIState();
 	}
 
@@ -134,6 +144,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+		sensors.updateDistance();
 		oi.UpdateSD();
 		oi.updateOIState();
 		Scheduler.getInstance().run();

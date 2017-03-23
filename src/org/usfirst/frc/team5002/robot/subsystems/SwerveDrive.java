@@ -47,7 +47,7 @@ public class SwerveDrive extends Subsystem {
     /* value ordering: FrontLeft, FrontRight, BackLeft, BackRight
      * Yes, for all 4 arrays (or however many there are.)
      */
-    private double[] steer_offsets = { 830.0, 958.0, 409.0, 508.0 };
+    private double[] steer_offsets = { 11.0, 576.0, 73.0, 834.0 };
     private double[] maxEncoderOutput = {1024.0, 1024.0, 1024.0, 1024.0};
     private double[] minEncoderOutput = {0.0, 0.0, 0.0, 0.0};
     private double[] currentSteerTarget = {0.0, 0.0, 0.0, 0.0};
@@ -449,21 +449,14 @@ public class SwerveDrive extends Subsystem {
         double angles[] = { 0, 0, 0, 0, 0 };
 
         angles[0] = degrees + angleAdjustment; // adjust target to be relative to module rotation
-        if(angles[0] > 0) {
-            angles[1] = (angles[0] + 180.0);
-            angles[2] = (angles[0] - 180.0);
-            angles[3] = (angles[0] - 360.0);
-            angles[4] = (angles[0] + 360.0);
-        } else {
-            angles[1] = (angles[0] - 180.0);
-            angles[2] = (angles[0] + 180.0);
-            angles[3] = (angles[0] + 360.0);
-            angles[4] = (angles[0] - 360.0);
-        }
-
+        angles[1] = (angles[0] + 180.0);
+        angles[2] = (angles[0] - 180.0);
+        angles[3] = (angles[0] - 360.0);
+        angles[4] = (angles[0] + 360.0);
+        
         /* Find target angle with smallest distance from current: */
         int minIdx = 0;
-        for(int i=0;i<5;i++) {
+        for(int i=0;i<angles.length;i++) {
             if( Math.abs(angles[i] - currentAngle) < Math.abs(angles[minIdx] - currentAngle) ) {
                 minIdx = i;
             }
@@ -485,6 +478,8 @@ public class SwerveDrive extends Subsystem {
     	double nativePos = angles[minIdx] * ((getSteerHack(pos) - getMinSteerHack(pos)) / 360.0);
     	nativePos += getSteerOffset(pos);
         nativePos += getMinSteerHack(pos);
+        
+        currentSteerTarget[positionToIndex(pos)] = nativePos;
 
     	steer.set(nativePos);
     }

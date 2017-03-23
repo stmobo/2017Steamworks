@@ -23,4 +23,5 @@ public class RobotMap {
     /* Analog distance sensor ports: */
     public static int distSensorLeft = 1;
     public static int distSensorRight = 0;
+    public static int climbDistSensor = 2;
 }

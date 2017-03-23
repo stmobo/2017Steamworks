@@ -57,7 +57,7 @@ public class OI {
         toggleFOC = home;
         resetHdg = menu;
 
-		Y.toggleWhenPressed(new ClimbUp());//turns the climb motor on while Y is being held
+		Y.whileHeld(new ClimbUp()); //turns the climb motor on while Y is being held
         if(!DriverStation.getInstance().isFMSAttached()) {
     		RB.whileHeld(new ClimbDown());
         }
@@ -66,8 +66,10 @@ public class OI {
     // For toggle buttons that don't warrant their own commands.
     boolean focDebounce = false;
     public void updateOIState() {
-        if(toggleFOC.get() && !focDebounce) {
-            focEnabled = !focEnabled;
+        if(toggleFOC.get()) {
+        	if(!focDebounce) {
+        		focEnabled = !focEnabled;
+        	}
             focDebounce = true;
         } else {
             focDebounce = false;
@@ -134,13 +136,13 @@ public class OI {
     /* set multipliers for teleop drive speed outputs */
     public double getDriveSpeedCoefficient() {
         if(activateLowSpeed.get()) {
-            return 0.25 * arcadeStick.getRawAxis(4) * -1.0;
+            return 0.25;/* arcadeStick.getRawAxis(4) * -1.0;*/
         } else if(activateHighSpeed.get()) {
-            return 1.0 * arcadeStick.getRawAxis(4) * -1.0;
+            return 1.0;/* * arcadeStick.getRawAxis(4) * -1.0;*/
         } else if(isPOVPressed()) {
         	return 0.25;
         } else {
-            return 0.50 * arcadeStick.getRawAxis(4) * -1.0;
+            return 0.50;/* * arcadeStick.getRawAxis(4) * -1.0;*/
         }
     }
 
@@ -178,13 +180,18 @@ public class OI {
         }
 	}
 
-	public double getTurnAxis(){
-    	return arcadeStick.getRawAxis(3) - arcadeStick.getRawAxis(2);
+	public double getTurnAxis() {
+		double stick = arcadeStick.getRawAxis(4);
+		double trig = arcadeStick.getRawAxis(3) - arcadeStick.getRawAxis(2);
+		if(Math.abs(stick) > Math.abs(trig)) {
+			return stick;
+		}
+    	return trig;
 	}
 
 	public void UpdateSD(){
 		Robot.drivetrain.updateSD();//sends all the data from SwerveDrive subsystem to the SmartDashboard
-		Robot.viewport.updateSD();
+		//Robot.viewport.updateSD();
         Robot.sensors.updateSD();
 
 		if(!DriverStation.getInstance().isDisabled()) {

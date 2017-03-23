@@ -1,7 +1,14 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Frontal Distance" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="489" y="349"/>
+	</widget>
+	<widget field="Avg. Sensor Voltage" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="470" y="371"/>
+	</widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
-		<location x="1431" y="246"/>
+		<location x="1427" y="239"/>
+		<height>14</height>
 		<property name="Text" value="BR Inhibit"/>
 	</static-widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
@@ -147,7 +154,7 @@
 		<location x="662" y="11"/>
 		<width>649</width>
 		<height>521</height>
-		<property name="Camera Choice" value=""/>
+		<property name="Camera Choice" value="USB Camera 0"/>
 	</static-widget>
 	<widget field="SteerPos-BL" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="14" y="140"/>

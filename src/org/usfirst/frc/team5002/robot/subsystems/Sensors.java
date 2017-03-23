@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.SPI.Port;
 public class Sensors extends Subsystem {
     private AnalogInput distLeft;
     private AnalogInput distRight;
+    private AnalogInput distClimb;
 
     /* Voltage varies inversely with distance measured by sensor. */
     private final double minDistance = 10;
@@ -24,6 +25,9 @@ public class Sensors extends Subsystem {
 
     private final double maxDistance = 80;
     private final double minVoltage = 0.4;
+    
+    private final double smoothingConstant = 0.25;
+    private double distOut = 0;
 
     private double startYaw;
     public static AHRS navx;
@@ -32,14 +36,17 @@ public class Sensors extends Subsystem {
     public Sensors() {
         distLeft = new AnalogInput(RobotMap.distSensorLeft);
         distRight = new AnalogInput(RobotMap.distSensorRight);
+        distClimb = new AnalogInput(RobotMap.climbDistSensor);
 
+        distLeft.setAverageBits(64);
+        distRight.setAverageBits(64);
+        
         try {
 			/* NOTE: With respect to the NavX, the robot's front is in the -X direction.
 			 * The robot's right side is in the +Y direction,
 			 * and the robot's top side is in the +Z direction as usual.
 		     * Clockwise rotation = increasing yaw.
 		     */
-
 			navx = new AHRS(SerialPort.Port.kMXP);
 		} catch (RuntimeException ex) {
 			DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
@@ -73,18 +80,43 @@ public class Sensors extends Subsystem {
         double cvtFactor = (minDistance - maxDistance) / (maxVoltage - minVoltage);
         return maxDistance + ((v - minVoltage) * cvtFactor);
     }
+    
+    public double getClimbVoltage() {
+    	return distClimb.getVoltage();
+    }
+    
+    public double getLeftVoltage() {
+    	return distLeft.getAverageVoltage();
+    }
+    
+    public double getRightVoltage() {
+    	return distRight.getAverageVoltage();
+    }
 
     public double getLeftDistance() {
-        return voltageToDistance(distLeft.getVoltage());
+        return voltageToDistance(distLeft.getAverageVoltage());
     }
 
     public double getRightDistance() {
-        return voltageToDistance(distRight.getVoltage());
+        return voltageToDistance(distRight.getAverageVoltage());
+    }
+    
+    public void updateDistance() {
+    	double avgDist = (distLeft.getAverageVoltage() + distRight.getAverageVoltage()) / 2.0;
+    	distOut += (smoothingConstant * (avgDist - distOut));
+    }
+    
+    public double getFrontDistance() {
+    	return distOut;
     }
 
     public void updateSD() {
-        SmartDashboard.putNumber("LeftDist-Voltage", distLeft.getVoltage());
-        SmartDashboard.putNumber("RightDist-Voltage", distRight.getVoltage());
+        SmartDashboard.putNumber("LeftDist-Voltage", distLeft.getAverageVoltage());
+        SmartDashboard.putNumber("RightDist-Voltage", distRight.getAverageVoltage());
+
+    	double avgDist = (distLeft.getAverageVoltage() + distRight.getAverageVoltage()) / 2.0;
+    	SmartDashboard.putNumber("Avg. Sensor Voltage", avgDist);
+        SmartDashboard.putNumber("Frontal Distance", getFrontDistance());
 
         SmartDashboard.putNumber("LeftDist-cm", getLeftDistance());
         SmartDashboard.putNumber("RightDist-cm", getRightDistance());

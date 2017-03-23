@@ -106,6 +106,7 @@ public class Teleop extends Command {
 
     private boolean autoAlignButtonDebounce = false;
     protected void execute() {
+    	
         if(Robot.oi.autoAlignButtonActivated()) {
             if(!autoAlignButtonDebounce) {
                 autoAlignActive = !autoAlignActive;
@@ -114,12 +115,14 @@ public class Teleop extends Command {
         } else {
             autoAlignButtonDebounce = false;
         }
+        
 
         if(autoAlignActive) {
             AutoGear.autoGearAlign();
             if(AutoGear.finished()) {
                 autoAlignActive = false;
                 Robot.oi.shakeController();
+                Robot.drivetrain.setDriveSpeedCollective(0.0);
             }
         } else {
             drive();
