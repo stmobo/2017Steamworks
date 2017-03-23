@@ -10,6 +10,7 @@ import org.usfirst.frc.team5002.robot.commands.TakeOuter;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.GenericHID.*;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -35,11 +36,14 @@ public class OI {
     private Button X;
     private Button Y;
 	private Button LB;
-  private Button RB;
+    private Button RB;
 	private Button home;
 	private Button menu;
 
     boolean focEnabled = false;
+
+    private final Timer ctrlShakeTimer = new Timer();
+    private boolean ctrlShaking = false;
 
 	public OI(){
 		arcadeStick = new Joystick(0); //gave Joystick a job
@@ -78,6 +82,28 @@ public class OI {
         	Robot.navx.zeroYaw();
         }
 
+        if(ctrlShaking) {
+            if(ctrlShakeTimer.hasPeriodPassed(1.0)) {
+                ctrlShaking = false;
+                arcadeStick.setRumble(RumbleType.kLeftRumble, 0.0);
+                arcadeStick.setRumble(RumbleType.kRightRumble, 0.0);
+                ctrlShakeTimer.stop();
+            }
+        }
+    }
+
+    public void shakeController() {
+        ctrlShakeTimer.reset();
+        ctrlShakeTimer.start();
+
+        ctrlShaking = true;
+
+        arcadeStick.setRumble(RumbleType.kLeftRumble, 1.0);
+        arcadeStick.setRumble(RumbleType.kRightRumble, 1.0);
+    }
+
+    public boolean autoAlignButtonActivated() {
+        return X.get();
     }
 
     public boolean intakeButtonActivated() {
@@ -95,7 +121,7 @@ public class OI {
     public boolean viewBackwardButtonActivated() {
         return B.get();
     }
-  
+
     public boolean isPOVPressed() {
     	int angle = arcadeStick.getPOV(0);
     	if(angle == -1) {

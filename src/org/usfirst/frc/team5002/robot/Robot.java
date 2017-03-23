@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team5002.robot.commands.Teleop;
 import org.usfirst.frc.team5002.robot.commands.AutonomousTemp;
-import org.usfirst.frc.team5002.robot.commands.INtaker;
 import org.usfirst.frc.team5002.robot.commands.KillDrivetrain;
 import org.usfirst.frc.team5002.robot.commands.PIDSteerCollective;
 import org.usfirst.frc.team5002.robot.commands.PIDSteerTestSingle;
@@ -29,6 +28,7 @@ import org.usfirst.frc.team5002.robot.subsystems.Intake;
 import org.usfirst.frc.team5002.robot.subsystems.Launcherer;
 import org.usfirst.frc.team5002.robot.subsystems.Outtake;
 import org.usfirst.frc.team5002.robot.subsystems.RopeClimber;
+import org.usfirst.frc.team5002.robot.subsystems.Sensors;
 import org.usfirst.frc.team5002.robot.subsystems.SwerveDrive;
 import org.usfirst.frc.team5002.robot.subsystems.ViewPort;
 
@@ -44,8 +44,10 @@ public class Robot extends IterativeRobot {
 	public static final SwerveDrive drivetrain = new SwerveDrive();
 	public static final RopeClimber ropeClimber = new RopeClimber();
     public static ViewPort viewport;
+    public static final Sensors sensors = new Sensors();
 	public static OI oi;
-  public static double startYaw;
+
+    public static double startYaw;
 
 	public static AHRS navx;
 
@@ -86,7 +88,7 @@ public class Robot extends IterativeRobot {
 			DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
 			navx = null;
 		}
-        
+
         SmartDashboard.putData("Autonomous", chooser);
 
         if(navx != null) {
@@ -164,11 +166,6 @@ public class Robot extends IterativeRobot {
 
 		Teleop teleop = new Teleop();
 		Scheduler.getInstance().add(teleop);
-
-		Teleop teleopTest = new Teleop();
-		Command intakeCmd = new INtaker();
-		Scheduler.getInstance().add(teleopTest);
-		Scheduler.getInstance().add(intakeCmd);
 
 		oi.updateOIState();
 	}

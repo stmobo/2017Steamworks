@@ -20,13 +20,16 @@ public class Teleop extends Command {
     // If true, then angle changes will be disabled at high speed
     public static final boolean enableAngleHold = false;
 
-	private double speedlimit(double speedIn) {
-		return (Math.abs(speedIn) > maxDriveOutput) ? Math.signum(speedIn)*maxDriveOutput : speedIn;
-	}
-
     /* Speeds for automatic gear alignment */
     static final double alignSpeed = 0.1;
     static final double driveSpeed = 0.25;
+
+    /* Thresholds + distances for auto gear align */
+    static final double targetDistance = 20.0; // cm
+    static final double distThreshold = 3.5;   // stop when closer than (targetDistance +- distThreshold)
+    static final double alignThreshold = 5.0;  // maximum diff. between left and right sensor distances
+
+    private boolean autoAlignActive = false;
 
     private void autoGearAlign() {
         double dist = (Robot.sensors.getLeftDistance() + Robot.sensors.getRightDistance()) / 2;
@@ -53,11 +56,18 @@ public class Teleop extends Command {
             } else if(dist < targetDistance) {
                 Robot.drivetrain.setDriveSpeedCollective(-driveSpeed);
             }
+        } else {
+            autoAlignActive = true;
+            Robot.oi.shakeController();
         }
     }
 
 	double[] angles = new double[4];
 	double[] speeds = new double[4];
+    private double speedlimit(double speedIn) {
+        return (Math.abs(speedIn) > maxDriveOutput) ? Math.signum(speedIn)*maxDriveOutput : speedIn;
+    }
+
 	private void drive(){
 		double fwd = (Math.abs(Robot.oi.getForwardAxis()) > joystickDeadband) ? Robot.oi.getForwardAxis() : 0.0;
 		double str = (Math.abs(Robot.oi.getHorizontalAxis()) > joystickDeadband) ? Robot.oi.getHorizontalAxis() : 0.0;
@@ -133,8 +143,22 @@ public class Teleop extends Command {
 		Robot.drivetrain.setDriveSpeed(SwerveDrive.ModulePosition.FR, speeds[3]);
 	}
 
+    private boolean autoAlignButtonDebounce = false;
     protected void execute() {
-        drive();
+        if(Robot.oi.autoAlignButtonActivated()) {
+            if(!autoAlignButtonDebounce) {
+                autoAlignActive = !autoAlignActive;
+            }
+            autoAlignButtonDebounce = true;
+        } else {
+            autoAlignButtonDebounce = false;
+        }
+
+        if(autoAlignActive) {
+            autoGearAlign();
+        } else {
+            drive();
+        }
     }
 
     public Teleop() {

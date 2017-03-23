@@ -489,6 +489,20 @@ public class SwerveDrive extends Subsystem {
     	steer.set(nativePos);
     }
 
+    public void setSteerDegreesCollective(double degrees) {
+        setSteerDegrees(ModulePosition.FL, degrees);
+        setSteerDegrees(ModulePosition.FR, degrees);
+        setSteerDegrees(ModulePosition.BL, degrees);
+        setSteerDegrees(ModulePosition.BR, degrees);
+    }
+
+    public void setDriveSpeedCollective(double speed) {
+        setDriveSpeed(ModulePosition.FL, speed);
+        setDriveSpeed(ModulePosition.FR, speed);
+        setDriveSpeed(ModulePosition.BL, speed);
+        setDriveSpeed(ModulePosition.BR, speed);
+    }
+
     public void initDefaultCommand() {
     	this.setDefaultCommand(new KillDrivetrain());
     }
@@ -548,8 +562,6 @@ public class SwerveDrive extends Subsystem {
     	UpdateSDSingle(ModulePosition.FR);
     	UpdateSDSingle(ModulePosition.BL);
     	UpdateSDSingle(ModulePosition.BR);
-
-
 
     	SmartDashboard.putString("Steer Encoder Calibration",
     		"{ " + Double.toString(fl_steer.getAnalogInRaw()) + ", "
