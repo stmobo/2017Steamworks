@@ -326,7 +326,7 @@ public class SwerveDrive extends Subsystem {
         SendableChooser<Boolean> chooser = new SendableChooser<Boolean>();
         chooser.addDefault("Enabled", true);
         chooser.addObject("Disabled", false);
-        SmartDashboard.putData(positionToFriendlyName(pos) + " Swerve Inhibit", chooser);
+        SmartDashboard.putData(positionToFriendlyName(pos) + "-Inhibit", chooser);
 
         swerveInhibitSelectors[positionToIndex(pos)] = chooser;
     }
@@ -548,6 +548,8 @@ public class SwerveDrive extends Subsystem {
     	SmartDashboard.putNumber("SteerPos-"+suffix, steer.getPosition());
     	SmartDashboard.putNumber("SteerVel-"+suffix, steer.getAnalogInVelocity());
     	SmartDashboard.putNumber("SteerADC-"+suffix, steer.getAnalogInRaw());
+    	SmartDashboard.putNumber("SteerDeg-"+suffix, getCurrentSteerPositionDegrees(pos));
+    	SmartDashboard.putNumber("SteerRot-"+suffix, getCurrentSteerRotations(pos));
 
         SmartDashboard.putNumber("DriveSpeed-"+suffix, drive.getSpeed());
         SmartDashboard.putNumber("DrivePos-"+suffix, drive.getPosition());

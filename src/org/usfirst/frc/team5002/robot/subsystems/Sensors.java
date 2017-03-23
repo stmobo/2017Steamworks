@@ -95,6 +95,9 @@ public class Sensors extends Subsystem {
 			SmartDashboard.putBoolean("Calibrating", navx.isCalibrating());
 			SmartDashboard.putBoolean("Connected", navx.isConnected());
 
+			SmartDashboard.putNumber("X-Displacement", navx.getDisplacementX());
+			SmartDashboard.putNumber("Y-Displacement", navx.getDisplacementY());
+			
 			SmartDashboard.putNumber("Heading", navx.getAngle());
 			SmartDashboard.putNumber("Compass", navx.getCompassHeading());
 			SmartDashboard.putNumber("Yaw", navx.getYaw());
