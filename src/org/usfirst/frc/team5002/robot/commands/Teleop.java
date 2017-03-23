@@ -1,6 +1,7 @@
 package org.usfirst.frc.team5002.robot.commands;
 
 import org.usfirst.frc.team5002.robot.Robot;
+import org.usfirst.frc.team5002.robot.commands.AutoGear;
 import org.usfirst.frc.team5002.robot.subsystems.SwerveDrive;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -20,47 +21,7 @@ public class Teleop extends Command {
     // If true, then angle changes will be disabled at high speed
     public static final boolean enableAngleHold = false;
 
-    /* Speeds for automatic gear alignment */
-    static final double alignSpeed = 0.1;
-    static final double driveSpeed = 0.25;
-
-    /* Thresholds + distances for auto gear align */
-    static final double targetDistance = 20.0; // cm
-    static final double distThreshold = 3.5;   // stop when closer than (targetDistance +- distThreshold)
-    static final double alignThreshold = 5.0;  // maximum diff. between left and right sensor distances
-
     private boolean autoAlignActive = false;
-
-    private void autoGearAlign() {
-        double dist = (Robot.sensors.getLeftDistance() + Robot.sensors.getRightDistance()) / 2;
-
-        if(Math.abs(Robot.sensors.getLeftDistance() - Robot.sensors.getRightDistance()) >= alignThreshold) {
-            /* Adjust angle to target: */
-
-            /* Set swerve modules to turning (mechanum-esque) configuration: */
-        	Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.FL, 45.0);
-        	Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.FR, 135.0);
-        	Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.BL, -45.0);
-        	Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.BR, -135.0);
-
-            if(Robot.sensors.getLeftDistance() > Robot.sensors.getRightDistance()) {
-                Robot.drivetrain.setDriveSpeedCollective(-alignSpeed); // CCW rotation
-            } else {
-                Robot.drivetrain.setDriveSpeedCollective(alignSpeed); // CW rotation
-            }
-        } else if(Math.abs(dist - targetDistance) >= distThreshold) {
-            /* Adjust distance to target: */
-            Robot.drivetrain.setSteerDegreesCollective(0);
-            if(dist > targetDistance) {
-                Robot.drivetrain.setDriveSpeedCollective(driveSpeed);
-            } else if(dist < targetDistance) {
-                Robot.drivetrain.setDriveSpeedCollective(-driveSpeed);
-            }
-        } else {
-            autoAlignActive = true;
-            Robot.oi.shakeController();
-        }
-    }
 
 	double[] angles = new double[4];
 	double[] speeds = new double[4];
@@ -155,7 +116,11 @@ public class Teleop extends Command {
         }
 
         if(autoAlignActive) {
-            autoGearAlign();
+            AutoGear.autoGearAlign();
+            if(AutoGear.finished()) {
+                autoAlignActive = false;
+                Robot.oi.shakeController();
+            }
         } else {
             drive();
         }
