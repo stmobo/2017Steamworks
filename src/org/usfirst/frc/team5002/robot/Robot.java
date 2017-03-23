@@ -33,8 +33,8 @@ import org.usfirst.frc.team5002.robot.subsystems.ViewPort;
  */
 public class Robot extends IterativeRobot {
 
-	public static final SwerveDrive drivetrain = new SwerveDrive();
-	public static final RopeClimber ropeClimber = new RopeClimber();
+	public static SwerveDrive drivetrain;
+	public static RopeClimber ropeClimber;
     public static ViewPort viewport;
     public static Sensors sensors;
 	public static OI oi;
@@ -48,9 +48,11 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
-		oi = new OI();
-        viewport = new ViewPort();
+		drivetrain = new SwerveDrive();
+		ropeClimber = new RopeClimber();
+        // viewport = new ViewPort();
         sensors = new Sensors();
+        oi = new OI();
 
         SmartDashboard.putData("Autonomous", chooser);
 
