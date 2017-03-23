@@ -41,6 +41,7 @@ public class OI {
 
 	public OI(){
 		arcadeStick = new Joystick(0); //gave Joystick a job
+
 		A = new JoystickButton(arcadeStick, 1);
 		B = new JoystickButton(arcadeStick, 2);
 		X = new JoystickButton(arcadeStick, 3);
@@ -57,8 +58,10 @@ public class OI {
         activateAutoGear = X;
 
 		Y.toggleWhenPressed(new ClimbUp());//turns the climb motor on while Y is being held
-		RB.whileHeld(new ClimbDown());//turns launcher motor on when B is pressed once, and off when B is pressed again
         activateAutoGear.whenPressed(new AutoGear());
+        if(!DriverStation.getInstance().isFMSAttached()) {
+    		RB.whileHeld(new ClimbDown());
+        }
 	}
 
     // For toggle buttons that don't warrant their own commands.
@@ -89,6 +92,14 @@ public class OI {
         return activateAutoGear.get();
     }
 
+    public boolean viewForwardButtonActivated() {
+        return A.get();
+    }
+
+    public boolean viewBackwardButtonActivated() {
+        return B.get();
+    }
+
     public boolean isPOVPressed() {
     	int angle = arcadeStick.getPOV(0);
     	if(angle == -1) {
@@ -110,13 +121,13 @@ public class OI {
     /* set multipliers for teleop drive speed outputs */
     public double getDriveSpeedCoefficient() {
         if(activateLowSpeed.get()) {
-            return 0.25;
+            return 0.25 * arcadeStick.getRawAxis(4) * -1.0;
         } else if(activateHighSpeed.get()) {
-            return 1.0;
+            return 1.0 * arcadeStick.getRawAxis(4) * -1.0;
         } else if(isPOVPressed()) {
         	return 0.25;
         } else {
-            return 0.50;
+            return 0.50 * arcadeStick.getRawAxis(4) * -1.0;
         }
     }
 
@@ -155,13 +166,7 @@ public class OI {
 	}
 
 	public double getTurnAxis(){
-		double trig = arcadeStick.getRawAxis(3) - arcadeStick.getRawAxis(2);
-		double stick = arcadeStick.getRawAxis(4); // (axis 4 = right-hand X axis) allows the Joystick to command the rotation of the Robot
-		if(Math.abs(stick) > Math.abs(trig)) {
-			return stick;
-		} else {
-			return trig;
-		}
+    	return arcadeStick.getRawAxis(3) - arcadeStick.getRawAxis(2);
 	}
 
     public void vibrate() {
@@ -176,8 +181,7 @@ public class OI {
 
 	public void UpdateSD(){
 		Robot.drivetrain.updateSD();//sends all the data from SwerveDrive subsystem to the SmartDashboard
-		Robot.intake.updateSD();
-
+		Robot.viewport.updateSD();
 		if(!DriverStation.getInstance().isDisabled()) {
 			if(DriverStation.getInstance().isAutonomous()) {
 				SmartDashboard.putNumber("Match Time", (int)(15.0 - Timer.getMatchTime()));

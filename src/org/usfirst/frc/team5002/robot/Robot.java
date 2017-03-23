@@ -31,15 +31,12 @@ import org.usfirst.frc.team5002.robot.subsystems.*;
 public class Robot extends IterativeRobot {
 
 	public static final SwerveDrive drivetrain = new SwerveDrive();
-	public static final Intake intake = new Intake();
-	public static final Launcherer launcherer = new Launcherer();
 	public static final RopeClimber ropeClimber = new RopeClimber();
-	public static final Outtake outtake = new Outtake();
+    public static ViewPort viewport;
 	public static OI oi;
 	public static Sensors sensors;
 
 	public static double startYaw;
-
 	public static AHRS navx;
 
     private Teleop teleopCommand;
@@ -69,6 +66,7 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		oi = new OI();
         sensors = new Sensors();
+        viewport = new ViewPort();
 
 		try {
 			/* NOTE: With respect to the NavX, the robot's front is in the -X direction.
@@ -82,11 +80,6 @@ public class Robot extends IterativeRobot {
 			DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
 			navx = null;
 		}
-
-        // start camera stream lol
-        UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
-        cam.setFPS(15);
-        cam.setResolution(320, 240);
 
         SmartDashboard.putData("Autonomous", chooser);
 
@@ -168,7 +161,6 @@ public class Robot extends IterativeRobot {
 			autonomousCommand.cancel();
 
 		Scheduler.getInstance().add(teleopCommand);
-
 		oi.updateOIState();
 	}
 
@@ -177,7 +169,6 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		//Robot.oi.testing();
 		oi.UpdateSD();
 		oi.updateOIState();
 

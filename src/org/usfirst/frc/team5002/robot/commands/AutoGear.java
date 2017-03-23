@@ -27,7 +27,6 @@ public class AutoGear extends Command {
     protected void initialize() {
         Robot.inhibitTeleop = true;
 
-    	Robot.drivetrain.setDriveTeleop();
         Robot.drivetrain.setSteerDegreesCollective(0);
     }
 
@@ -45,17 +44,17 @@ public class AutoGear extends Command {
         	Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.BR, -135.0);
 
             if(Robot.sensors.getLeftDistance() > Robot.sensors.getRightDistance()) {
-                Robot.drivetrain.setDriveOutputCollective(-alignSpeed); // CCW rotation
+                Robot.drivetrain.setDriveSpeedCollective(-alignSpeed); // CCW rotation
             } else {
-                Robot.drivetrain.setDriveOutputCollective(alignSpeed); // CW rotation
+                Robot.drivetrain.setDriveSpeedCollective(alignSpeed); // CW rotation
             }
         } else if(Math.abs(dist - targetDistance) >= distThreshold) {
             /* Adjust distance to target: */
             Robot.drivetrain.setSteerDegreesCollective(0);
             if(dist > targetDistance) {
-                Robot.drivetrain.setDriveOutputCollective(driveSpeed);
+                Robot.drivetrain.setDriveSpeedCollective(driveSpeed);
             } else if(dist < targetDistance) {
-                Robot.drivetrain.setDriveOutputCollective(-driveSpeed);
+                Robot.drivetrain.setDriveSpeedCollective(-driveSpeed);
             }
         }
     }
@@ -78,7 +77,7 @@ public class AutoGear extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-        Robot.drivetrain.setDriveOutputCollective(0);
+        Robot.drivetrain.setDriveSpeedCollective(0);
 
         Command signal = new OperatorSignal(1.0);
         Scheduler.getInstance().add(signal);
@@ -90,6 +89,6 @@ public class AutoGear extends Command {
     // subsystems is scheduled to run
     protected void interrupted() {
         Robot.inhibitTeleop = false;
-        Robot.drivetrain.setDriveOutputCollective(0);
+        Robot.drivetrain.setDriveSpeedCollective(0);
     }
 }
