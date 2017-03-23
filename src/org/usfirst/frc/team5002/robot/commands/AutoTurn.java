@@ -16,7 +16,7 @@ public class AutoTurn extends Command {
 
 	public AutoTurn(double degreesOffset) {
     	requires(Robot.drivetrain);
-    	finalTurnAngle = Robot.getRobotHeading() + degreesOffset;
+    	finalTurnAngle = Robot.sensors.getRobotHeading() + degreesOffset;
     }
 
     // Called just before this Command runs the first time
@@ -24,13 +24,13 @@ public class AutoTurn extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-        if( Math.abs(Robot.getRobotHeading() - finalTurnAngle) >= turnAngleThreshold ) {
+        if( Math.abs(Robot.sensors.getRobotHeading() - finalTurnAngle) >= turnAngleThreshold ) {
         	Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.FL, 45.0);
         	Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.FR, 135.0);
         	Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.BL, -45.0);
         	Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.BR, -135.0);
 
-            if(Robot.getRobotHeading() > finalTurnAngle) {
+            if(Robot.sensors.getRobotHeading() > finalTurnAngle) {
                 Robot.drivetrain.setDriveSpeedCollective(-turnSpeed);
             } else {
                 Robot.drivetrain.setDriveSpeedCollective(turnSpeed);
@@ -40,7 +40,7 @@ public class AutoTurn extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return Math.abs(Robot.getRobotHeading() - finalTurnAngle) < turnAngleThreshold;
+        return Math.abs(Robot.sensors.getRobotHeading() - finalTurnAngle) < turnAngleThreshold;
     }
 
     // Called once after isFinished returns true
