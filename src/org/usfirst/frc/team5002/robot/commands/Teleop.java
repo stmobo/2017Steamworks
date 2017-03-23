@@ -24,32 +24,41 @@ public class Teleop extends Command {
 		return (Math.abs(speedIn) > maxDriveOutput) ? Math.signum(speedIn)*maxDriveOutput : speedIn;
 	}
 
-    /* Returns true when drive steering angles should be locked
-     * (When at speed, in other words.)
-     */
-    private boolean disableSteerAngleChange() {
-        /* There are two ways of determining when it's safe to change steer
-         * angles: through the IMU's accelerometers and through the
-         * controller inputs. */
-         return (Robot.oi.getDriveMagnitude() > 0.75);
+    /* Speeds for automatic gear alignment */
+    static final double alignSpeed = 0.1;
+    static final double driveSpeed = 0.25;
+
+    private void autoGearAlign() {
+        double dist = (Robot.sensors.getLeftDistance() + Robot.sensors.getRightDistance()) / 2;
+
+        if(Math.abs(Robot.sensors.getLeftDistance() - Robot.sensors.getRightDistance()) >= alignThreshold) {
+            /* Adjust angle to target: */
+
+            /* Set swerve modules to turning (mechanum-esque) configuration: */
+        	Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.FL, 45.0);
+        	Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.FR, 135.0);
+        	Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.BL, -45.0);
+        	Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.BR, -135.0);
+
+            if(Robot.sensors.getLeftDistance() > Robot.sensors.getRightDistance()) {
+                Robot.drivetrain.setDriveSpeedCollective(-alignSpeed); // CCW rotation
+            } else {
+                Robot.drivetrain.setDriveSpeedCollective(alignSpeed); // CW rotation
+            }
+        } else if(Math.abs(dist - targetDistance) >= distThreshold) {
+            /* Adjust distance to target: */
+            Robot.drivetrain.setSteerDegreesCollective(0);
+            if(dist > targetDistance) {
+                Robot.drivetrain.setDriveSpeedCollective(driveSpeed);
+            } else if(dist < targetDistance) {
+                Robot.drivetrain.setDriveSpeedCollective(-driveSpeed);
+            }
+        }
     }
-
-	/**
-	 * Given forward, left/right and rotational clockwise speeds return an array of doubles matching:
-	 * WS1 (front right wheel speed command, 0 to +1)
-	 * WS2 (front left wheel speed command, 0 to +1)
-	 * WS3 (rear left wheel speed command, 0 to +1)
-	 * WS4 (rear right wheel speed command, 0 to +1)
-
-	 * @param fwd	-1.0 to 1.0, forward to reverse velocity
-	 * @param str	-1.0 to 1.0, left to right velocity
-	 * @param rcw	-1.0 to 1.0, clockwise rotational velocity
-	 * @return		Array of Doubles matching ws1-ws4 and wa1-wa4
-	 */
 
 	double[] angles = new double[4];
 	double[] speeds = new double[4];
-	protected void execute(){
+	private void drive(){
 		double fwd = (Math.abs(Robot.oi.getForwardAxis()) > joystickDeadband) ? Robot.oi.getForwardAxis() : 0.0;
 		double str = (Math.abs(Robot.oi.getHorizontalAxis()) > joystickDeadband) ? Robot.oi.getHorizontalAxis() : 0.0;
 		//double rcw = 0.0;
@@ -123,6 +132,10 @@ public class Teleop extends Command {
 		Robot.drivetrain.setDriveSpeed(SwerveDrive.ModulePosition.FL, speeds[2]);
 		Robot.drivetrain.setDriveSpeed(SwerveDrive.ModulePosition.FR, speeds[3]);
 	}
+
+    protected void execute() {
+        drive();
+    }
 
     public Teleop() {
         requires(Robot.drivetrain);
