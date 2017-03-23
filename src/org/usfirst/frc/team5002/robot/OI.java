@@ -2,11 +2,6 @@ package org.usfirst.frc.team5002.robot;
 
 import org.usfirst.frc.team5002.robot.commands.ClimbDown;
 import org.usfirst.frc.team5002.robot.commands.ClimbUp;
-import org.usfirst.frc.team5002.robot.commands.INtaker;
-import org.usfirst.frc.team5002.robot.commands.LaunchererC;
-import org.usfirst.frc.team5002.robot.commands.OUTtaker;
-import org.usfirst.frc.team5002.robot.commands.ReverseInTaker;
-import org.usfirst.frc.team5002.robot.commands.TakeOuter;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
