@@ -101,10 +101,6 @@ public class OI {
         return X.get();
     }
 
-    public boolean intakeButtonActivated() {
-    	return A.get();
-    }
-
     public boolean reverseButtonActivated() {
     	return LB.get();
     }

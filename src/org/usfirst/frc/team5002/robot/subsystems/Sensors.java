@@ -86,8 +86,8 @@ public class Sensors extends Subsystem {
         SmartDashboard.putNumber("LeftDist-Voltage", distLeft.getVoltage());
         SmartDashboard.putNumber("RightDist-Voltage", distRight.getVoltage());
 
-        SmartDashboard.putNumber("LeftDist-Dist (cm)", getLeftDistance());
-        SmartDashboard.putNumber("RightDist-Dist (cm)", getRightDistance());
+        SmartDashboard.putNumber("LeftDist-cm", getLeftDistance());
+        SmartDashboard.putNumber("RightDist-cm", getRightDistance());
 
         SmartDashboard.putNumber("Start Yaw", startYaw);
 		if(navx != null) {
