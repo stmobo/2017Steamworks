@@ -27,6 +27,7 @@ public class Sensors extends Subsystem {
 
     private double startYaw;
     public static AHRS navx;
+    private AHRS.BoardYawAxis yawAxis;
 
     public Sensors() {
         distLeft = new AnalogInput(RobotMap.distSensorLeft);
@@ -48,8 +49,10 @@ public class Sensors extends Subsystem {
         if(navx != null) {
             navx.zeroYaw();
             startYaw = navx.getYaw();
+            yawAxis = navx.getBoardYawAxis();
         } else {
         	startYaw = 0;
+            yawAxis = null;
         }
     }
 
