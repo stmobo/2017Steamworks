@@ -52,6 +52,8 @@ public class SwerveDrive extends Subsystem {
     private double[] minEncoderOutput = {0.0, 0.0, 0.0, 0.0};
     private double[] currentSteerTarget = {0.0, 0.0, 0.0, 0.0};
     private double[] currentSteerDegrees = {0.0, 0.0, 0.0, 0.0};
+    private double[] steerADCFiltered = {0.0, 0.0, 0.0, 0.0};
+    private final double steerFilterConstant = 0.25;
 
     boolean driveReversalStatus[] = {false, false, false, false};
     boolean driveReversalConst[] = {true, false, true, false};
@@ -538,6 +540,8 @@ public class SwerveDrive extends Subsystem {
                 drive.disable();
             }
         }
+        
+        steerADCFiltered[positionToIndex(pos)] += steerFilterConstant * (steer.getAnalogInRaw() - steerADCFiltered[positionToIndex(pos)]);
 
     	SmartDashboard.putNumber("SteerErr-"+suffix, steer.getClosedLoopError());
     	SmartDashboard.putNumber("SteerPos-"+suffix, steer.getPosition());
@@ -561,10 +565,10 @@ public class SwerveDrive extends Subsystem {
     	UpdateSDSingle(ModulePosition.BR);
 
     	SmartDashboard.putString("Steer Encoder Calibration",
-    		"{ " + Double.toString(fl_steer.getAnalogInRaw()) + ", "
-				 + Double.toString(fr_steer.getAnalogInRaw()) + ", "
-				 + Double.toString(bl_steer.getAnalogInRaw()) + ", "
-				 + Double.toString(br_steer.getAnalogInRaw()) + " }"
+    		"{ " + Double.toString(steerADCFiltered[0]) + ", "
+				 + Double.toString(steerADCFiltered[1]) + ", "
+				 + Double.toString(steerADCFiltered[2]) + ", "
+				 + Double.toString(steerADCFiltered[3]) + " }"
     	);
     }
 }

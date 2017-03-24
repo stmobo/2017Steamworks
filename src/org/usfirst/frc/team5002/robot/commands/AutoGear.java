@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 public class AutoGear extends Command {
     public static final double targetDistance = 0.7; // voltage
     public static final double distThreshold = 0.03;   // stop when closer than (targetDistance +- distThreshold)
-
     public static final double driveSpeed = 0.25;   // forward/back drive speed (for adjusting distance to wall)
     
 	public AutoGear() {
