@@ -54,10 +54,12 @@ public class Robot extends IterativeRobot {
         sensors = new Sensors();
         oi = new OI();
         
-        UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
-        cam.setFPS(15);
-        cam.setResolution(240, 320);
-
+        if(viewport != null) {
+        	UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
+            cam.setFPS(15);
+            cam.setResolution(240, 320);
+        }
+        
         SmartDashboard.putData("Autonomous", chooser);
 
         chooser.addObject("Auto Left", new AutonomousTemp(-0.1));
