@@ -19,7 +19,6 @@ public class ViewPort extends Subsystem {
         "Feed 1"
     };
     private VideoSource[] sources;
-    private CvSink[] dummySinks;
     private int currentSrc;
 
     private MjpegServer server;
@@ -27,7 +26,6 @@ public class ViewPort extends Subsystem {
     public ViewPort() {
         /* Init all sources */
         UsbCameraInfo[] cams = UsbCamera.enumerateUsbCameras();
-        dummySinks = new CvSink[cams.length];
         sources = new VideoSource[cams.length];
 
         System.out.println("Got " + Integer.toString(sources.length) + " sources");
@@ -35,25 +33,26 @@ public class ViewPort extends Subsystem {
         
         if(cams.length > 0) {
 	        int i = 0;
+	        
 	        server = CameraServer.getInstance().addServer("ViewPort");
+	        
 	        for(UsbCameraInfo cam : cams) {
 	        	VideoSource src = new UsbCamera(cam.name, cam.dev);
+	        	
 	        	System.out.println("Initialized camera " + Integer.toString(i) + ": device " + Integer.toString(cam.dev) + ": " + cam.name);
+	        	
 	        	sources[i] = src;
-	            src.setFPS(15);
+	            
+	        	src.setFPS(15);
 	            src.setResolution(320, 240);
-	
-	            dummySinks[i] = new CvSink("DummySink-"+Integer.toString(i));
-	            dummySinks[i].setSource(src);
-	            dummySinks[i].setEnabled(true);
 	
 	            if(cameraNames.length > i) {
 	                cameraNames[i] = cameraNames[i] + " (" + src.getName() + ")";
 	            }
+	            
 	            i++;
 	        }
 
-	        //server = (MjpegServer) CameraServer.getInstance().getServer();
             currentSrc = 0;
             server.setSource(sources[0]);
         }
