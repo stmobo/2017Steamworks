@@ -48,8 +48,6 @@ public class SwerveDrive extends Subsystem {
      * Yes, for all 4 arrays (or however many there are.)
      */
     private double[] steer_offsets = { 11.0, 576.0, 73.0, 834.0 };
-    private double[] maxEncoderOutput = {1024.0, 1024.0, 1024.0, 1024.0};
-    private double[] minEncoderOutput = {0.0, 0.0, 0.0, 0.0};
     private double[] currentSteerTarget = {0.0, 0.0, 0.0, 0.0};
     private double[] currentSteerDegrees = {0.0, 0.0, 0.0, 0.0};
     private double[] steerADCFiltered = {0.0, 0.0, 0.0, 0.0};
@@ -98,26 +96,6 @@ public class SwerveDrive extends Subsystem {
     	default:
     		return "UN";
     	}
-    }
-
-    /**
-     * Gets the maximum possible value returned by the encoder hardware.
-     * For use in software compensation.
-     *
-     * @param pos position of the steer module to inspect.
-     */
-    private double getSteerHack(ModulePosition pos) {
-    	return maxEncoderOutput[positionToIndex(pos)];
-    }
-
-    /**
-     * Gets the minimum possible value returned by the encoder hardware.
-     * For use in software compensation.
-     *
-     * @param pos position of the steer module to inspect.
-     */
-    private double getMinSteerHack(ModulePosition pos) {
-    	return minEncoderOutput[positionToIndex(pos)];
     }
 
     /**
@@ -314,9 +292,8 @@ public class SwerveDrive extends Subsystem {
     	CANTalon steer = getSteerController(pos);
     	double nativeUnits = steer.getPosition();
 
-    	nativeUnits -= getMinSteerHack(pos);
     	nativeUnits -= getSteerOffset(pos);
-    	double degrees = nativeUnits * (360.0 / (getSteerHack(pos) - getMinSteerHack(pos)));
+    	double degrees = nativeUnits * (360.0 / 1024.0);
 
     	return degrees;
     }
@@ -397,9 +374,8 @@ public class SwerveDrive extends Subsystem {
     	SmartDashboard.putNumber("SteerRawTarget-"+positionToFriendlyName(pos), degrees);
     	SmartDashboard.putNumber("SteerTarget-"+positionToFriendlyName(pos), angles[minIdx]);
 
-    	double nativePos = angles[minIdx] * ((getSteerHack(pos) - getMinSteerHack(pos)) / 360.0);
+    	double nativePos = angles[minIdx] * (1024.0 / 360.0);
     	nativePos += getSteerOffset(pos);
-        nativePos += getMinSteerHack(pos);
         
         currentSteerTarget[positionToIndex(pos)] = nativePos;
 
