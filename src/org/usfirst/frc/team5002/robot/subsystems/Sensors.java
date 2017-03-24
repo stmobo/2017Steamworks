@@ -102,8 +102,8 @@ public class Sensors extends Subsystem {
     }
     
     public void updateDistance() {
-    	double avgDist = (distLeft.getAverageVoltage() + distRight.getAverageVoltage()) / 2.0;
-    	distOut += (smoothingConstant * (avgDist - distOut));
+    	double dist = distLeft.getAverageVoltage();
+    	distOut += (smoothingConstant * (dist - distOut));
     }
     
     public double getFrontDistance() {
