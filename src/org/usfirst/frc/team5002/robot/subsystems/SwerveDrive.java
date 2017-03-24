@@ -107,18 +107,7 @@ public class SwerveDrive extends Subsystem {
      * @param pos position of the steer module to inspect.
      */
     private double getSteerHack(ModulePosition pos) {
-    	switch(pos) {
-    	case FL:
-    		return maxEncoderOutput[0];
-    	case FR:
-    		return maxEncoderOutput[1];
-    	case BL:
-    		return maxEncoderOutput[2];
-    	case BR:
-    		return maxEncoderOutput[3];
-    	}
-
-    	return 1024;
+    	return maxEncoderOutput[positionToIndex(pos)];
     }
 
     /**
@@ -128,18 +117,7 @@ public class SwerveDrive extends Subsystem {
      * @param pos position of the steer module to inspect.
      */
     private double getMinSteerHack(ModulePosition pos) {
-        switch(pos) {
-        case FL:
-    		return minEncoderOutput[0];
-    	case FR:
-    		return minEncoderOutput[1];
-    	case BL:
-    		return minEncoderOutput[2];
-    	case BR:
-    		return minEncoderOutput[3];
-        }
-
-        return 0;
+    	return minEncoderOutput[positionToIndex(pos)];
     }
 
     /**
@@ -150,18 +128,7 @@ public class SwerveDrive extends Subsystem {
      * @param pos position of the steer module to inspect.
      */
     private double getSteerOffset(ModulePosition pos) {
-    	switch(pos) {
-    	case FL:
-    		return steer_offsets[0];
-    	case FR:
-    		return steer_offsets[1];
-    	case BL:
-    		return steer_offsets[2];
-    	case BR:
-    		return steer_offsets[3];
-    	}
-
-    	return 0;
+    	return steer_offsets[positionToIndex(pos)];
     }
 
     /**
@@ -170,18 +137,7 @@ public class SwerveDrive extends Subsystem {
      * @param pos position of the steer module to inspect.
      */
     private boolean getDriveReverse(ModulePosition pos) {
-    	switch(pos) {
-    	case FL:
-    		return driveReversalStatus[0];
-    	case FR:
-    		return driveReversalStatus[1];
-    	case BL:
-    		return driveReversalStatus[2];
-    	case BR:
-    		return driveReversalStatus[3];
-    	}
-
-    	return false;
+    	return driveReversalStatus[positionToIndex(pos)];
     }
 
     /**
@@ -190,18 +146,7 @@ public class SwerveDrive extends Subsystem {
      * @param pos position of the steer module to inspect.
      */
     private boolean getDriveReverseConst(ModulePosition pos) {
-    	switch(pos) {
-    	case FL:
-    		return driveReversalConst[0];
-    	case FR:
-    		return driveReversalConst[1];
-    	case BL:
-    		return driveReversalConst[2];
-    	case BR:
-    		return driveReversalConst[3];
-    	}
-
-    	return false;
+    	return driveReversalConst[positionToIndex(pos)];
     }
 
     /**
@@ -210,18 +155,7 @@ public class SwerveDrive extends Subsystem {
      * @param pos position of the steer module to inspect.
      */
     private double getSteerTarget(ModulePosition pos) {
-    	switch(pos) {
-    	case FL:
-    		return currentSteerTarget[0];
-    	case FR:
-    		return currentSteerTarget[1];
-    	case BL:
-    		return currentSteerTarget[2];
-    	case BR:
-    		return currentSteerTarget[3];
-    	}
-
-    	return 0.0;
+    	return currentSteerTarget[positionToIndex(pos)];
     }
 
     /**
@@ -230,20 +164,7 @@ public class SwerveDrive extends Subsystem {
      * @param pos position of the steer module to inspect.
      */
     private void setDriveReverse(ModulePosition pos, boolean stat) {
-    	switch(pos) {
-    	case FL:
-    		driveReversalStatus[0] = stat;
-    		break;
-    	case FR:
-    		driveReversalStatus[1] = stat;
-    		break;
-    	case BL:
-    		driveReversalStatus[2] = stat;
-    		break;
-    	case BR:
-    		driveReversalStatus[3] = stat;
-    		break;
-    	}
+    	driveReversalStatus[positionToIndex(pos)] = stat;
     }
 
     /**
