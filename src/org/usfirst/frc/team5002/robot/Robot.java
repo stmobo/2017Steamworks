@@ -98,12 +98,6 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		autonomousCommand = chooser.getSelected();
-		/*
-		 * String autoSelected = SmartDashboard.getString("Auto Selector",
-		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-		 * = new MyAutoCommand(); break; case "Default Auto": default:
-		 * autonomousCommand = new ExampleCommand(); break; }
-		 */
 
 		// schedule the autonomous command (example)
 		if (autonomousCommand != null)
@@ -132,10 +126,11 @@ public class Robot extends IterativeRobot {
 		Teleop teleop = new Teleop();
 		Scheduler.getInstance().add(teleop);
 
-		/*
-		ViewControl viewCtrl = new ViewControl();
-		Scheduler.getInstance().add(viewCtrl);
-		*/
+		if(Robot.viewport != null) {
+			ViewControl viewCtrl = new ViewControl();
+			Scheduler.getInstance().add(viewCtrl);	
+		}
+		
 		oi.updateOIState();
 	}
 
