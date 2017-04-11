@@ -1,10 +1,12 @@
 package org.usfirst.frc.team5002.robot.commands;
 
 import org.usfirst.frc.team5002.robot.Robot;
+import org.usfirst.frc.team5002.robot.commands.AutoGear;
 import org.usfirst.frc.team5002.robot.subsystems.SwerveDrive;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Teleop.java -- teleop drive control code for linear movement + rotation
@@ -19,37 +21,15 @@ public class Teleop extends Command {
     // If true, then angle changes will be disabled at high speed
     public static final boolean enableAngleHold = false;
 
-	private double speedlimit(double speedIn) {
-		return (Math.abs(speedIn) > maxDriveOutput) ? Math.signum(speedIn)*maxDriveOutput : speedIn;
-	}
-
-    /* Returns true when drive steering angles should be locked
-     * (When at speed, in other words.)
-     */
-    private boolean disableSteerAngleChange() {
-        /* There are two ways of determining when it's safe to change steer
-         * angles: through the IMU's accelerometers and through the
-         * controller inputs. */
-         return (Robot.oi.getDriveMagnitude() > 0.75);
-    }
-
-	/**
-	 * Given forward, left/right and rotational clockwise speeds return an array of doubles matching:
-	 * WS1 (front right wheel speed command, 0 to +1)
-	 * WS2 (front left wheel speed command, 0 to +1)
-	 * WS3 (rear left wheel speed command, 0 to +1)
-	 * WS4 (rear right wheel speed command, 0 to +1)
-	 *
-
-	 * @param fwd	-1.0 to 1.0, forward to reverse velocity
-	 * @param str	-1.0 to 1.0, left to right velocity
-	 * @param rcw	-1.0 to 1.0, clockwise rotational velocity
-	 * @return		Array of Doubles matching ws1-ws4 and wa1-wa4
-	 */
+    private boolean autoAlignActive = false;
 
 	double[] angles = new double[4];
 	double[] speeds = new double[4];
-	protected void execute(){
+    private double speedlimit(double speedIn) {
+        return (Math.abs(speedIn) > maxDriveOutput) ? Math.signum(speedIn)*maxDriveOutput : speedIn;
+    }
+
+	private void drive(){
 		double fwd = (Math.abs(Robot.oi.getForwardAxis()) > joystickDeadband) ? Robot.oi.getForwardAxis() : 0.0;
 		double str = (Math.abs(Robot.oi.getHorizontalAxis()) > joystickDeadband) ? Robot.oi.getHorizontalAxis() : 0.0;
 		//double rcw = 0.0;
@@ -58,6 +38,15 @@ public class Teleop extends Command {
 		if(Math.abs(fwd)>1.0 || Math.abs(str)>1.0 || Math.abs(rcw)>1.0){
 			return;
 		}
+
+		if(Robot.oi.isPOVPressed()) {
+			fwd = Robot.oi.getFwdPOV();
+			str = Robot.oi.getStrPOV();
+		}
+
+		SmartDashboard.putNumber("Forward", fwd);
+		SmartDashboard.putNumber("Strafe", str);
+		SmartDashboard.putNumber("Rotate", rcw);
 
 		double r = Math.sqrt(Math.pow(LENGTH_INCHES,2) + Math.pow(WIDTH_INCHES,2));
 
@@ -88,10 +77,20 @@ public class Teleop extends Command {
 		speeds[3] = (maxWs > 1 ? spd_br / maxWs : spd_br) * Robot.oi.getDriveSpeedCoefficient();
 
 		if(!enableAngleHold || Robot.oi.arcadeStick.getMagnitude() <= 0.50) {
-			angles[0] = (c==0 && b==0) ? 0.0 : (Math.atan2(b, c) * 180 / Math.PI); // back right
-			angles[1] = (d==0 && b==0) ? 0.0 : (Math.atan2(b, d) * 180 / Math.PI); // back left
-			angles[2] = (d==0 && a==0) ? 0.0 : (Math.atan2(a, d) * 180 / Math.PI); // front left
-			angles[3] = (c==0 && a==0) ? 0.0 : (Math.atan2(a, c) * 180 / Math.PI); // front right
+			if((Math.abs(fwd) > 0.0)  ||
+				(Math.abs(str) > 0.0) ||
+				(Math.abs(rcw) > 0.0)
+			) {
+				angles[0] = (c==0 && b==0) ? 0.0 : (Math.atan2(b, c) * 180 / Math.PI); // back right
+				angles[1] = (d==0 && b==0) ? 0.0 : (Math.atan2(b, d) * 180 / Math.PI); // back left
+				angles[2] = (d==0 && a==0) ? 0.0 : (Math.atan2(a, d) * 180 / Math.PI); // front left
+				angles[3] = (c==0 && a==0) ? 0.0 : (Math.atan2(a, c) * 180 / Math.PI); // front right
+
+				SmartDashboard.putNumber("Angle-BR", angles[0]);
+				SmartDashboard.putNumber("Angle-BL", angles[1]);
+				SmartDashboard.putNumber("Angle-FL", angles[2]);
+				SmartDashboard.putNumber("Angle-FR", angles[3]);
+			}
 		}
 
 		Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.BR, angles[0]);
@@ -99,11 +98,36 @@ public class Teleop extends Command {
 		Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.FL, angles[2]);
 		Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.FR, angles[3]);
 
-		Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.BR, speeds[0]);
-		Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.BL, speeds[1]);
-		Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.FL, speeds[2]);
-		Robot.drivetrain.setDriveOutput(SwerveDrive.ModulePosition.FR, speeds[3]);
+		Robot.drivetrain.setDriveSpeed(SwerveDrive.ModulePosition.BR, speeds[0]);
+		Robot.drivetrain.setDriveSpeed(SwerveDrive.ModulePosition.BL, speeds[1]);
+		Robot.drivetrain.setDriveSpeed(SwerveDrive.ModulePosition.FL, speeds[2]);
+		Robot.drivetrain.setDriveSpeed(SwerveDrive.ModulePosition.FR, speeds[3]);
 	}
+
+    private boolean autoAlignButtonDebounce = false;
+    protected void execute() {
+    	
+        if(Robot.oi.autoAlignButtonActivated()) {
+            if(!autoAlignButtonDebounce) {
+                autoAlignActive = !autoAlignActive;
+            }
+            autoAlignButtonDebounce = true;
+        } else {
+            autoAlignButtonDebounce = false;
+        }
+        
+
+        if(autoAlignActive) {
+            AutoGear.autoGearAlign();
+            if(AutoGear.finished()) {
+                autoAlignActive = false;
+                Robot.oi.shakeController();
+                Robot.drivetrain.setDriveSpeedCollective(0.0);
+            }
+        } else {
+            drive();
+        }
+    }
 
     public Teleop() {
         requires(Robot.drivetrain);
@@ -111,8 +135,10 @@ public class Teleop extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	/* Set main controls for driving... */
-    	Robot.drivetrain.setDriveTeleop();
+		Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.BR, 0.0);
+		Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.BL, 0.0);
+		Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.FL, 0.0);
+		Robot.drivetrain.setSteerDegrees(SwerveDrive.ModulePosition.FR, 0.0);
     }
 
     // Make this return true when this Command no longer needs to run execute()

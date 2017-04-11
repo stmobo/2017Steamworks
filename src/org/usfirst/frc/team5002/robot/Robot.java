@@ -1,13 +1,11 @@
 
 package org.usfirst.frc.team5002.robot;
 
-import com.kauailabs.navx.frc.AHRS;
-
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -15,15 +13,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team5002.robot.commands.Teleop;
+import org.usfirst.frc.team5002.robot.commands.ViewControl;
+import org.usfirst.frc.team5002.robot.commands.AutoDriveIMU;
+import org.usfirst.frc.team5002.robot.commands.AutonomousTemp;
 import org.usfirst.frc.team5002.robot.commands.KillDrivetrain;
 import org.usfirst.frc.team5002.robot.commands.PIDSteerCollective;
 import org.usfirst.frc.team5002.robot.commands.PIDSteerTestSingle;
 import org.usfirst.frc.team5002.robot.commands.SteerTestVbus;
-import org.usfirst.frc.team5002.robot.subsystems.Intake;
-import org.usfirst.frc.team5002.robot.subsystems.Launcherer;
-import org.usfirst.frc.team5002.robot.subsystems.Outtake;
 import org.usfirst.frc.team5002.robot.subsystems.RopeClimber;
+import org.usfirst.frc.team5002.robot.subsystems.Sensors;
 import org.usfirst.frc.team5002.robot.subsystems.SwerveDrive;
+import org.usfirst.frc.team5002.robot.subsystems.ViewPort;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -33,15 +33,11 @@ import org.usfirst.frc.team5002.robot.subsystems.SwerveDrive;
  * directory.
  */
 public class Robot extends IterativeRobot {
-
-	public static final SwerveDrive drivetrain = new SwerveDrive();
-	public static final Intake intake = new Intake();
-	public static final Launcherer launcherer = new Launcherer();
-	public static final RopeClimber ropeClimber = new RopeClimber();
-	public static final Outtake outtake = new Outtake();
+	public static SwerveDrive drivetrain;
+	public static RopeClimber ropeClimber;
+    public static ViewPort viewport;
+    public static Sensors sensors;
 	public static OI oi;
-
-	public static AHRS navx;
 
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
@@ -52,37 +48,23 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
-		oi = new OI();
-
-		try {
-			/* NOTE: With respect to the NavX, the robot's front is in the -X direction.
-			 * The robot's right side is in the +Y direction,
-			 * and the robot's top side is in the +Z direction as usual.
-       * Clockwise rotation = increasing yaw.
-       */
-
-			navx = new AHRS(Port.kMXP);
-		} catch (RuntimeException ex) {
-			DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
-			navx = null;
-		}
-
-        // start camera stream lol
+		drivetrain = new SwerveDrive();
+		ropeClimber = new RopeClimber();
+        //viewport = new ViewPort();
+        sensors = new Sensors();
+        oi = new OI();
+        
         UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
         cam.setFPS(15);
-        cam.setResolution(640, 480);
-        
-        if(navx != null) {
-            navx.zeroYaw();
-        }
+        cam.setResolution(240, 320);
 
-		/* Add PID Test commands. */
-		/*
-		SmartDashboard.putData("PIDSteerTest-FrontLeft", new PIDSteerTestSingle(drivetrain.fl_steer));
-		SmartDashboard.putData("PIDSteerTest-FrontRight", new PIDSteerTestSingle(drivetrain.fr_steer));
-		SmartDashboard.putData("PIDSteerTest-BackLeft", new PIDSteerTestSingle(drivetrain.bl_steer));
-		SmartDashboard.putData("PIDSteerTest-BackRight", new PIDSteerTestSingle(drivetrain.br_steer));
-		*/
+        SmartDashboard.putData("Autonomous", chooser);
+
+        chooser.addObject("Auto Left", new AutonomousTemp(-0.1));
+        chooser.addObject("Auto Right", new AutonomousTemp(0.1));
+        chooser.addObject("Auto Straight", new AutonomousTemp(0.0));
+        chooser.addObject("Auto IMU Drive", new AutoDriveIMU());
+        chooser.addDefault("No Auto", new KillDrivetrain());
 	}
 
 	/**
@@ -97,18 +79,8 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void disabledPeriodic() {
-		/*
-		SmartDashboard.putNumber("FL-Pos", Robot.drivetrain.fl_steer.getPosition());
-		SmartDashboard.putNumber("FR-Pos", Robot.drivetrain.fr_steer.getPosition());
-		SmartDashboard.putNumber("BL-Pos", Robot.drivetrain.bl_steer.getPosition());
-		SmartDashboard.putNumber("BR-Pos", Robot.drivetrain.br_steer.getPosition());
-		*/
-
-		//Robot.drivetrain.UpdateSDSingle(Robot.drivetrain.fr_steer);
-		//Robot.drivetrain.UpdateSDSingle(Robot.drivetrain.fl_steer);
-
-		Robot.drivetrain.updateSD();
-
+		sensors.updateDistance();
+		oi.UpdateSD();
 		Scheduler.getInstance().run();
 	}
 
@@ -125,7 +97,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		autonomousCommand = new KillDrivetrain();
+		autonomousCommand = chooser.getSelected();
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
 		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
@@ -143,7 +115,8 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-		Robot.drivetrain.updateSD();
+		oi.UpdateSD();
+		sensors.updateDistance();
 		Scheduler.getInstance().run();
 	}
 
@@ -156,16 +129,14 @@ public class Robot extends IterativeRobot {
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
 
-		//PIDSteerCollective PIDTest = new PIDSteerCollective();
-		//Scheduler.getInstance().add(PIDTest);
+		Teleop teleop = new Teleop();
+		Scheduler.getInstance().add(teleop);
 
-		Teleop teleopTest = new Teleop();
-		Scheduler.getInstance().add(teleopTest);
-
-    oi.updateOIState();
-
-		//Command test = new SteerTestVbus();
-		//Scheduler.getInstance().add(test);
+		/*
+		ViewControl viewCtrl = new ViewControl();
+		Scheduler.getInstance().add(viewCtrl);
+		*/
+		oi.updateOIState();
 	}
 
 	/**
@@ -173,8 +144,9 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		//Robot.oi.testing();
-		Robot.drivetrain.updateSD();
+		sensors.updateDistance();
+		oi.UpdateSD();
+		oi.updateOIState();
 		Scheduler.getInstance().run();
 	}
 
