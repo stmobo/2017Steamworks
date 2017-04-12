@@ -56,6 +56,9 @@ public class SwerveDrive extends Subsystem {
     boolean driveReversalStatus[] = {false, false, false, false};
     boolean driveReversalConst[] = {true, false, true, false};
 
+    int steerADCMax[] = {0, 0, 0, 0};
+    int steerADCMin[] = {1024, 1024, 1024, 1024};
+
     /* NOTE: Exact object type below is SendableChooser<Boolean>.
      * Unfortunately, Java's generics are... not as powerful as I'd like,
      * and we can't /directly/ create an array of SendableChooser<Boolean>. */
@@ -69,7 +72,7 @@ public class SwerveDrive extends Subsystem {
     	BR     ///< Back-right
     };
 
-    private int positionToIndex(ModulePosition pos) {
+    public int positionToIndex(ModulePosition pos) {
     	switch(pos) {
     	case FL:
 		default:
@@ -288,25 +291,37 @@ public class SwerveDrive extends Subsystem {
     	}
     }
 
-    private double getCurrentSteerPositionDegrees(ModulePosition pos) {
-    	CANTalon steer = getSteerController(pos);
-    	double nativeUnits = steer.getPosition();
-
-    	nativeUnits -= getSteerOffset(pos);
-    	double degrees = nativeUnits * (360.0 / 1024.0);
-
-    	return degrees;
-    }
-
     private int getCurrentSteerRotations(ModulePosition pos) {
         CANTalon steer = getSteerController(pos);
         double nativeUnits = steer.getPosition();
 
         /* Round towards 0: */
         if(nativeUnits < 0) {
-            return (int)Math.ceil(nativeUnits / 1024);
+            return (int)Math.ceil(nativeUnits / 1024.0);
         }
-        return (int)Math.floor(nativeUnits / 1024);
+        return (int)Math.floor(nativeUnits / 1024.0);
+    }
+
+    private double getCurrentSteerPositionDegrees(ModulePosition pos) {
+    	CANTalon steer = getSteerController(pos);
+    	double nativeUnits = steer.getPosition() % 1024.0;
+
+    	nativeUnits -= getSteerOffset(pos);
+    	double degrees = nativeUnits * (360.0 / (steerADCMax[positionToIndex(pos)] - steerADCMin[positionToIndex(pos)]));
+
+        degrees += getCurrentSteerRotations(pos) * 360.0;
+
+    	return degrees;
+    }
+
+    public int getCurrentSteerADC(ModulePosition pos) {
+    	CANTalon steer = getSteerController(pos);
+        return steer.getAnalogInRaw();
+    }
+
+    public void calibrateSteerADC(ModulePosition pos, int minADC, int maxADC) {
+        steerADCMax[positionToIndex(pos)] = maxADC;
+        steerADCMin[positionToIndex(pos)] = minADC;
     }
 
     /**
@@ -352,7 +367,7 @@ public class SwerveDrive extends Subsystem {
         angles[2] = (angles[0] - 180.0);
         angles[3] = (angles[0] - 360.0);
         angles[4] = (angles[0] + 360.0);
-        
+
         /* Find target angle with smallest distance from current: */
         int minIdx = 0;
         for(int i=0;i<angles.length;i++) {
@@ -374,12 +389,26 @@ public class SwerveDrive extends Subsystem {
     	SmartDashboard.putNumber("SteerRawTarget-"+positionToFriendlyName(pos), degrees);
     	SmartDashboard.putNumber("SteerTarget-"+positionToFriendlyName(pos), angles[minIdx]);
 
-    	double nativePos = angles[minIdx] * (1024.0 / 360.0);
+    	double nativePos = (angles[minIdx] * ((steerADCMax[positionToIndex(pos)] - steerADCMin[positionToIndex(pos)]) / 360.0)) + steerADCMin[positionToIndex(pos)];
     	nativePos += getSteerOffset(pos);
-        
+
         currentSteerTarget[positionToIndex(pos)] = nativePos;
 
     	steer.set(nativePos);
+    }
+
+    /**
+     * Steers the given swerve module at a given VBus %.
+     * Used for swerve quirks compatibility.
+     */
+    public void setSteerVbus(ModulePosition pos, double vbus) {
+    	CANTalon steer = getSteerController(pos);
+
+        if(steer.getControlMode() != TalonControlMode.PercentVbus) {
+            steer.changeControlMode(TalonControlMode.PercentVbus);
+        }
+
+        steer.set(vbus);
     }
 
     public void setSteerDegreesCollective(double degrees) {
@@ -436,7 +465,7 @@ public class SwerveDrive extends Subsystem {
                 drive.disableControl();
             }
         }
-        
+
         steerADCFiltered[positionToIndex(pos)] += steerFilterConstant * (steer.getAnalogInRaw() - steerADCFiltered[positionToIndex(pos)]);
 
     	SmartDashboard.putNumber("SteerErr-"+suffix, steer.getClosedLoopError());
