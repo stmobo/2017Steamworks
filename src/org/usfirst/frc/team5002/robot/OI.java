@@ -2,14 +2,10 @@ package org.usfirst.frc.team5002.robot;
 
 import org.usfirst.frc.team5002.robot.commands.ClimbDown;
 import org.usfirst.frc.team5002.robot.commands.ClimbUp;
-import org.usfirst.frc.team5002.robot.commands.INtaker;
-import org.usfirst.frc.team5002.robot.commands.LaunchererC;
-import org.usfirst.frc.team5002.robot.commands.OUTtaker;
-import org.usfirst.frc.team5002.robot.commands.ReverseInTaker;
-import org.usfirst.frc.team5002.robot.commands.TakeOuter;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.GenericHID.*;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -35,11 +31,14 @@ public class OI {
     private Button X;
     private Button Y;
 	private Button LB;
-  private Button RB;
+    private Button RB;
 	private Button home;
 	private Button menu;
 
-    boolean focEnabled = false;
+    public boolean focEnabled = false;
+
+    private final Timer ctrlShakeTimer = new Timer();
+    private boolean ctrlShaking = false;
 
 	public OI(){
 		arcadeStick = new Joystick(0); //gave Joystick a job
@@ -58,7 +57,7 @@ public class OI {
         toggleFOC = home;
         resetHdg = menu;
 
-		Y.toggleWhenPressed(new ClimbUp());//turns the climb motor on while Y is being held
+		Y.whileHeld(new ClimbUp()); //turns the climb motor on while Y is being held
         if(!DriverStation.getInstance().isFMSAttached()) {
     		RB.whileHeld(new ClimbDown());
         }
@@ -67,21 +66,41 @@ public class OI {
     // For toggle buttons that don't warrant their own commands.
     boolean focDebounce = false;
     public void updateOIState() {
-        if(toggleFOC.get() && !focDebounce) {
-            focEnabled = !focEnabled;
+        if(toggleFOC.get()) {
+        	if(!focDebounce) {
+        		focEnabled = !focEnabled;
+        	}
             focDebounce = true;
         } else {
             focDebounce = false;
         }
 
         if(resetHdg.get()) {
-        	Robot.navx.zeroYaw();
+        	Robot.sensors.navx.zeroYaw();
         }
 
+        if(ctrlShaking) {
+            if(ctrlShakeTimer.hasPeriodPassed(1.0)) {
+                ctrlShaking = false;
+                arcadeStick.setRumble(RumbleType.kLeftRumble, 0.0);
+                arcadeStick.setRumble(RumbleType.kRightRumble, 0.0);
+                ctrlShakeTimer.stop();
+            }
+        }
     }
 
-    public boolean intakeButtonActivated() {
-    	return A.get();
+    public void shakeController() {
+        ctrlShakeTimer.reset();
+        ctrlShakeTimer.start();
+
+        ctrlShaking = true;
+
+        arcadeStick.setRumble(RumbleType.kLeftRumble, 1.0);
+        arcadeStick.setRumble(RumbleType.kRightRumble, 1.0);
+    }
+
+    public boolean autoAlignButtonActivated() {
+        return X.get();
     }
 
     public boolean reverseButtonActivated() {
@@ -95,7 +114,7 @@ public class OI {
     public boolean viewBackwardButtonActivated() {
         return B.get();
     }
-  
+
     public boolean isPOVPressed() {
     	int angle = arcadeStick.getPOV(0);
     	if(angle == -1) {
@@ -117,13 +136,13 @@ public class OI {
     /* set multipliers for teleop drive speed outputs */
     public double getDriveSpeedCoefficient() {
         if(activateLowSpeed.get()) {
-            return 0.25 * arcadeStick.getRawAxis(4) * -1.0;
+            return 0.25;/* arcadeStick.getRawAxis(4) * -1.0;*/
         } else if(activateHighSpeed.get()) {
-            return 1.0 * arcadeStick.getRawAxis(4) * -1.0;
+            return 1.0;/* * arcadeStick.getRawAxis(4) * -1.0;*/
         } else if(isPOVPressed()) {
         	return 0.25;
         } else {
-            return 0.50 * arcadeStick.getRawAxis(4) * -1.0;
+            return 0.50;/* * arcadeStick.getRawAxis(4) * -1.0;*/
         }
     }
 
@@ -134,11 +153,11 @@ public class OI {
     }
 
 	public double getForwardAxis() {
-        if(focEnabled && Robot.navx != null) {
+        if(focEnabled && Robot.sensors.navx != null) {
             // Zero degrees = towards opposing side
             double x = arcadeStick.getRawAxis(1) * -1.0;
             double y = arcadeStick.getRawAxis(0) * -1.0;
-            double hdg = Robot.getRobotHeading();
+            double hdg = Robot.sensors.getRobotHeading();
 
             // X-coordinate -> CW alias rotation (left-handed)
             return (x * Math.cos(hdg*Math.PI/180.0)) + (y * -Math.sin(hdg*Math.PI/180.0));
@@ -148,11 +167,11 @@ public class OI {
 	}
 
 	public double getHorizontalAxis(){
-        if(focEnabled && Robot.navx != null) {
+        if(focEnabled && Robot.sensors.navx != null) {
             // Right = +Y
             double x = arcadeStick.getRawAxis(1) * -1.0;
             double y = arcadeStick.getRawAxis(0) * -1.0;
-            double hdg = Robot.getRobotHeading();
+            double hdg = Robot.sensors.getRobotHeading();
 
             // Y-coordinate, CW alias rotation w/ left-handed coordinate system
             return (x * Math.sin(hdg*Math.PI/180.0)) + (y * Math.cos(hdg*Math.PI/180.0));
@@ -161,13 +180,22 @@ public class OI {
         }
 	}
 
-	public double getTurnAxis(){
-    	return arcadeStick.getRawAxis(3) - arcadeStick.getRawAxis(2);
+	public double getTurnAxis() {
+		double stick = arcadeStick.getRawAxis(4);
+		double trig = arcadeStick.getRawAxis(3) - arcadeStick.getRawAxis(2);
+		if(Math.abs(stick) > Math.abs(trig)) {
+			return stick;
+		}
+    	return trig;
 	}
 
 	public void UpdateSD(){
 		Robot.drivetrain.updateSD();//sends all the data from SwerveDrive subsystem to the SmartDashboard
-		Robot.viewport.updateSD();
+		if(Robot.viewport != null) {
+			Robot.viewport.updateSD();	
+		}
+        Robot.sensors.updateSD();
+
 		if(!DriverStation.getInstance().isDisabled()) {
 			if(DriverStation.getInstance().isAutonomous()) {
 				SmartDashboard.putNumber("Match Time", (int)(15.0 - Timer.getMatchTime()));
@@ -185,25 +213,6 @@ public class OI {
 			SmartDashboard.putBoolean("40-Second Watch", false);
 		}
 
-		SmartDashboard.putNumber("Start Yaw", Robot.startYaw);
-		SmartDashboard.putNumber("POV", arcadeStick.getPOV(0));
-		if(Robot.navx != null) {
-			SmartDashboard.putBoolean("NavX Present", true);
-			SmartDashboard.putBoolean("Calibrating", Robot.navx.isCalibrating());
-			SmartDashboard.putBoolean("Connected", Robot.navx.isConnected());
-
-			SmartDashboard.putNumber("Heading", Robot.navx.getAngle());
-			SmartDashboard.putNumber("Compass", Robot.navx.getCompassHeading());
-			SmartDashboard.putNumber("Yaw", Robot.navx.getYaw());
-			SmartDashboard.putNumber("Fused", Robot.navx.getFusedHeading());
-			if(focEnabled) {
-				SmartDashboard.putString("Control Mode", "Field-Oriented");
-			} else {
-				SmartDashboard.putString("Control Mode", "Robot-Oriented (FOC available)");
-			}
-		} else {
-			SmartDashboard.putBoolean("NavX Present", false);
-			SmartDashboard.putString("Control Mode", "Robot-Oriented (FOC unavailable)");
-		}
+        SmartDashboard.putNumber("POV", arcadeStick.getPOV(0));
 	}
 }

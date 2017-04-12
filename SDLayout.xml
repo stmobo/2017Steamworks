@@ -1,5 +1,104 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Frontal Distance" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="489" y="349"/>
+	</widget>
+	<widget field="Avg. Sensor Voltage" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="470" y="371"/>
+	</widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
+		<location x="1427" y="239"/>
+		<height>14</height>
+		<property name="Text" value="BR Inhibit"/>
+	</static-widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
+		<location x="1349" y="240"/>
+		<property name="Text" value="BL Inhibit"/>
+	</static-widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
+		<location x="1429" y="172"/>
+		<property name="Text" value="FR Inhibit"/>
+	</static-widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
+		<location x="1346" y="169"/>
+		<property name="Text" value="FL Inhibit"/>
+	</static-widget>
+	<widget field="40-Second Watch" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1317" y="111"/>
+	</widget>
+	<widget field="Match Time" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1322" y="87"/>
+	</widget>
+	<widget field="Y-Displacement" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="487" y="319"/>
+	</widget>
+	<widget field="X-Displacement" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="488" y="296"/>
+	</widget>
+	<widget field="RightDist-cm" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="507" y="418"/>
+	</widget>
+	<widget field="LeftDist-cm" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="514" y="395"/>
+	</widget>
+	<widget field="RightDist-Voltage" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="484" y="465"/>
+	</widget>
+	<widget field="LeftDist-Voltage" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="490" y="442"/>
+	</widget>
+	<widget field="Selected View" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1317" y="328"/>
+	</widget>
+	<widget field="SteerRot-BR" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1458" y="451"/>
+	</widget>
+	<widget field="SteerDeg-BR" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1458" y="396"/>
+	</widget>
+	<widget field="SteerVel-BR" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="197" y="510"/>
+	</widget>
+	<widget field="SteerRot-BL" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1314" y="451"/>
+	</widget>
+	<widget field="SteerDeg-BL" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1311" y="398"/>
+	</widget>
+	<widget field="SteerVel-BL" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="53" y="513"/>
+	</widget>
+	<widget field="SteerRot-FR" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1458" y="429"/>
+	</widget>
+	<widget field="SteerDeg-FR" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1457" y="373"/>
+	</widget>
+	<widget field="SteerVel-FR" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="197" y="490"/>
+	</widget>
+	<widget field="SteerRot-FL" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1313" y="430"/>
+	</widget>
+	<widget field="SteerDeg-FL" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1311" y="373"/>
+		<height>20</height>
+	</widget>
+	<widget field="SteerVel-FL" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="53" y="490"/>
+	</widget>
+	<widget field="BR-Inhibit" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
+		<location x="1406" y="245"/>
+	</widget>
+	<widget field="BL-Inhibit" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
+		<location x="1323" y="243"/>
+	</widget>
+	<widget field="FR-Inhibit" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
+		<location x="1408" y="177"/>
+	</widget>
+	<widget field="FL-Inhibit" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
+		<location x="1324" y="177"/>
+	</widget>
 	<widget field="Angle-FR" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="190" y="436"/>
 	</widget>
@@ -18,43 +117,44 @@
 		<height>35</height>
 	</static-widget>
 	<widget field="Fused" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="474" y="327"/>
+		<location x="332" y="298"/>
 		<width>116</width>
+		<height>20</height>
 	</widget>
 	<widget field="Intake Switch" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="331" y="175"/>
 	</widget>
 	<widget field="Compass" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="326" y="329"/>
+		<location x="175" y="319"/>
 	</widget>
 	<widget field="Connected" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="184" y="349"/>
+		<location x="37" y="319"/>
 		<width>138</width>
 	</widget>
 	<widget field="Calibrating" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="185" y="326"/>
+		<location x="37" y="341"/>
 		<width>138</width>
 	</widget>
 	<widget field="Yaw" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="349" y="305"/>
+		<location x="198" y="297"/>
 	</widget>
 	<widget field="Control Mode" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="170" y="278"/>
+		<location x="23" y="271"/>
 		<width>286</width>
 	</widget>
 	<widget field="Heading" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="330" y="352"/>
+		<location x="180" y="340"/>
 		<width>124</width>
 	</widget>
 	<widget field="NavX Present" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="170" y="303"/>
+		<location x="22" y="297"/>
 		<width>153</width>
 	</widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.CameraServerViewer">
 		<location x="662" y="11"/>
 		<width>649</width>
 		<height>521</height>
-		<property name="Camera Choice" value=""/>
+		<property name="Camera Choice" value="USB Camera 0"/>
 	</static-widget>
 	<widget field="SteerPos-BL" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="14" y="140"/>
@@ -131,7 +231,7 @@
 		<location x="14" y="119"/>
 	</widget>
 	<widget field="Autonomous" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
-		<location x="55" y="256"/>
+		<location x="375" y="385"/>
 	</widget>
 	<widget field="SteerRawTarget-FR" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="191" y="391"/>
@@ -146,7 +246,7 @@
 		<location x="9" y="391"/>
 	</widget>
 	<widget field="Start Yaw" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="457" y="351"/>
+		<location x="313" y="320"/>
 	</widget>
 	<widget field="Strafe" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="502" y="199"/>
@@ -167,7 +267,7 @@
 		<location x="8" y="414"/>
 	</widget>
 	<widget field="Steer Encoder Calibration" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="169" y="254"/>
+		<location x="21" y="248"/>
 		<width>288</width>
 	</widget>
 	<widget field="Forward" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">

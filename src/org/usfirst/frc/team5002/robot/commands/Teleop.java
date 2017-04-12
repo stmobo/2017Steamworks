@@ -1,6 +1,7 @@
 package org.usfirst.frc.team5002.robot.commands;
 
 import org.usfirst.frc.team5002.robot.Robot;
+import org.usfirst.frc.team5002.robot.commands.AutoGear;
 import org.usfirst.frc.team5002.robot.subsystems.SwerveDrive;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -20,36 +21,15 @@ public class Teleop extends Command {
     // If true, then angle changes will be disabled at high speed
     public static final boolean enableAngleHold = false;
 
-	private double speedlimit(double speedIn) {
-		return (Math.abs(speedIn) > maxDriveOutput) ? Math.signum(speedIn)*maxDriveOutput : speedIn;
-	}
-
-    /* Returns true when drive steering angles should be locked
-     * (When at speed, in other words.)
-     */
-    private boolean disableSteerAngleChange() {
-        /* There are two ways of determining when it's safe to change steer
-         * angles: through the IMU's accelerometers and through the
-         * controller inputs. */
-         return (Robot.oi.getDriveMagnitude() > 0.75);
-    }
-
-	/**
-	 * Given forward, left/right and rotational clockwise speeds return an array of doubles matching:
-	 * WS1 (front right wheel speed command, 0 to +1)
-	 * WS2 (front left wheel speed command, 0 to +1)
-	 * WS3 (rear left wheel speed command, 0 to +1)
-	 * WS4 (rear right wheel speed command, 0 to +1)
-
-	 * @param fwd	-1.0 to 1.0, forward to reverse velocity
-	 * @param str	-1.0 to 1.0, left to right velocity
-	 * @param rcw	-1.0 to 1.0, clockwise rotational velocity
-	 * @return		Array of Doubles matching ws1-ws4 and wa1-wa4
-	 */
+    private boolean autoAlignActive = false;
 
 	double[] angles = new double[4];
 	double[] speeds = new double[4];
-	protected void execute(){
+    private double speedlimit(double speedIn) {
+        return (Math.abs(speedIn) > maxDriveOutput) ? Math.signum(speedIn)*maxDriveOutput : speedIn;
+    }
+
+	private void drive(){
 		double fwd = (Math.abs(Robot.oi.getForwardAxis()) > joystickDeadband) ? Robot.oi.getForwardAxis() : 0.0;
 		double str = (Math.abs(Robot.oi.getHorizontalAxis()) > joystickDeadband) ? Robot.oi.getHorizontalAxis() : 0.0;
 		//double rcw = 0.0;
@@ -123,6 +103,31 @@ public class Teleop extends Command {
 		Robot.drivetrain.setDriveSpeed(SwerveDrive.ModulePosition.FL, speeds[2]);
 		Robot.drivetrain.setDriveSpeed(SwerveDrive.ModulePosition.FR, speeds[3]);
 	}
+
+    private boolean autoAlignButtonDebounce = false;
+    protected void execute() {
+    	
+        if(Robot.oi.autoAlignButtonActivated()) {
+            if(!autoAlignButtonDebounce) {
+                autoAlignActive = !autoAlignActive;
+            }
+            autoAlignButtonDebounce = true;
+        } else {
+            autoAlignButtonDebounce = false;
+        }
+        
+
+        if(autoAlignActive) {
+            AutoGear.autoGearAlign();
+            if(AutoGear.finished()) {
+                autoAlignActive = false;
+                Robot.oi.shakeController();
+                Robot.drivetrain.setDriveSpeedCollective(0.0);
+            }
+        } else {
+            drive();
+        }
+    }
 
     public Teleop() {
         requires(Robot.drivetrain);
