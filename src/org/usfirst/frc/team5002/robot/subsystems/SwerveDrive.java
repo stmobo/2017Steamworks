@@ -293,7 +293,7 @@ public class SwerveDrive extends Subsystem {
 
     private int getCurrentSteerRotations(ModulePosition pos) {
         CANTalon steer = getSteerController(pos);
-        double nativeUnits = steer.getPosition();
+        double nativeUnits = steer.getPosition() - steerADCMin[positionToIndex(pos)];
 
         /* Round towards 0: */
         if(nativeUnits < 0) {
@@ -307,7 +307,7 @@ public class SwerveDrive extends Subsystem {
     	double nativeUnits = steer.getPosition() % 1024.0;
 
     	nativeUnits -= getSteerOffset(pos);
-    	double degrees = nativeUnits * (360.0 / (steerADCMax[positionToIndex(pos)] - steerADCMin[positionToIndex(pos)]));
+    	double degrees = (nativeUnits - steerADCMin[positionToIndex(pos)]) * (360.0 / (steerADCMax[positionToIndex(pos)] - steerADCMin[positionToIndex(pos)]));
 
         degrees += getCurrentSteerRotations(pos) * 360.0;
 
