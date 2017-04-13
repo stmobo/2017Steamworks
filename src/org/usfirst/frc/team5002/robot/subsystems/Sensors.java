@@ -14,10 +14,11 @@ import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.SPI.Port;
 
+import edu.wpi.first.wpilibj.networktables.*;
+
 public class Sensors extends Subsystem {
     private AnalogInput distLeft;
     private AnalogInput distRight;
-    private AnalogInput distClimb;
 
     /* Voltage varies inversely with distance measured by sensor. */
     private final double minDistance = 10;
@@ -25,7 +26,7 @@ public class Sensors extends Subsystem {
 
     private final double maxDistance = 80;
     private final double minVoltage = 0.4;
-    
+
     private final double smoothingConstant = 0.25;
     private double distOut = 0;
 
@@ -33,14 +34,17 @@ public class Sensors extends Subsystem {
     public static AHRS navx;
     private AHRS.BoardYawAxis yawAxis;
 
+    private NetworkTable jetson;
+
     public Sensors() {
         distLeft = new AnalogInput(RobotMap.distSensorLeft);
         distRight = new AnalogInput(RobotMap.distSensorRight);
-        distClimb = new AnalogInput(RobotMap.climbDistSensor);
 
         distLeft.setAverageBits(64);
         distRight.setAverageBits(64);
-        
+
+        jetson = NetworkTable.getTable("vision");
+
         try {
 			/* NOTE: With respect to the NavX, the robot's front is in the -X direction.
 			 * The robot's right side is in the +Y direction,
@@ -48,19 +52,49 @@ public class Sensors extends Subsystem {
 		     * Clockwise rotation = increasing yaw.
 		     */
 			navx = new AHRS(SerialPort.Port.kMXP);
-		} catch (RuntimeException ex) {
-			DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
-			navx = null;
-		}
 
-        if(navx != null) {
             navx.zeroYaw();
             startYaw = navx.getYaw();
             yawAxis = navx.getBoardYawAxis();
-        } else {
-        	startYaw = 0;
+
+		} catch (RuntimeException ex) {
+			DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
+
+            navx = null;
+            startYaw = 0;
             yawAxis = null;
-        }
+		}
+    }
+
+    /**
+     * Returns true if the jetson is connected, false if not.
+     */
+    public boolean getJetsonStatus() {
+        return jetson.getBoolean("connected", false);
+    }
+
+    /**
+     * Returns true if the vision targets have been detected.
+     */
+    public double canSeeTargets() {
+        return jetson.getBoolean("valid", false);
+    }
+
+    /**
+     * Returns the distance to the vision targets, as reported by the Jetson.
+     *
+     * If the jetson is not connected, this returns 0.
+     */
+    public double getVisualDistance() {
+        return jetson.getNumber("distance", 0.0);
+    }
+
+    /**
+     * Returns the lateral (left/right) offset from the vision targets,
+     * as reported by the Jetson.
+     */
+    public double getVisualOffset() {
+        return jetson.getNumber("offset", 0.0);
     }
 
     /* A more reliable form of navx.getAngle() */
@@ -80,15 +114,11 @@ public class Sensors extends Subsystem {
         double cvtFactor = (minDistance - maxDistance) / (maxVoltage - minVoltage);
         return maxDistance + ((v - minVoltage) * cvtFactor);
     }
-    
-    public double getClimbVoltage() {
-    	return distClimb.getVoltage();
-    }
-    
+
     public double getLeftVoltage() {
     	return distLeft.getAverageVoltage();
     }
-    
+
     public double getRightVoltage() {
     	return distRight.getAverageVoltage();
     }
@@ -100,12 +130,12 @@ public class Sensors extends Subsystem {
     public double getRightDistance() {
         return voltageToDistance(distRight.getAverageVoltage());
     }
-    
+
     public void updateDistance() {
     	double dist = distLeft.getAverageVoltage();
     	distOut += (smoothingConstant * (dist - distOut));
     }
-    
+
     public double getFrontDistance() {
     	return distOut;
     }
@@ -129,7 +159,7 @@ public class Sensors extends Subsystem {
 
 			SmartDashboard.putNumber("X-Displacement", navx.getDisplacementX());
 			SmartDashboard.putNumber("Y-Displacement", navx.getDisplacementY());
-			
+
 			SmartDashboard.putNumber("Heading", navx.getAngle());
 			SmartDashboard.putNumber("Compass", navx.getCompassHeading());
 			SmartDashboard.putNumber("Yaw", navx.getYaw());
