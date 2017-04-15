@@ -89,10 +89,10 @@ filteredOffset = 0
 filteredFOVVert = 0
 filteredFOVHoriz = 0
 
-cam = cv2.VideoCapture(0)
+cam = cv2.VideoCapture(1)
 
 if not cam.isOpened():
-    print("Error: could not open camera 0")
+    print("Error: could not open camera 1")
     sys.exit(-1)
 
 while True:
@@ -101,9 +101,9 @@ while True:
     filtered = cv2.boxFilter(frame, -1, (7,7))
 
     # Filter by HSV:
-    filtered = cv2.cvtColor(filtered, cv2.COLOR_BGR2HSV)
-    #filtered = cv2.inRange(filtered, [8, 119, 214], [36, 214, 255]) # Green targets (actual)
-    filtered = cv2.inRange(filtered, np.array([90, 0, 105]), np.array([180, 255, 231])) # Red targets (testing)
+    filtered = cv2.cvtColor(filtered, cv2.COLOR_BGR2HLS)
+    filtered = cv2.inRange(filtered, np.array([0, 94, 0]), np.array([60, 255, 255])) # Green targets (actual)
+    #filtered = cv2.inRange(filtered, np.array([90, 0, 105]), np.array([180, 255, 231])) # Red targets (testing)
 
     _, contours, _ = cv2.findContours(filtered, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
 
