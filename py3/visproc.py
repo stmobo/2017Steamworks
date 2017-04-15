@@ -51,8 +51,22 @@ def getTargetDistance(ct, imgWidth, imgHeight):
     bb_width = bb[2]
     bb_height = bb[3]
 
-    #return targetWidth * imgWidth / (bb_width * math.tan(fovHoriz))
-    return targetHeight * imgHeight / (bb_height * math.tan(fovVert))
+    return targetWidth * imgWidth / (bb_width * math.tan(fovHoriz))
+    #return targetHeight * imgHeight / (bb_height * math.tan(fovVert))
+
+def getTargetCenter(ct):
+    moments = cv2.moments(ct)
+    center = (int(moments['m10']/moments['m00']), int(moments['m01']/moments['m00']))
+
+    return center
+
+def getTargetOffset(ct, imgWidth, dist):
+    center = getTargetCenter(ct)
+
+    # positive values = target is right/under of center
+    centerOffsetHoriz = center[0] - (imgWidth/2.0)
+
+    return centerOffsetHoriz * ((dist*math.tan(fovHoriz)) / imgWidth)
 
 def getFOVAngles(ct, imgWidth, imgHeight, dist):
     min_rect = cv2.minAreaRect(ct)
@@ -71,6 +85,7 @@ def getFOVAngles(ct, imgWidth, imgHeight, dist):
 
 smoothing_constant = 0.25
 filteredDist = 0
+filteredOffset = 0
 filteredFOVVert = 0
 filteredFOVHoriz = 0
 
@@ -134,7 +149,7 @@ while True:
         cvg_ratio = ct_area / bb_area
         cvg_score = 100/math.exp(abs(cvg_ratio-1))
 
-        cv2.putText(out, str.format("{:.3g}", cvg_ratio), tuple(pts[0]), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0))
+        cv2.putText(out, str.format("{:.3g}", cvg_ratio), tuple(pts[0]), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0))
         cv2.putText(out, str.format("{:.3g}", AS), tuple(pts[2]), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255))
 
         if AS < 0.1 or AS > 0.6:
@@ -168,13 +183,29 @@ while True:
         avgFOVVert = (angles1[1]+angles2[1])/2.0
         avgDist = (dist1+dist2)/2.0
 
+        # Get target offsets:
+        offset1 = getTargetOffset(tgt1[0], frame.shape[1], dist1)
+        offset2 = getTargetOffset(tgt2[0], frame.shape[1], dist2)
+        avgOffset = (offset1+offset2)/2.0
+
         filteredFOVHoriz = filteredFOVHoriz + (smoothing_constant*(avgFOVHoriz-filteredFOVHoriz))
         filteredFOVVert = filteredFOVVert + (smoothing_constant*(avgFOVVert-filteredFOVVert))
         filteredDist = filteredDist + (smoothing_constant * (avgDist - filteredDist))
+        filteredOffset = filteredOffset + (smoothing_constant * (avgOffset - filteredOffset))
+
+        center1 = getTargetCenter(tgt1[0])
+        center2 = getTargetCenter(tgt2[0])
+
+        drawpt1 = (int((center1[0]+center2[0])/2.0)-50, int((center1[1]+center2[1])/2.0)+50)
+        drawpt2 = (int((center1[0]+center2[0])/2.0)-50, int((center1[1]+center2[1])/2.0)+70)
+
+        cv2.putText(out, str.format("Distance: {:.3g} inches", filteredDist), drawpt1, cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0))
+        cv2.putText(out, str.format("Lateral Offset: {:.3g} inches", filteredOffset), drawpt2, cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0))
 
         print(str.format("Approx. horiz. FOV: {:f} radians,", filteredFOVHoriz))
         print(str.format("Approx. vert. FOV: {:f} radians,", filteredFOVVert))
         print(str.format("Approx. distance: {:.3f} inches.", filteredDist))
+        print(str.format("Approx. lateral offset: {:.3f} inches.", avgOffset))
 
         out = cv2.drawContours(out, [tgt1[0], tgt2[0]], -1, (255, 0, 0), -1)
 
