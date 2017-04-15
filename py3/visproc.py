@@ -20,6 +20,60 @@ import sys
 #  (measuring between the outside edges of the tape)
 #
 
+# found on chiefdelphi, for the LifeCam HD-3000
+
+# Empirically found, for the LiveCam Studio:
+# Horizontal FOV (radians): 0.776417
+# Vertical FOV (radians): 0.551077
+
+# Found on ChiefDelphi, for the LifeCam HD-3000:
+# Horizontal FOV (degrees): 60
+# Vertical FOV (degrees): 34.3
+
+# Emprically found for the LifeCam HD-3000:
+# Horizontal FOV (radians): 0.623525
+# Vertical FOV (radians): 0.594530
+
+fovHoriz = 0.623525
+fovVert = 0.594530
+
+# Both are in inches:
+targetWidth = 2.0 # inches
+targetHeight = 5.0
+
+def getTargetDistance(ct, imgWidth, imgHeight):
+    min_rect = cv2.minAreaRect(ct)
+    pts = np.int0(cv2.boxPoints(min_rect))
+    min_width = abs(pts[0][0] - pts[2][0])
+    min_height = abs(pts[0][1] - pts[2][1])
+
+    bb = cv2.boundingRect(ct)
+    bb_width = bb[2]
+    bb_height = bb[3]
+
+    #return targetWidth * imgWidth / (bb_width * math.tan(fovHoriz))
+    return targetHeight * imgHeight / (bb_height * math.tan(fovVert))
+
+def getFOVAngles(ct, imgWidth, imgHeight, dist):
+    min_rect = cv2.minAreaRect(ct)
+    pts = np.int0(cv2.boxPoints(min_rect))
+    min_width = abs(pts[0][0] - pts[2][0])
+    min_height = abs(pts[0][1] - pts[2][1])
+
+    bb = cv2.boundingRect(ct)
+    bb_width = bb[2]
+    bb_height = bb[3]
+
+    return (
+        math.atan2(targetWidth*imgWidth, bb_width*dist),
+        math.atan2(targetHeight*imgHeight, bb_height*dist)
+    )
+
+smoothing_constant = 0.25
+filteredDist = 0
+filteredFOVVert = 0
+filteredFOVHoriz = 0
+
 cam = cv2.VideoCapture(0)
 
 if not cam.isOpened():
@@ -53,6 +107,9 @@ while True:
         min_width = abs(pts[0][0] - pts[2][0])
         min_height = abs(pts[0][1] - pts[2][1])
 
+        moments = cv2.moments(ct)
+        center = (int(moments['m10']/moments['m00']), int(moments['m01']/moments['m00']))
+
         if min_width > 550:
             continue
 
@@ -71,11 +128,14 @@ while True:
         # Ideal Cvg. area ratio = 1
 
         bb_area = min_width*min_height
+        if bb_area < 10:
+            continue
+
         cvg_ratio = ct_area / bb_area
         cvg_score = 100/math.exp(abs(cvg_ratio-1))
 
-        cv2.putText(out, str(cvg_ratio), tuple(pts[2]), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0))
-        cv2.putText(out, str(AS), tuple(pts[0]), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255))
+        cv2.putText(out, str.format("{:.3g}", cvg_ratio), tuple(pts[0]), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0))
+        cv2.putText(out, str.format("{:.3g}", AS), tuple(pts[2]), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255))
 
         if AS < 0.1 or AS > 0.6:
             cv2.drawContours(out, [pts], 0, (0, 0, 255), 4)
@@ -92,6 +152,29 @@ while True:
     if len(scoredContours) >= 2:
         tgt1 = scoredContours.pop()
         tgt2 = scoredContours.pop()
+
+        # Calculate distance to targets:
+        #print(frame.shape)
+        dist1 = getTargetDistance(tgt1[0], frame.shape[1], frame.shape[0])
+        dist2 = getTargetDistance(tgt2[0], frame.shape[1], frame.shape[0])
+        print(str.format("d1: {:.3f} inches", dist1))
+        print(str.format("d2: {:.3f} inches", dist2))
+
+        # Get FOV angles:
+        angles1 = getFOVAngles(tgt1[0], frame.shape[1], frame.shape[0], 72.0)
+        angles2 = getFOVAngles(tgt2[0], frame.shape[1], frame.shape[0], 72.0)
+
+        avgFOVHoriz = (angles1[0]+angles2[0])/2.0
+        avgFOVVert = (angles1[1]+angles2[1])/2.0
+        avgDist = (dist1+dist2)/2.0
+
+        filteredFOVHoriz = filteredFOVHoriz + (smoothing_constant*(avgFOVHoriz-filteredFOVHoriz))
+        filteredFOVVert = filteredFOVVert + (smoothing_constant*(avgFOVVert-filteredFOVVert))
+        filteredDist = filteredDist + (smoothing_constant * (avgDist - filteredDist))
+
+        print(str.format("Approx. horiz. FOV: {:f} radians,", filteredFOVHoriz))
+        print(str.format("Approx. vert. FOV: {:f} radians,", filteredFOVVert))
+        print(str.format("Approx. distance: {:.3f} inches.", filteredDist))
 
         out = cv2.drawContours(out, [tgt1[0], tgt2[0]], -1, (255, 0, 0), -1)
 
