@@ -48,6 +48,8 @@ public class SwerveDrive extends Subsystem {
      * Yes, for all 4 arrays (or however many there are.)
      */
     private double[] steer_offsets = { 11.0, 576.0, 73.0, 834.0 };
+    private double[] maxEncoderOutput = {1024.0, 1024.0, 1024.0, 1024.0};
+    private double[] minEncoderOutput = {0.0, 0.0, 0.0, 0.0};
     private double[] currentSteerTarget = {0.0, 0.0, 0.0, 0.0};
     private double[] currentSteerDegrees = {0.0, 0.0, 0.0, 0.0};
     private double[] steerADCFiltered = {0.0, 0.0, 0.0, 0.0};
@@ -352,7 +354,7 @@ public class SwerveDrive extends Subsystem {
         angles[2] = (angles[0] - 180.0);
         angles[3] = (angles[0] - 360.0);
         angles[4] = (angles[0] + 360.0);
-        
+
         /* Find target angle with smallest distance from current: */
         int minIdx = 0;
         for(int i=0;i<angles.length;i++) {
@@ -376,7 +378,7 @@ public class SwerveDrive extends Subsystem {
 
     	double nativePos = angles[minIdx] * (1024.0 / 360.0);
     	nativePos += getSteerOffset(pos);
-        
+
         currentSteerTarget[positionToIndex(pos)] = nativePos;
 
     	steer.set(nativePos);
@@ -436,7 +438,7 @@ public class SwerveDrive extends Subsystem {
                 drive.disable();
             }
         }
-        
+
         steerADCFiltered[positionToIndex(pos)] += steerFilterConstant * (steer.getAnalogInRaw() - steerADCFiltered[positionToIndex(pos)]);
 
     	SmartDashboard.putNumber("SteerErr-"+suffix, steer.getClosedLoopError());

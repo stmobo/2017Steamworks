@@ -20,6 +20,7 @@ import org.usfirst.frc.team5002.robot.commands.KillDrivetrain;
 import org.usfirst.frc.team5002.robot.commands.PIDSteerCollective;
 import org.usfirst.frc.team5002.robot.commands.PIDSteerTestSingle;
 import org.usfirst.frc.team5002.robot.commands.SteerTestVbus;
+import org.usfirst.frc.team5002.robot.subsystems.GearMech;
 import org.usfirst.frc.team5002.robot.subsystems.RopeClimber;
 import org.usfirst.frc.team5002.robot.subsystems.Sensors;
 import org.usfirst.frc.team5002.robot.subsystems.SwerveDrive;
@@ -35,9 +36,11 @@ import org.usfirst.frc.team5002.robot.subsystems.ViewPort;
 public class Robot extends IterativeRobot {
 	public static SwerveDrive drivetrain;
 	public static RopeClimber ropeClimber;
+	public static GearMech gearMech;
     public static ViewPort viewport;
     public static Sensors sensors;
 	public static OI oi;
+
 
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
@@ -51,15 +54,16 @@ public class Robot extends IterativeRobot {
 		drivetrain = new SwerveDrive();
 		ropeClimber = new RopeClimber();
         viewport = new ViewPort();
+		gearMech = new GearMech();
         sensors = new Sensors();
         oi = new OI();
-        
+
         if(viewport != null) {
         	UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
             cam.setFPS(15);
             cam.setResolution(240, 320);
         }
-        
+
         SmartDashboard.putData("Autonomous", chooser);
 
         chooser.addObject("Auto Left", new AutonomousTemp(-0.1));
@@ -126,9 +130,9 @@ public class Robot extends IterativeRobot {
 
 		if(Robot.viewport != null) {
 			ViewControl viewCtrl = new ViewControl();
-			Scheduler.getInstance().add(viewCtrl);	
+			Scheduler.getInstance().add(viewCtrl);
 		}
-		
+
 		oi.updateOIState();
 	}
 

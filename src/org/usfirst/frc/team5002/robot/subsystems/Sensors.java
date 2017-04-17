@@ -76,7 +76,7 @@ public class Sensors extends Subsystem {
     /**
      * Returns true if the vision targets have been detected.
      */
-    public double canSeeTargets() {
+    public boolean canSeeTargets() {
         return jetson.getBoolean("valid", false);
     }
 

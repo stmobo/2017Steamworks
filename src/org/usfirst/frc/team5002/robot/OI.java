@@ -2,6 +2,7 @@ package org.usfirst.frc.team5002.robot;
 
 import org.usfirst.frc.team5002.robot.commands.ClimbDown;
 import org.usfirst.frc.team5002.robot.commands.ClimbUp;
+import org.usfirst.frc.team5002.robot.commands.GearMechOpen;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
@@ -58,6 +59,8 @@ public class OI {
         resetHdg = menu;
 
 		Y.whileHeld(new ClimbUp()); //turns the climb motor on while Y is being held
+		X.whenPressed(new GearMechOpen()); //opens the gear mech for 0.2 sec when the button is pressed
+		
         if(!DriverStation.getInstance().isFMSAttached()) {
     		RB.whileHeld(new ClimbDown());
         }
