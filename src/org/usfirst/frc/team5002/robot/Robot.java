@@ -53,14 +53,16 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		drivetrain = new SwerveDrive();
 		ropeClimber = new RopeClimber();
-        //viewport = new ViewPort();
+        viewport = new ViewPort();
 		gearMech = new GearMech();
         sensors = new Sensors();
         oi = new OI();
-        
-        UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
-        cam.setFPS(15);
-        cam.setResolution(240, 320);
+
+        if(viewport != null) {
+        	UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
+            cam.setFPS(15);
+            cam.setResolution(240, 320);
+        }
 
         SmartDashboard.putData("Autonomous", chooser);
 
@@ -102,12 +104,6 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		autonomousCommand = chooser.getSelected();
-		/*
-		 * String autoSelected = SmartDashboard.getString("Auto Selector",
-		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-		 * = new MyAutoCommand(); break; case "Default Auto": default:
-		 * autonomousCommand = new ExampleCommand(); break; }
-		 */
 
 		// schedule the autonomous command (example)
 		if (autonomousCommand != null)
@@ -126,20 +122,17 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopInit() {
-		// This makes sure that the autonomous stops running when
-		// teleop starts running. If you want the autonomous to
-		// continue until interrupted by another command, remove
-		// this line or comment it out.
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
 
 		Teleop teleop = new Teleop();
 		Scheduler.getInstance().add(teleop);
 
-		/*
-		ViewControl viewCtrl = new ViewControl();
-		Scheduler.getInstance().add(viewCtrl);
-		*/
+		if(Robot.viewport != null) {
+			ViewControl viewCtrl = new ViewControl();
+			Scheduler.getInstance().add(viewCtrl);
+		}
+
 		oi.updateOIState();
 	}
 

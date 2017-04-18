@@ -12,11 +12,10 @@ import edu.wpi.first.wpilibj.command.Scheduler;
  *
  */
 public class AutoGear extends Command {
-    public static final double targetDistance = 0.7; // voltage
-    public static final double distThreshold = 0.03;   // stop when closer than (targetDistance +- distThreshold)
+    public static final double distThreshold = 0.25; // stop when closer than (targetDistance +- distThreshold)
+    public static final double pegOffsetDist = 6.0;  // Distance _from wall_ to stop at
+    public static final double driveSpeed = 0.25;    // forward/back drive speed (for adjusting distance to wall)
 
-    public static final double driveSpeed = 0.25;   // forward/back drive speed (for adjusting distance to wall)
-    
 	public AutoGear() {
     	requires(Robot.drivetrain);
     }
@@ -32,9 +31,15 @@ public class AutoGear extends Command {
     }
 
     public static void autoGearAlign() {
-    	double dist = Robot.sensors.getFrontDistance();
-        
-        if(Math.abs(dist - targetDistance) >= distThreshold) {
+    	double lonOff = Robot.sensors.getVisualDistance() - pegOffsetDist;
+        double latOff = Robot.sensors.getVisualOffset();
+
+        double dist = Math.hypot(lonOff, latOff);
+        double driveAngle = Math.atan2(latOff, lonOff);
+
+        Robot.drivetrain.setSteerDegreesCollective(driveAngle);
+
+        if(Math.abs(dist) >= distThreshold) {
             /* Adjust distance to target: */
             Robot.drivetrain.setSteerDegreesCollective(0);
             if(dist > targetDistance) {
@@ -48,8 +53,11 @@ public class AutoGear extends Command {
     }
 
     public static boolean finished() {
-        double dist = Robot.sensors.getFrontDistance();
-        if(Math.abs(dist - targetDistance) < distThreshold) {
+    	double lonOff = Robot.sensors.getVisualDistance() - pegOffsetDist;
+        double latOff = Robot.sensors.getVisualOffset();
+        double dist = Math.hypot(lonOff, latOff);
+
+        if(Math.abs(dist) < distThreshold) {
             return true;
         }
 

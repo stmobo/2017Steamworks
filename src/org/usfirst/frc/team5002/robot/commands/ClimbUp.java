@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class ClimbUp extends Command {
 	private final double climbSlowThreshold = 2.5;
-	
+
     public ClimbUp() {
         requires(Robot.ropeClimber);
     }
@@ -17,13 +17,9 @@ public class ClimbUp extends Command {
      protected void initialize() {
     }
 
-   
+
     protected void execute() {
-    	if(Robot.sensors.getClimbVoltage() > climbSlowThreshold) {
-        	Robot.ropeClimber.runSlow();
-    	} else {
-        	Robot.ropeClimber.run();
-    	}
+    	Robot.ropeClimber.run();
     }
 
     protected boolean isFinished() {
