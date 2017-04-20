@@ -28,12 +28,18 @@ public class GearMechOpen extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.gearMech.open();
+    	if (tm.get() < 0.4){
+    		Robot.gearMech.open();
+    	}
+    	else{
+    		Robot.gearMech.reset();
+    	}
+    	
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return tm.hasPeriodPassed(0.2);
+        return tm.hasPeriodPassed(0.45);
     }
 
     // Called once after isFinished returns true

@@ -1,23 +1,21 @@
 package org.usfirst.frc.team5002.robot.commands;
 
 import org.usfirst.frc.team5002.robot.Robot;
-
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.TalonControlMode;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- * AutoDriveIMU -- Automatic driving via IMU.
- * Really, this will only work at the very beginning of a match.
+ *
  */
-public class AutoDriveIMU extends Command {
-    private final double invertAxis = -1.0;
+public class AutoGearMech extends Command {
+	private final double invertAxis = -1.0;
     private final double distance = 1.9812;       // meters
     private final double distThreshold = 0.1;     // meters
     private final double driveSpeed = 0.25;       //
 
-    public AutoDriveIMU() {
+    public AutoGearMech() {
     	requires(Robot.drivetrain);
     }
 
@@ -57,3 +55,4 @@ public class AutoDriveIMU extends Command {
         end();
     }
 }
+
