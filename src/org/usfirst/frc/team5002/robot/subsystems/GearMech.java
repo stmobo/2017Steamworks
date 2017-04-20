@@ -22,7 +22,7 @@ public class GearMech extends Subsystem {
     }
     
     	public GearMech(){
-        	gearmechMove = new CANTalon(4);//TODO input actual port number
+        	gearmechMove = new CANTalon(42);//TODO input actual port number
         	gearmechMove.changeControlMode(TalonControlMode.PercentVbus);
         
         }
@@ -30,9 +30,10 @@ public class GearMech extends Subsystem {
         public void open(){
         	gearmechMove.set(-1.0);
         }
-        public void reset(){
+     /*   public void reset(){
         	gearmechMove.set(0.6);
         }
+        */
  
         public void stop(){
         	gearmechMove.set(0);
