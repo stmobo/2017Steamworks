@@ -141,15 +141,14 @@ public class Sensors extends Subsystem {
     }
 
     public void updateSD() {
-        SmartDashboard.putNumber("LeftDist-Voltage", distLeft.getAverageVoltage());
-        SmartDashboard.putNumber("RightDist-Voltage", distRight.getAverageVoltage());
-
-    	double avgDist = (distLeft.getAverageVoltage() + distRight.getAverageVoltage()) / 2.0;
-    	SmartDashboard.putNumber("Avg. Sensor Voltage", avgDist);
-        SmartDashboard.putNumber("Frontal Distance", getFrontDistance());
-
-        SmartDashboard.putNumber("LeftDist-cm", getLeftDistance());
-        SmartDashboard.putNumber("RightDist-cm", getRightDistance());
+    	if(getJetsonStatus()) {
+        	SmartDashboard.putBoolean("Jetson Connected", true);
+        	SmartDashboard.putBoolean("Targets Visible", canSeeTargets());
+        	SmartDashboard.putNumber("Vision Distance", getVisualDistance());
+        	SmartDashboard.putNumber("Vision Offset", getVisualOffset());
+    	} else {
+        	SmartDashboard.putBoolean("Jetson Connected", false);	
+    	}
 
         SmartDashboard.putNumber("Start Yaw", startYaw);
 		if(navx != null) {

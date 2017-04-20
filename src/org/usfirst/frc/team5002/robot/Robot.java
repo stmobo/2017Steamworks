@@ -59,7 +59,7 @@ public class Robot extends IterativeRobot {
         oi = new OI();
 
         if(viewport == null) {
-        	UsbCamera cam = CameraServer.getInstance().startAutomaticCapture(1);
+        	UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
             cam.setFPS(15);
             cam.setResolution(240, 320);
         }
