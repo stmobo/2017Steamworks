@@ -103,7 +103,7 @@ public class OI {
     }
 
     public boolean autoAlignButtonActivated() {
-        return X.get();
+        return false;//X.get();
     }
 
     public boolean reverseButtonActivated() {

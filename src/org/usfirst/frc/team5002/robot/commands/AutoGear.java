@@ -42,9 +42,9 @@ public class AutoGear extends Command {
         if(Math.abs(dist) >= distThreshold) {
             /* Adjust distance to target: */
             Robot.drivetrain.setSteerDegreesCollective(0);
-            if(dist > targetDistance) {
+            if(dist > distThreshold) {
                 Robot.drivetrain.setDriveSpeedCollective(-driveSpeed);
-            } else if(dist < targetDistance) {
+            } else if(dist < distThreshold) {
                 Robot.drivetrain.setDriveSpeedCollective(driveSpeed);
             }
         } else {

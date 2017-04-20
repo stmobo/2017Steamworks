@@ -53,13 +53,13 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		drivetrain = new SwerveDrive();
 		ropeClimber = new RopeClimber();
-        viewport = new ViewPort();
+        //viewport = new ViewPort();
 		gearMech = new GearMech();
         sensors = new Sensors();
         oi = new OI();
 
-        if(viewport != null) {
-        	UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
+        if(viewport == null) {
+        	UsbCamera cam = CameraServer.getInstance().startAutomaticCapture(1);
             cam.setFPS(15);
             cam.setResolution(240, 320);
         }
