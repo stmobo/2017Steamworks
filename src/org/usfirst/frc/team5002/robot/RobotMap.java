@@ -17,7 +17,7 @@ public class RobotMap {
 	public static int bl_drive = 13;//19;
 	public static int bl_steer = 12;//1;
 
-	public static int br_drive = 4;//2;
+	public static int br_drive = 0;//2;
 	public static int br_steer = 2;//4;
 
     /* Analog distance sensor ports: */

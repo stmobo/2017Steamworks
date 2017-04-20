@@ -12,7 +12,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class GearMech extends Subsystem {
 	
-	private CANTalon gearmechFwd;
+	private CANTalon gearmechMove;
+	
 
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
@@ -21,17 +22,20 @@ public class GearMech extends Subsystem {
     }
     
     	public GearMech(){
-        	gearmechFwd = new CANTalon(28743);//TODO input actual port number
-        	gearmechFwd.changeControlMode(TalonControlMode.PercentVbus);
+        	gearmechMove = new CANTalon(4);//TODO input actual port number
+        	gearmechMove.changeControlMode(TalonControlMode.PercentVbus);
         
         }
         
         public void open(){
-        	gearmechFwd.set(1.0);
+        	gearmechMove.set(-1.0);
+        }
+        public void reset(){
+        	gearmechMove.set(0.6);
         }
  
         public void stop(){
-        	gearmechFwd.set(0);
+        	gearmechMove.set(0);
         }
     }
 
