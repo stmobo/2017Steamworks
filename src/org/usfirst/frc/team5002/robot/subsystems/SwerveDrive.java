@@ -47,15 +47,16 @@ public class SwerveDrive extends Subsystem {
     /* value ordering: FrontLeft, FrontRight, BackLeft, BackRight
      * Yes, for all 4 arrays (or however many there are.)
      */
-    private double[] steer_offsets = {873.0, 55.0, 628.0, 616.0};//{ 11.0, 576.0, 73.0, 834.0 };
+    private double[] steer_offsets = { 11.0, 576.0, 73.0, 834.0 };
     private double[] maxEncoderOutput = {1024.0, 1024.0, 1024.0, 1024.0};
     private double[] minEncoderOutput = {0.0, 0.0, 0.0, 0.0};
     private double[] currentSteerTarget = {0.0, 0.0, 0.0, 0.0};
     private double[] currentSteerDegrees = {0.0, 0.0, 0.0, 0.0};
+    private double[] steerADCFiltered = {0.0, 0.0, 0.0, 0.0};
+    private final double steerFilterConstant = 0.25;
 
     boolean driveReversalStatus[] = {false, false, false, false};
     boolean driveReversalConst[] = {true, false, true, false};
-    boolean swerveEnableStatus[] = {true, true, true, true};
 
     /* NOTE: Exact object type below is SendableChooser<Boolean>.
      * Unfortunately, Java's generics are... not as powerful as I'd like,
@@ -100,48 +101,6 @@ public class SwerveDrive extends Subsystem {
     }
 
     /**
-     * Gets the maximum possible value returned by the encoder hardware.
-     * For use in software compensation.
-     *
-     * @param pos position of the steer module to inspect.
-     */
-    private double getSteerHack(ModulePosition pos) {
-    	switch(pos) {
-    	case FL:
-    		return maxEncoderOutput[0];
-    	case FR:
-    		return maxEncoderOutput[1];
-    	case BL:
-    		return maxEncoderOutput[2];
-    	case BR:
-    		return maxEncoderOutput[3];
-    	}
-
-    	return 1024;
-    }
-
-    /**
-     * Gets the minimum possible value returned by the encoder hardware.
-     * For use in software compensation.
-     *
-     * @param pos position of the steer module to inspect.
-     */
-    private double getMinSteerHack(ModulePosition pos) {
-        switch(pos) {
-        case FL:
-    		return minEncoderOutput[0];
-    	case FR:
-    		return minEncoderOutput[1];
-    	case BL:
-    		return minEncoderOutput[2];
-    	case BR:
-    		return minEncoderOutput[3];
-        }
-
-        return 0;
-    }
-
-    /**
      * Gets the relative value of "forward" with respect to a steer encoder.
      * Driving a steer motor to this position will induce forward motion when
      * driven with positive voltage.
@@ -149,18 +108,7 @@ public class SwerveDrive extends Subsystem {
      * @param pos position of the steer module to inspect.
      */
     private double getSteerOffset(ModulePosition pos) {
-    	switch(pos) {
-    	case FL:
-    		return steer_offsets[0];
-    	case FR:
-    		return steer_offsets[1];
-    	case BL:
-    		return steer_offsets[2];
-    	case BR:
-    		return steer_offsets[3];
-    	}
-
-    	return 0;
+    	return steer_offsets[positionToIndex(pos)];
     }
 
     /**
@@ -169,18 +117,7 @@ public class SwerveDrive extends Subsystem {
      * @param pos position of the steer module to inspect.
      */
     private boolean getDriveReverse(ModulePosition pos) {
-    	switch(pos) {
-    	case FL:
-    		return driveReversalStatus[0];
-    	case FR:
-    		return driveReversalStatus[1];
-    	case BL:
-    		return driveReversalStatus[2];
-    	case BR:
-    		return driveReversalStatus[3];
-    	}
-
-    	return false;
+    	return driveReversalStatus[positionToIndex(pos)];
     }
 
     /**
@@ -189,18 +126,7 @@ public class SwerveDrive extends Subsystem {
      * @param pos position of the steer module to inspect.
      */
     private boolean getDriveReverseConst(ModulePosition pos) {
-    	switch(pos) {
-    	case FL:
-    		return driveReversalConst[0];
-    	case FR:
-    		return driveReversalConst[1];
-    	case BL:
-    		return driveReversalConst[2];
-    	case BR:
-    		return driveReversalConst[3];
-    	}
-
-    	return false;
+    	return driveReversalConst[positionToIndex(pos)];
     }
 
     /**
@@ -209,18 +135,7 @@ public class SwerveDrive extends Subsystem {
      * @param pos position of the steer module to inspect.
      */
     private double getSteerTarget(ModulePosition pos) {
-    	switch(pos) {
-    	case FL:
-    		return currentSteerTarget[0];
-    	case FR:
-    		return currentSteerTarget[1];
-    	case BL:
-    		return currentSteerTarget[2];
-    	case BR:
-    		return currentSteerTarget[3];
-    	}
-
-    	return 0.0;
+    	return currentSteerTarget[positionToIndex(pos)];
     }
 
     /**
@@ -229,20 +144,7 @@ public class SwerveDrive extends Subsystem {
      * @param pos position of the steer module to inspect.
      */
     private void setDriveReverse(ModulePosition pos, boolean stat) {
-    	switch(pos) {
-    	case FL:
-    		driveReversalStatus[0] = stat;
-    		break;
-    	case FR:
-    		driveReversalStatus[1] = stat;
-    		break;
-    	case BL:
-    		driveReversalStatus[2] = stat;
-    		break;
-    	case BR:
-    		driveReversalStatus[3] = stat;
-    		break;
-    	}
+    	driveReversalStatus[positionToIndex(pos)] = stat;
     }
 
     /**
@@ -392,9 +294,8 @@ public class SwerveDrive extends Subsystem {
     	CANTalon steer = getSteerController(pos);
     	double nativeUnits = steer.getPosition();
 
-    	nativeUnits -= getMinSteerHack(pos);
     	nativeUnits -= getSteerOffset(pos);
-    	double degrees = nativeUnits * (360.0 / (getSteerHack(pos) - getMinSteerHack(pos)));
+    	double degrees = nativeUnits * (360.0 / 1024.0);
 
     	return degrees;
     }
@@ -453,7 +354,7 @@ public class SwerveDrive extends Subsystem {
         angles[2] = (angles[0] - 180.0);
         angles[3] = (angles[0] - 360.0);
         angles[4] = (angles[0] + 360.0);
-        
+
         /* Find target angle with smallest distance from current: */
         int minIdx = 0;
         for(int i=0;i<angles.length;i++) {
@@ -475,10 +376,9 @@ public class SwerveDrive extends Subsystem {
     	SmartDashboard.putNumber("SteerRawTarget-"+positionToFriendlyName(pos), degrees);
     	SmartDashboard.putNumber("SteerTarget-"+positionToFriendlyName(pos), angles[minIdx]);
 
-    	double nativePos = angles[minIdx] * ((getSteerHack(pos) - getMinSteerHack(pos)) / 360.0);
+    	double nativePos = angles[minIdx] * (1024.0 / 360.0);
     	nativePos += getSteerOffset(pos);
-        nativePos += getMinSteerHack(pos);
-        
+
         currentSteerTarget[positionToIndex(pos)] = nativePos;
 
     	steer.set(nativePos);
@@ -539,6 +439,8 @@ public class SwerveDrive extends Subsystem {
             }
         }
 
+        steerADCFiltered[positionToIndex(pos)] += steerFilterConstant * (steer.getAnalogInRaw() - steerADCFiltered[positionToIndex(pos)]);
+
     	SmartDashboard.putNumber("SteerErr-"+suffix, steer.getClosedLoopError());
     	SmartDashboard.putNumber("SteerPos-"+suffix, steer.getPosition());
     	SmartDashboard.putNumber("SteerVel-"+suffix, steer.getAnalogInVelocity());
@@ -561,10 +463,10 @@ public class SwerveDrive extends Subsystem {
     	UpdateSDSingle(ModulePosition.BR);
 
     	SmartDashboard.putString("Steer Encoder Calibration",
-    		"{ " + Double.toString(fl_steer.getAnalogInRaw()) + ", "
-				 + Double.toString(fr_steer.getAnalogInRaw()) + ", "
-				 + Double.toString(bl_steer.getAnalogInRaw()) + ", "
-				 + Double.toString(br_steer.getAnalogInRaw()) + " }"
+    		"{ " + Double.toString(steerADCFiltered[0]) + ", "
+				 + Double.toString(steerADCFiltered[1]) + ", "
+				 + Double.toString(steerADCFiltered[2]) + ", "
+				 + Double.toString(steerADCFiltered[3]) + " }"
     	);
     }
 }

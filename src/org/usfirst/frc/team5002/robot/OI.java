@@ -194,7 +194,9 @@ public class OI {
 
 	public void UpdateSD(){
 		Robot.drivetrain.updateSD();//sends all the data from SwerveDrive subsystem to the SmartDashboard
-		//Robot.viewport.updateSD();
+		if(Robot.viewport != null) {
+			Robot.viewport.updateSD();	
+		}
         Robot.sensors.updateSD();
 
 		if(!DriverStation.getInstance().isDisabled()) {
