@@ -36,7 +36,7 @@ public class OI {
 	private Button home;
 	private Button menu;
 
-    public boolean focEnabled = false;
+    public boolean focEnabled = true;
 
     private final Timer ctrlShakeTimer = new Timer();
     private boolean ctrlShaking = false;
@@ -60,10 +60,12 @@ public class OI {
 
 		Y.whileHeld(new ClimbUp()); //turns the climb motor on while Y is being held
 		X.whenPressed(new GearMechOpen()); //opens the gear mech for 0.2 sec when the button is pressed
-		
+
+		/*
         if(!DriverStation.getInstance().isFMSAttached()) {
     		RB.whileHeld(new ClimbDown());
         }
+		*/
 	}
 
     // For toggle buttons that don't warrant their own commands.
@@ -114,10 +116,6 @@ public class OI {
         return A.get();
     }
 
-    public boolean viewBackwardButtonActivated() {
-        return B.get();
-    }
-
     public boolean isPOVPressed() {
     	int angle = arcadeStick.getPOV(0);
     	if(angle == -1) {
@@ -155,15 +153,23 @@ public class OI {
         return arcadeStick.getMagnitude();
     }
 
+	/*
+ 	 * <X, Y> in terms of axis coordinates (i.e. <getHorizontalAxis(), getHorizontalAxis()>):
+	 * <+1, +1> = Up+Left
+	 * <+1, -1> = Down+Left
+	 * <-1, +1> = Up+Right
+	 * <-1, -1> = Down+Right
+	 */
+
 	public double getForwardAxis() {
         if(focEnabled && Robot.sensors.navx != null) {
             // Zero degrees = towards opposing side
-            double x = arcadeStick.getRawAxis(1) * -1.0;
-            double y = arcadeStick.getRawAxis(0) * -1.0;
+            double x = arcadeStick.getRawAxis(0) * -1.0;
+            double y = arcadeStick.getRawAxis(1) * -1.0;
             double hdg = Robot.sensors.getRobotHeading();
 
             // X-coordinate -> CW alias rotation (left-handed)
-            return (x * Math.cos(hdg*Math.PI/180.0)) + (y * -Math.sin(hdg*Math.PI/180.0));
+            return (x * -Math.sin(hdg*Math.PI/180.0)) + (y * Math.cos(hdg*Math.PI/180.0));
         } else {
             return arcadeStick.getRawAxis(1) * -1.0;  // (axis 1 = left-hand Y axis) allows the Joystick to command the Robot's forwards and backwards movement
         }
@@ -171,13 +177,12 @@ public class OI {
 
 	public double getHorizontalAxis(){
         if(focEnabled && Robot.sensors.navx != null) {
-            // Right = +Y
-            double x = arcadeStick.getRawAxis(1) * -1.0;
-            double y = arcadeStick.getRawAxis(0) * -1.0;
+            double x = arcadeStick.getRawAxis(0) * -1.0;
+            double y = arcadeStick.getRawAxis(1) * -1.0;
             double hdg = Robot.sensors.getRobotHeading();
 
             // Y-coordinate, CW alias rotation w/ left-handed coordinate system
-            return (x * Math.sin(hdg*Math.PI/180.0)) + (y * Math.cos(hdg*Math.PI/180.0));
+            return (x * Math.cos(hdg*Math.PI/180.0)) + (y * Math.sin(hdg*Math.PI/180.0));
         } else {
             return arcadeStick.getRawAxis(0) * -1.0; // (axis 0 = left-hand X axis) allows the Joystick to command the Robot's side to side movement
         }
@@ -194,9 +199,7 @@ public class OI {
 
 	public void UpdateSD(){
 		Robot.drivetrain.updateSD();//sends all the data from SwerveDrive subsystem to the SmartDashboard
-		if(Robot.viewport != null) {
-			Robot.viewport.updateSD();	
-		}
+		
         Robot.sensors.updateSD();
 
 		if(!DriverStation.getInstance().isDisabled()) {

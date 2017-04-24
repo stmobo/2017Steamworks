@@ -6,6 +6,7 @@ import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.networktables.NetworkTablesJNI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -47,12 +48,15 @@ public class SwerveDrive extends Subsystem {
     /* value ordering: FrontLeft, FrontRight, BackLeft, BackRight
      * Yes, for all 4 arrays (or however many there are.)
      */
-    private double[] steer_offsets = { 880.0, 1454.0, -437.0, 575.0 };
+    private double[] steer_offsets = { 884.8673791874427, 442.9537088191704, 867.007616181512, 578.0004634896394 };
     private double[] maxEncoderOutput = {1024.0, 1024.0, 1024.0, 1024.0};
     private double[] minEncoderOutput = {0.0, 0.0, 0.0, 0.0};
+    
     private double[] currentSteerTarget = {0.0, 0.0, 0.0, 0.0};
     private double[] currentSteerDegrees = {0.0, 0.0, 0.0, 0.0};
     private double[] steerADCFiltered = {0.0, 0.0, 0.0, 0.0};
+    
+    private double lastSteerUpdate;
     private final double steerFilterConstant = 0.25;
 
     boolean driveReversalStatus[] = {false, false, false, false};
@@ -211,6 +215,7 @@ public class SwerveDrive extends Subsystem {
         configureDriveMotor(ModulePosition.FR);
         configureDriveMotor(ModulePosition.BL);
         configureDriveMotor(ModulePosition.BR);
+        
     }
 
     /**
@@ -462,11 +467,14 @@ public class SwerveDrive extends Subsystem {
     	UpdateSDSingle(ModulePosition.BL);
     	UpdateSDSingle(ModulePosition.BR);
 
-    	SmartDashboard.putString("Steer Encoder Calibration",
-    		"{ " + Double.toString(steerADCFiltered[0]) + ", "
-				 + Double.toString(steerADCFiltered[1]) + ", "
-				 + Double.toString(steerADCFiltered[2]) + ", "
-				 + Double.toString(steerADCFiltered[3]) + " }"
-    	);
+    	if(Math.abs(lastSteerUpdate - Timer.getFPGATimestamp()) > 1.0) {
+	    	SmartDashboard.putString("Steer Encoder Calibration",
+	    		"{ " + Double.toString(steerADCFiltered[0]) + ", "
+					 + Double.toString(steerADCFiltered[1]) + ", "
+					 + Double.toString(steerADCFiltered[2]) + ", "
+					 + Double.toString(steerADCFiltered[3]) + " }"
+	    	);
+	    	lastSteerUpdate = Timer.getFPGATimestamp();
+    	}
     }
 }

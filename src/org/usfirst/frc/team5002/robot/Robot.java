@@ -13,8 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team5002.robot.commands.Teleop;
-import org.usfirst.frc.team5002.robot.commands.ViewControl;
-//import org.usfirst.frc.team5002.robot.commands.AutoDriveIMU;
+import org.usfirst.frc.team5002.robot.commands.AutoCenter;
 import org.usfirst.frc.team5002.robot.commands.AutonomousTemp;
 import org.usfirst.frc.team5002.robot.commands.KillDrivetrain;
 import org.usfirst.frc.team5002.robot.commands.PIDSteerCollective;
@@ -53,7 +52,7 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		drivetrain = new SwerveDrive();
 		ropeClimber = new RopeClimber();
-        //viewport = new ViewPort();
+        viewport = new ViewPort();
 		gearMech = new GearMech();
         sensors = new Sensors();
         oi = new OI();
@@ -66,11 +65,9 @@ public class Robot extends IterativeRobot {
 
         SmartDashboard.putData("Autonomous", chooser);
 
-        chooser.addObject("Auto Left", new AutonomousTemp(-0.1));
-        chooser.addObject("Auto Right", new AutonomousTemp(0.1));
-        chooser.addObject("Auto Straight", new AutonomousTemp(0.0));
-       // chooser.addObject("Auto IMU Drive", new AutoDriveIMU());
-        chooser.addDefault("No Auto", new KillDrivetrain());
+        chooser.addDefault("Auto Straight", new AutonomousTemp(-0.05));
+		chooser.addObject("Center Peg Auto", new AutoCenter(-0.05));
+        chooser.addObject("No Auto", new KillDrivetrain());
 	}
 
 	/**
@@ -85,9 +82,11 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void disabledPeriodic() {
-		sensors.updateDistance();
 		oi.UpdateSD();
 		Scheduler.getInstance().run();
+		if(Robot.viewport != null) {
+			Robot.viewport.update();
+		}
 	}
 
 	/**
@@ -116,7 +115,6 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		oi.UpdateSD();
-		sensors.updateDistance();
 		Scheduler.getInstance().run();
 	}
 
@@ -128,11 +126,6 @@ public class Robot extends IterativeRobot {
 		Teleop teleop = new Teleop();
 		Scheduler.getInstance().add(teleop);
 
-		if(Robot.viewport != null) {
-			ViewControl viewCtrl = new ViewControl();
-			Scheduler.getInstance().add(viewCtrl);
-		}
-
 		oi.updateOIState();
 	}
 
@@ -141,9 +134,11 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		sensors.updateDistance();
 		oi.UpdateSD();
 		oi.updateOIState();
+		if(Robot.viewport != null) {
+			Robot.viewport.update();
+		}
 		Scheduler.getInstance().run();
 	}
 

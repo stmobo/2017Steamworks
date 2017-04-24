@@ -23,6 +23,8 @@ public class Teleop extends Command {
 
     private boolean autoAlignActive = false;
 
+	private static final double driveBias = 0.00; // to the right motors and frm the left
+
 	double[] angles = new double[4];
 	double[] speeds = new double[4];
     private double speedlimit(double speedIn) {
@@ -71,10 +73,10 @@ public class Teleop extends Command {
 		double spd_br = Math.sqrt(Math.pow(a, 2) + Math.pow(c, 2));
 		maxWs = spd_br > maxWs ? spd_br : maxWs;
 
-		speeds[0] = (maxWs > 1 ? spd_fr / maxWs : spd_fr) * Robot.oi.getDriveSpeedCoefficient();
-		speeds[1] = (maxWs > 1 ? spd_fl / maxWs : spd_fl) * Robot.oi.getDriveSpeedCoefficient();
-		speeds[2] = (maxWs > 1 ? spd_bl / maxWs : spd_bl) * Robot.oi.getDriveSpeedCoefficient();
-		speeds[3] = (maxWs > 1 ? spd_br / maxWs : spd_br) * Robot.oi.getDriveSpeedCoefficient();
+		speeds[0] = (maxWs > 1 ? spd_fr / maxWs : spd_fr) * Robot.oi.getDriveSpeedCoefficient() + driveBias;
+		speeds[1] = ((maxWs > 1 ? spd_fl / maxWs : spd_fl) * Robot.oi.getDriveSpeedCoefficient()) - driveBias;
+		speeds[2] = ((maxWs > 1 ? spd_bl / maxWs : spd_bl) * Robot.oi.getDriveSpeedCoefficient()) - driveBias;
+		speeds[3] = (maxWs > 1 ? spd_br / maxWs : spd_br) * Robot.oi.getDriveSpeedCoefficient() + driveBias;
 
 		if(!enableAngleHold || Robot.oi.arcadeStick.getMagnitude() <= 0.50) {
 			if((Math.abs(fwd) > 0.0)  ||
@@ -106,7 +108,7 @@ public class Teleop extends Command {
 
     private boolean autoAlignButtonDebounce = false;
     protected void execute() {
-    	
+
         if(Robot.oi.autoAlignButtonActivated()) {
             if(!autoAlignButtonDebounce) {
                 autoAlignActive = !autoAlignActive;
@@ -115,7 +117,7 @@ public class Teleop extends Command {
         } else {
             autoAlignButtonDebounce = false;
         }
-        
+
 
         if(autoAlignActive) {
             AutoGear.autoGearAlign();

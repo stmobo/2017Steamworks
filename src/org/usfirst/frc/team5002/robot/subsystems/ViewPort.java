@@ -5,6 +5,9 @@ import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.networktables.NetworkTablesJNI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+
+import org.usfirst.frc.team5002.robot.Robot;
+
 import edu.wpi.cscore.*;
 
 /**
@@ -15,73 +18,61 @@ public class ViewPort extends Subsystem {
     /* Names here are assumed to be in the same order as GetVideoSources().
      * Not a very reasonable assumption, but it's what we've got to work with...
      */
-    private String[] cameraNames = {
-        "Feed 1"
-    };
-    private VideoSource[] sources;
-    private int currentSrc;
-
-    private MjpegServer server;
-
+	private UsbCamera cam1;
+	private UsbCamera cam2;
+    
+	private int currentSrc;
+    
+    private VideoSink server;
+    private CvSink dummy1;
+    private CvSink dummy2;
+    
     public ViewPort() {
         /* Init all sources */
-        UsbCameraInfo[] cams = UsbCamera.enumerateUsbCameras();
-        sources = new VideoSource[cams.length];
-
-        System.out.println("Got " + Integer.toString(sources.length) + " sources");
-        System.out.println("Got " + Integer.toString(cams.length) + " USB cameras");
+        cam1 = CameraServer.getInstance().startAutomaticCapture(0);
+        cam2 = CameraServer.getInstance().startAutomaticCapture(1);
         
-        if(cams.length > 0) {
-	        int i = 0;
-	        
-	        server = CameraServer.getInstance().addServer("ViewPort");
-	        
-	        for(UsbCameraInfo cam : cams) {
-	        	VideoSource src = new UsbCamera(cam.name, cam.dev);
-	        	
-	        	System.out.println("Initialized camera " + Integer.toString(i) + ": device " + Integer.toString(cam.dev) + ": " + cam.name);
-	        	
-	        	sources[i] = src;
-	            
-	        	src.setFPS(15);
-	            src.setResolution(320, 240);
-	
-	            if(cameraNames.length > i) {
-	                cameraNames[i] = cameraNames[i] + " (" + src.getName() + ")";
-	            }
-	            
-	            i++;
-	        }
+        cam1.setFPS(15);
+        cam1.setResolution(240, 320);
+        
+        cam2.setFPS(15);
+        cam2.setResolution(240, 320);
+        
+        server = CameraServer.getInstance().getServer();
+        
+        dummy1 = new CvSink("dummy1");
+        dummy2 = new CvSink("dummy2");
+        
+        dummy1.setSource(cam1);
+        dummy1.setEnabled(true);
 
-            currentSrc = 0;
-            server.setSource(sources[0]);
-        }
+        dummy2.setSource(cam2);
+        dummy2.setEnabled(true);
+        
+        currentSrc = 0;
 	}
 
-    public String getFeedName() {
-        if(cameraNames.length > currentSrc) {
-            return cameraNames[currentSrc];
-        } else {
-            return sources[currentSrc].getName();
-        }
+    public void nextView() {
+    	if(currentSrc == 0) {
+    		server.setSource(cam2);
+    		currentSrc = 1;
+    	} else {
+    		server.setSource(cam1);
+    		currentSrc = 0;
+    	}
     }
+    
+    private boolean nextViewDebounce = false;
 
-    public void setView(int index) {
-        if(index < sources.length && index != currentSrc) {
-            currentSrc = index;
-            server.setSource(sources[index]);
-        }
-    }
-
-    /**
-     * Retrieves the number of views available for use.
-     */
-    public int getViewCount() {
-        return sources.length;
-    }
-
-    public void updateSD() {
-        SmartDashboard.putString("Selected View", getFeedName());
+    public void update() {
+    	if(Robot.oi.viewForwardButtonActivated()) {
+    		if(!nextViewDebounce) {
+    			nextView();
+    		}
+    		nextViewDebounce = true;
+    	} else {
+    		nextViewDebounce = false;
+    	}
     }
 
 	public void initDefaultCommand() {}

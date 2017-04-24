@@ -8,7 +8,10 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.smartdashboard.*;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.cscore.CvSink;
+import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
@@ -16,34 +19,40 @@ import edu.wpi.first.wpilibj.SPI.Port;
 
 import edu.wpi.first.wpilibj.networktables.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.opencv.core.*;
+import org.opencv.core.MatOfPoint;
+import org.opencv.imgproc.Imgproc;
+
 public class Sensors extends Subsystem {
-    private AnalogInput distLeft;
-    private AnalogInput distRight;
-
-    /* Voltage varies inversely with distance measured by sensor. */
-    private final double minDistance = 10;
-    private final double maxVoltage = 3.0;
-
-    private final double maxDistance = 80;
-    private final double minVoltage = 0.4;
-
-    private final double smoothingConstant = 0.25;
-    private double distOut = 0;
-
     private double startYaw;
     public static AHRS navx;
     private AHRS.BoardYawAxis yawAxis;
 
     private NetworkTable jetson;
 
+    private UsbCamera visionCam;
+    private CvSink visionSink;
+    
+    private static final Scalar filterLow = new Scalar(0, 94, 0);
+    private static final Scalar filterHigh = new Scalar(60, 255, 255);
+    
+    private static final double fovHoriz = 0.623525;
+    
+    private double filteredOffset = 0.0;
+    private double filteredDistance = 0.0;
+    private static final double smoothingConst = 0.10;
+    
     public Sensors() {
-        distLeft = new AnalogInput(RobotMap.distSensorLeft);
-        distRight = new AnalogInput(RobotMap.distSensorRight);
-
-        distLeft.setAverageBits(64);
-        distRight.setAverageBits(64);
-
         jetson = NetworkTable.getTable("vision");
+        
+        /*
+        visionCam = new UsbCamera("Vision Camera", 2);
+        visionSink = new CvSink("Vision Sink");
+        visionSink.setSource(visionCam);
+		*/
 
         try {
 			/* NOTE: With respect to the NavX, the robot's front is in the -X direction.
@@ -65,6 +74,71 @@ public class Sensors extends Subsystem {
             yawAxis = null;
 		}
     }
+
+    private void visionLoop() {
+    	List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
+    	
+    	/* Preprocessing. */
+    	Mat frame = new Mat();
+    	Mat filtered = new Mat();
+    	
+    	visionSink.grabFrame(frame);
+    	Imgproc.boxFilter(frame, filtered, -1, new Size(7,7));
+    	Imgproc.cvtColor(filtered, filtered, Imgproc.COLOR_BGR2HLS);
+    	Core.inRange(filtered, filterLow, filterHigh, filtered);
+    	Imgproc.findContours(filtered, contours, null, Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_NONE);
+    	
+    	MatOfPoint bestContour = null;
+    	MatOfPoint secBestContour = null;
+    	
+    	double bestScore = 0;
+    	double secBestScore = 0;
+    	
+    	for(MatOfPoint ct : contours) {
+    		double ct_area = Imgproc.contourArea(ct);
+    		MatOfPoint2f ct2f = new MatOfPoint2f(ct.toArray());
+    		RotatedRect minRect = Imgproc.minAreaRect(ct2f);
+    		
+    		double as = minRect.size.width / minRect.size.height;
+    		double bb_area = minRect.size.width * minRect.size.height;
+    		
+    		if((ct_area < 100) || (minRect.size.width > 550)
+    				|| (as < 0.1) || (as > 0.6)
+    				|| (bb_area < 10)) {
+    			continue;
+    		}
+    		
+    		double cvg_ratio = ct_area / bb_area;
+    		
+    		double cvg_score = 100.0/Math.exp(Math.abs(cvg_ratio-1));
+    		double as_score = 100.0/Math.exp(Math.abs(as - (2/5)));
+    		
+    		double total_score = cvg_score + as_score;
+    		
+			if(total_score > bestScore) {
+				secBestContour = bestContour;
+				secBestScore = bestScore;
+				
+				bestScore = total_score;
+				bestContour = ct;
+			}
+    	}
+    	
+    	if((bestContour != null) && (secBestContour != null)) {
+    		Rect tgt1 = Imgproc.boundingRect(bestContour);
+    		Rect tgt2 = Imgproc.boundingRect(secBestContour);
+    		
+    		double d1 = (2.0 * (double)frame.width()) / ((double)tgt1.width * Math.tan(fovHoriz));
+    		double d2 = (2.0 * (double)frame.width()) / ((double)tgt2.width * Math.tan(fovHoriz));
+    		
+    		double o1 = (tgt1.x + (tgt1.width/2.0) - (double)(frame.width()/2.0)) * (2.0 / tgt1.width);
+    		double o2 = (tgt1.x + (tgt2.width/2.0) - (double)(frame.width()/2.0)) * (2.0 / tgt2.width);
+    		
+    		double dist = (d1+d2)/2.0;
+    		double offset = (o1+o2);
+    	}
+    }
+    
 
     /**
      * Returns true if the jetson is connected, false if not.
@@ -110,36 +184,6 @@ public class Sensors extends Subsystem {
 		}
 	}
 
-    private double voltageToDistance(double v) {
-        double cvtFactor = (minDistance - maxDistance) / (maxVoltage - minVoltage);
-        return maxDistance + ((v - minVoltage) * cvtFactor);
-    }
-
-    public double getLeftVoltage() {
-    	return distLeft.getAverageVoltage();
-    }
-
-    public double getRightVoltage() {
-    	return distRight.getAverageVoltage();
-    }
-
-    public double getLeftDistance() {
-        return voltageToDistance(distLeft.getAverageVoltage());
-    }
-
-    public double getRightDistance() {
-        return voltageToDistance(distRight.getAverageVoltage());
-    }
-
-    public void updateDistance() {
-    	double dist = distLeft.getAverageVoltage();
-    	distOut += (smoothingConstant * (dist - distOut));
-    }
-
-    public double getFrontDistance() {
-    	return distOut;
-    }
-
     public void updateSD() {
     	if(getJetsonStatus()) {
         	SmartDashboard.putBoolean("Jetson Connected", true);
@@ -147,7 +191,7 @@ public class Sensors extends Subsystem {
         	SmartDashboard.putNumber("Vision Distance", getVisualDistance());
         	SmartDashboard.putNumber("Vision Offset", getVisualOffset());
     	} else {
-        	SmartDashboard.putBoolean("Jetson Connected", false);	
+        	SmartDashboard.putBoolean("Jetson Connected", false);
     	}
 
         SmartDashboard.putNumber("Start Yaw", startYaw);
